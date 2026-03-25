@@ -1,0 +1,23 @@
+# Environment
+.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Coverage
+.coverage
+htmlcov/
+
+# Results (keep directory, ignore outputs)
+results/*.json
+
+# Downloaded datasets
+data/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
