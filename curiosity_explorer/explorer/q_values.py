@@ -18,14 +18,14 @@ Fixes applied:
 """
 
 import logging
-import math
-import re
 from collections import Counter
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-from ..llm import batch_generate, generate_with_model, generate_with_logprobs
+import config
+from ..llm import batch_generate, generate_with_logprobs
 from ..runner.trace_parser import extract_function_signature
 from .parse_utils import parse_candidate
+from .entropy_utils import string_entropy, logprob_token_entropy
 
 log = logging.getLogger(__name__)
 
@@ -33,21 +33,17 @@ log = logging.getLogger(__name__)
 def compute_q_values(func_name: str, source_code: str, test_history: list,
                      candidates: list[str], gamma: float = 0.5,
                      future_K: int = 3, code_visible: bool = True,
-                     logprob_model: str = None,
-                     generation_model: str = None) -> dict[str, dict]:
+                     logprob_model: str = None) -> dict[str, dict]:
     """Compute curiosity Q-values for each candidate.
 
     Args:
         logprob_model: Model for logprob-based IG (default: config.LOGPROB_MODEL
                        if available, else falls back to sampling)
-        generation_model: Model for candidate generation (default: config.MODEL)
 
     Returns dict mapping candidate -> {q_value, immediate_ig, future_value,
-    predicted_output, outcome_branches}.
+    predicted_output}.
     """
-    import config
     logprob_model = logprob_model or getattr(config, 'LOGPROB_MODEL', None)
-    generation_model = generation_model or config.MODEL
 
     if code_visible:
         code_section = f"```python\n{source_code}\n```"
@@ -64,7 +60,7 @@ def compute_q_values(func_name: str, source_code: str, test_history: list,
             executor.submit(
                 _compute_single_q, func_name, code_section,
                 history_str, test_history, cand, gamma, future_K,
-                code_visible, logprob_model, generation_model
+                code_visible, logprob_model
             ): cand
             for cand in candidates
         }
@@ -82,7 +78,7 @@ def compute_q_values(func_name: str, source_code: str, test_history: list,
 
 def _compute_single_q(func_name, code_section, history_str,
                       test_history, candidate, gamma, future_K,
-                      code_visible, logprob_model, generation_model):
+                      code_visible, logprob_model):
     """Compute Q-value for a single candidate."""
 
     predict_prompt = f"""Given this function:
@@ -101,7 +97,7 @@ Respond with ONLY the expected output value, nothing else."""
                                         temperature=0.3, max_tokens=100,
                                         top_logprobs=5)
         if result and result["token_logprobs"]:
-            immediate_ig = _logprob_entropy(result["token_logprobs"])
+            immediate_ig = logprob_token_entropy(result["token_logprobs"])
             predicted_output = result["text"].strip()[:100]
         else:
             immediate_ig = 0.0
@@ -110,7 +106,7 @@ Respond with ONLY the expected output value, nothing else."""
         predictions = batch_generate([predict_prompt] * 6, temperature=0.9,
                                      max_tokens=100)
         predictions = [p.strip().lower()[:100] for p in predictions if p]
-        immediate_ig = _string_entropy(predictions)
+        immediate_ig = string_entropy(predictions)
         if predictions:
             predicted_output = Counter(predictions).most_common(1)[0][0]
 
@@ -127,8 +123,7 @@ Respond with ONLY the expected output value, nothing else."""
     # branch on success vs failure and compute E_o[v(h')]
     future_value = _estimate_future_value_branched(
         func_name, code_section, test_history, candidate,
-        predicted_output, future_K, code_visible,
-        logprob_model, generation_model,
+        predicted_output, future_K, code_visible, logprob_model,
     )
 
     q_value = immediate_ig + gamma * future_value
@@ -143,30 +138,21 @@ Respond with ONLY the expected output value, nothing else."""
 
 def _estimate_future_value_branched(func_name, code_section, test_history,
                                      candidate, predicted_output, future_K,
-                                     code_visible, logprob_model,
-                                     generation_model):
+                                     code_visible, logprob_model):
     """Estimate E_o[v(h')] by branching on outcome type.
 
-    Simulates two branches:
-    - Success: test returns a normal result
-    - Failure: test raises an error or returns an error
-
+    Simulates two branches (success/failure) in parallel.
     For each branch, generate future candidates and score their IG.
-    Combine with estimated probability of each branch.
     """
+    base_history = _format_history(test_history)
     outcomes = [
         ("succeeds and returns: " + predicted_output[:80], 0.5),
         ("fails with an error or unexpected result", 0.5),
     ]
 
-    branch_values = []
+    def _score_branch(outcome_desc, weight):
+        sim_history = base_history + f"  {candidate} → {outcome_desc}\n"
 
-    for outcome_desc, weight in outcomes:
-        # Build simulated history with this outcome
-        sim_history = _format_history(test_history)
-        sim_history += f"  {candidate} → {outcome_desc}\n"
-
-        # Generate future candidates from simulated state
         gen_prompt = f"""Given this function:
 {code_section}
 
@@ -185,12 +171,10 @@ Respond with ONLY the function call. Example: {func_name}(arg1, arg2)"""
                 future_candidates.append(call)
 
         if not future_candidates:
-            branch_values.append(0.0)
-            continue
+            return 0.0
 
-        # Score future candidates' IG
-        best_future_ig = 0.0
-        for fc in future_candidates:
+        # Score future candidates in parallel
+        def _score_future(fc):
             fc_prompt = f"""Given this function:
 {code_section}
 
@@ -205,44 +189,25 @@ Respond with ONLY the expected output value, nothing else."""
                                             temperature=0.3, max_tokens=100,
                                             top_logprobs=5)
                 if fr and fr["token_logprobs"]:
-                    fc_ig = _logprob_entropy(fr["token_logprobs"])
-                    best_future_ig = max(best_future_ig, fc_ig)
+                    return logprob_token_entropy(fr["token_logprobs"])
+                return 0.0
             else:
                 preds = batch_generate([fc_prompt] * 3, temperature=0.9,
                                        max_tokens=100)
                 preds = [p.strip().lower()[:100] for p in preds if p]
-                fc_ig = _string_entropy(preds)
-                best_future_ig = max(best_future_ig, fc_ig)
+                return string_entropy(preds)
 
-        branch_values.append(weight * best_future_ig)
+        with ThreadPoolExecutor(max_workers=len(future_candidates)) as ex:
+            igs = list(ex.map(_score_future, future_candidates))
 
-    return sum(branch_values)
+        return weight * max(igs) if igs else 0.0
 
-
-def _logprob_entropy(token_logprobs):
-    """Compute mean per-token entropy from logprob data."""
-    entropies = []
-    for tok in token_logprobs:
-        top_lps = tok.get("top_logprobs", {})
-        if not top_lps:
-            continue
-        probs = [math.exp(lp) for lp in top_lps.values()]
-        total = sum(probs)
-        if total <= 0:
-            continue
-        probs = [p / total for p in probs]
-        ent = -sum(p * math.log2(p) for p in probs if p > 0)
-        entropies.append(ent)
-    return sum(entropies) / len(entropies) if entropies else 0.0
-
-
-def _string_entropy(predictions):
-    """Shannon entropy over prediction strings (fallback)."""
-    if not predictions:
-        return 0.0
-    counts = Counter(predictions)
-    total = len(predictions)
-    return -sum((c / total) * math.log2(c / total) for c in counts.values())
+    # Run both branches in parallel
+    with ThreadPoolExecutor(max_workers=2) as ex:
+        branch_futures = [
+            ex.submit(_score_branch, desc, w) for desc, w in outcomes
+        ]
+        return sum(f.result() for f in branch_futures)
 
 
 def _format_history(test_history):

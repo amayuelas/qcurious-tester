@@ -50,10 +50,4 @@ def parse_candidate(response: str, func_name: str) -> str | None:
     else:
         return None  # no balanced closing paren
 
-    call = text[start:end]
-
-    # Basic validation
-    if call.count("(") != call.count(")"):
-        return None
-
-    return call
+    return text[start:end]
