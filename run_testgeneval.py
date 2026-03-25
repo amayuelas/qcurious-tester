@@ -36,7 +36,7 @@ SETUP_CODE = "import django; django.setup()"
 ENV = {"DJANGO_SETTINGS_MODULE": "tests.test_sqlite"}
 WORKING_DIR = "/opt/django__django"
 
-STRATEGIES = ["random", "greedy", "curiosity_sampling", "curiosity_qvalue"]
+STRATEGIES = ["random", "greedy", "diverse_random", "curiosity_sampling", "curiosity_qvalue"]
 
 
 def parse_args():
@@ -123,26 +123,62 @@ Example imports from test file: {imports[0] if imports else ""}
     return ctx
 
 
-def generate_test_scripts(example, test_history, K=3):
-    """Generate K test scripts for a Django module."""
+SCRIPT_STRATEGIES = [
+    "Test EDGE CASES — empty inputs, None values, empty strings, boundary conditions.",
+    "Test ERROR HANDLING — pass invalid arguments, wrong types, trigger exceptions.",
+    "Test the MAIN FUNCTIONALITY — normal usage with typical, well-formed inputs.",
+    "Test a DIFFERENT CLASS or FUNCTION than previous tests focused on. Look at the module and find something untested.",
+    "Take the most recent test and MODIFY it slightly — change one argument, use a different method, add a parameter.",
+    "Look at the import list and test INTERACTIONS between classes — create instances and pass them to each other.",
+    "Test with COMPLEX inputs — nested objects, large data, multiple items, edge-case combinations.",
+]
+
+
+def generate_test_scripts(example, test_history, K=3, diverse=False):
+    """Generate K test scripts for a Django module.
+
+    Args:
+        diverse: if True, use different prompting strategies per script
+    """
     ctx = _build_context(example, test_history)
 
-    prompt = f"""{ctx}
-
-Write a short Python test script (5-15 lines) that tests UNTESTED behavior of this module.
-The script runs in a Django environment (django.setup() already called).
+    base_instructions = """The script runs in a Django environment (django.setup() already called).
 Import what you need and exercise the code — print results to verify.
 
 IMPORTANT:
 - Do NOT use unittest or pytest — just write executable Python code
 - Do NOT import django or call django.setup() — already done
 - Focus on behavior NOT covered by previous tests
-- Respond with ONLY the Python code, no explanations
+- Respond with ONLY the Python code, no explanations"""
+
+    if diverse:
+        import random as _rng
+        strategies = list(SCRIPT_STRATEGIES)
+        _rng.shuffle(strategies)
+        prompts = []
+        for i in range(K):
+            strat = strategies[i % len(strategies)]
+            prompt = f"""{ctx}
+
+Write a short Python test script (5-15 lines).
+{base_instructions}
+
+Strategy: {strat}
 
 ```python
 """
+            prompts.append(prompt)
+    else:
+        prompt = f"""{ctx}
 
-    responses = batch_generate([prompt] * K, temperature=0.9, max_tokens=500)
+Write a short Python test script (5-15 lines) that tests UNTESTED behavior of this module.
+{base_instructions}
+
+```python
+"""
+        prompts = [prompt] * K
+
+    responses = batch_generate(prompts, temperature=0.9, max_tokens=500)
 
     scripts = []
     for resp in responses:
@@ -338,13 +374,19 @@ def run_strategy(example, strategy, budget, K, S, seed):
     curve = []
 
     for step in range(budget):
-        scripts = generate_test_scripts(example, test_history, K=K)
+        # Use diverse generation for curiosity strategies
+        use_diverse = strategy in ("curiosity_sampling", "curiosity_qvalue",
+                                   "diverse_random")
+        scripts = generate_test_scripts(example, test_history, K=K,
+                                        diverse=use_diverse)
 
         if not scripts:
             curve.append(runner.get_cumulative_coverage())
             continue
 
         if strategy == "random":
+            selected = select_random(scripts, example, test_history, runner, S)
+        elif strategy == "diverse_random":
             selected = select_random(scripts, example, test_history, runner, S)
         elif strategy == "greedy":
             selected = select_greedy(scripts, example, test_history, runner, S)
