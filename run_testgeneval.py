@@ -36,7 +36,7 @@ SETUP_CODE = "import django; django.setup()"
 ENV = {"DJANGO_SETTINGS_MODULE": "tests.test_sqlite"}
 WORKING_DIR = "/opt/django__django"
 
-STRATEGIES = ["random", "greedy", "diverse_random", "curiosity_sampling", "curiosity_qvalue"]
+STRATEGIES = ["reflective_qvalue"]
 
 
 def parse_args():
@@ -355,6 +355,115 @@ Respond with ONLY the expected output."""
 
 
 # ---------------------------------------------------------------------------
+# Reflective strategy: predict → execute → compare → reflect → generate
+# ---------------------------------------------------------------------------
+
+def _predict_output(script, example, test_history):
+    """Predict what a test script will output."""
+    ctx = _build_context(example, test_history)
+    short = script.strip()[:300]
+    prompt = f"""{ctx}
+
+What will be the output of this test script?
+
+```python
+{short}
+```
+
+Respond with ONLY the expected output (2-3 lines max), nothing else."""
+
+    return generate_with_model(config.MODEL, prompt, temperature=0.3,
+                               max_tokens=150)
+
+
+def _reflect_on_result(example, test_history, script, predicted, actual,
+                       learnings_so_far):
+    """Compare prediction vs reality and extract lessons."""
+    ctx = _build_context(example, test_history)
+
+    prompt = f"""{ctx}
+
+You predicted this test would output:
+  {predicted[:200]}
+
+But the actual result was:
+  {actual[:200]}
+
+{"Your previous learnings: " + learnings_so_far if learnings_so_far else ""}
+
+In 2-3 sentences:
+1. Were you right or wrong? What specifically did you get wrong?
+2. What does this tell you about the module's behavior?
+3. What should you test NEXT to learn the most?"""
+
+    return generate_with_model(config.MODEL, prompt, temperature=0.3,
+                               max_tokens=300)
+
+
+def generate_reflective_scripts(example, test_history, learnings, K=3):
+    """Generate scripts guided by accumulated learnings."""
+    ctx = _build_context(example, test_history)
+
+    base = """The script runs in a Django environment (django.setup() already called).
+Import what you need and exercise the code — print results to verify.
+
+IMPORTANT:
+- Do NOT use unittest or pytest — just write executable Python code
+- Do NOT import django or call django.setup() — already done
+- Respond with ONLY the Python code, no explanations"""
+
+    prompt = f"""{ctx}
+
+{"LEARNINGS FROM PREVIOUS TESTS: " + learnings if learnings else ""}
+
+Based on what you've learned so far, write a test script (5-15 lines) that will
+MAXIMIZE your learning about UNTESTED behavior of this module.
+
+Focus on code paths you haven't explored yet. Avoid repeating tests that
+triggered errors you already understand.
+
+{base}
+
+```python
+"""
+
+    responses = batch_generate([prompt] * K, temperature=0.9, max_tokens=500)
+
+    scripts = []
+    for resp in responses:
+        script = _parse_script(resp)
+        if script and script not in scripts:
+            scripts.append(script)
+
+    return scripts
+
+
+def select_reflective(scripts, example, test_history, learnings, S=6):
+    """Select by predicting which test the model is most uncertain about,
+    but filtered to avoid known error paths."""
+    ctx = _build_context(example, test_history)
+
+    prompt = f"""{ctx}
+
+{"LEARNINGS: " + learnings if learnings else ""}
+
+Which of these tests will exercise the MOST NEW code paths (not error handling)?
+Pick the test that reaches deep into the module's main logic.
+
+{chr(10).join(f'  Script {i+1}: ' + s.strip()[:150] for i, s in enumerate(scripts))}
+
+Respond with ONLY the number."""
+
+    resp = generate_with_model(config.MODEL, prompt, temperature=0.3,
+                               max_tokens=20)
+    for n in re.findall(r'\d+', resp):
+        idx = int(n) - 1
+        if 0 <= idx < len(scripts):
+            return scripts[idx]
+    return scripts[0]
+
+
+# ---------------------------------------------------------------------------
 # Run one strategy on one example
 # ---------------------------------------------------------------------------
 
@@ -372,18 +481,24 @@ def run_strategy(example, strategy, budget, K, S, seed):
 
     test_history = []
     curve = []
+    learnings = ""  # accumulated reflections for reflective strategy
 
     for step in range(budget):
-        # Use diverse generation for curiosity strategies
-        use_diverse = strategy in ("curiosity_sampling", "curiosity_qvalue",
-                                   "diverse_random")
-        scripts = generate_test_scripts(example, test_history, K=K,
-                                        diverse=use_diverse)
+        # Generation: learnings-guided for reflective strategies
+        if strategy in ("reflective", "reflective_qvalue"):
+            scripts = generate_reflective_scripts(example, test_history,
+                                                  learnings, K=K)
+        else:
+            use_diverse = strategy in ("curiosity_sampling", "curiosity_qvalue",
+                                       "diverse_random")
+            scripts = generate_test_scripts(example, test_history, K=K,
+                                            diverse=use_diverse)
 
         if not scripts:
             curve.append(runner.get_cumulative_coverage())
             continue
 
+        # Selection
         if strategy == "random":
             selected = select_random(scripts, example, test_history, runner, S)
         elif strategy == "diverse_random":
@@ -394,12 +509,30 @@ def run_strategy(example, strategy, budget, K, S, seed):
             selected = select_curiosity(scripts, example, test_history, runner, S)
         elif strategy == "curiosity_qvalue":
             selected = select_qvalue(scripts, example, test_history, runner, S)
+        elif strategy == "reflective":
+            selected = select_reflective(scripts, example, test_history,
+                                         learnings, S)
+        elif strategy == "reflective_qvalue":
+            selected = select_qvalue(scripts, example, test_history, runner, S)
         else:
             selected = scripts[0]
+
+        # Predict before execution (for reflective strategies)
+        predicted = None
+        if strategy in ("reflective", "reflective_qvalue"):
+            predicted = _predict_output(selected, example, test_history)
 
         result = runner.run_test(selected)
         test_history.append((selected, result))
         curve.append(runner.get_cumulative_coverage())
+
+        # Reflect: compare prediction vs reality, update learnings
+        if strategy in ("reflective", "reflective_qvalue") and predicted:
+            actual = result.output or result.exception or "None"
+            reflection = _reflect_on_result(
+                example, test_history, selected, predicted, actual, learnings
+            )
+            learnings = (learnings + "\n" + reflection)[-500:]
 
         print(f"      Step {step+1}: new={result.new_branches}, "
               f"cum={runner.get_cumulative_coverage()}", flush=True)
