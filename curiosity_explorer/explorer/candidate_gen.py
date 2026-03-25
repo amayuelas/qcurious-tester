@@ -4,6 +4,7 @@ import logging
 
 from ..llm import batch_generate
 from ..runner.trace_parser import format_test_history, extract_function_signature
+from .parse_utils import parse_candidate as _shared_parse
 
 log = logging.getLogger(__name__)
 
@@ -37,7 +38,7 @@ Respond with ONLY the function call, nothing else. Example format:
 
     candidates = []
     for response in responses:
-        call = _parse_candidate(response, func_name)
+        call = _shared_parse(response, func_name)
         if call:
             candidates.append(call)
 
@@ -47,24 +48,11 @@ Respond with ONLY the function call, nothing else. Example format:
         log.debug(f"Retrying {retry_count} candidates (got {len(candidates)}/{K})")
         retry_responses = batch_generate([prompt] * retry_count, temperature=0.95)
         for response in retry_responses:
-            call = _parse_candidate(response, func_name)
+            call = _shared_parse(response, func_name)
             if call:
                 candidates.append(call)
 
     return candidates
 
 
-def _parse_candidate(response: str, func_name: str) -> str | None:
-    """Parse an LLM response into a valid function call, or None."""
-    if not response:
-        return None
-    call = response.strip().split("\n")[0].strip()
-    if call.startswith("```"):
-        call = call.strip("`").strip()
-    # Must start with the function name (reject garbage prefixed text)
-    if not call.startswith(func_name + "("):
-        return None
-    # Basic balanced-parens check
-    if call.count("(") != call.count(")"):
-        return None
-    return call
+# _parse_candidate moved to parse_utils.py

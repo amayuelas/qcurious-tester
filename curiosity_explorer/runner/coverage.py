@@ -33,6 +33,7 @@ class CoverageRunner:
         self.test_history: list[tuple[str, CoverageResult]] = []
         self.temp_dir = tempfile.mkdtemp()
         self.func_file = os.path.join(self.temp_dir, f"{func_name}.py")
+        self._cleaned_up = False
 
         with open(self.func_file, "w") as f:
             f.write(source_code)
@@ -126,3 +127,19 @@ class CoverageRunner:
     def reset(self):
         self.cumulative_branches = set()
         self.test_history = []
+
+    def cleanup(self):
+        """Remove temporary directory."""
+        if not self._cleaned_up:
+            import shutil
+            shutil.rmtree(self.temp_dir, ignore_errors=True)
+            self._cleaned_up = True
+
+    def __del__(self):
+        self.cleanup()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *args):
+        self.cleanup()

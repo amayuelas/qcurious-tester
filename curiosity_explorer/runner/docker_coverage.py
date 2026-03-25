@@ -113,12 +113,6 @@ class DockerCoverageRunner:
                         if branch not in self.cumulative_branches:
                             new_branches.add(branch)
                             self.cumulative_branches.add(branch)
-                    # Also track executed lines for richer signal
-                    for line in file_data.get("executed_lines", []):
-                        branch = (file_path, "L", line)
-                        if branch not in self.cumulative_branches:
-                            new_branches.add(branch)
-                            self.cumulative_branches.add(branch)
             except (json.JSONDecodeError, KeyError) as e:
                 log.debug(f"Coverage parse error: {e}")
         else:

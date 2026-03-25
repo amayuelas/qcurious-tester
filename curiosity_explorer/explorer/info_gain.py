@@ -289,18 +289,10 @@ Respond with ONLY the expected output value (the return value or exception), not
     pred_list = list(predictions.values())
     disagreement = _entropy(pred_list) if len(pred_list) >= 2 else 0.0
 
-    # --- Logprob entropy (Estimator B) — runs in parallel with verbalized ---
-    logprob_future = None
+    # --- Logprob entropy (Estimator B) + Verbalized confidence (C) in parallel ---
     logprob_model = config.LOGPROB_MODEL
 
-    # We run logprob and verbalized concurrently
-    with ThreadPoolExecutor(max_workers=2) as executor:
-        logprob_future = executor.submit(
-            _compute_logprob_entropy, logprob_model, predict_prompt,
-        )
-
-        # --- Verbalized confidence (Estimator C) ---
-        conf_prompt = f"""Given this function:
+    conf_prompt = f"""Given this function:
 {code_section}
 
 {history_str}
@@ -314,17 +306,27 @@ Answer these two questions with ONLY two numbers separated by a comma, nothing e
 Format: confidence_output, confidence_new_branches
 Example: 75, 30"""
 
-        conf_response = generate_with_model(config.MODEL, conf_prompt,
-                                            temperature=0.3, max_tokens=50)
-        output_conf, branch_conf = _parse_confidence_scores(conf_response)
-        verbalized_ig = (1 - output_conf / 100) * 0.7 + (branch_conf / 100) * 0.3
+    with ThreadPoolExecutor(max_workers=2) as executor:
+        logprob_future = executor.submit(
+            _compute_logprob_entropy, logprob_model, predict_prompt,
+        )
+        conf_future = executor.submit(
+            generate_with_model, config.MODEL, conf_prompt, 0.3, 50,
+        )
 
-        # Get logprob result
-        try:
-            logprob_ent = logprob_future.result()
-        except Exception as e:
-            log.warning(f"Logprob entropy failed: {e}")
-            logprob_ent = 0.0
+    try:
+        logprob_ent = logprob_future.result()
+    except Exception as e:
+        log.warning(f"Logprob entropy failed: {e}")
+        logprob_ent = 0.0
+
+    try:
+        conf_response = conf_future.result()
+    except Exception:
+        conf_response = ""
+
+    output_conf, branch_conf = _parse_confidence_scores(conf_response)
+    verbalized_ig = (1 - output_conf / 100) * 0.7 + (branch_conf / 100) * 0.3
 
     # --- Hybrid (Estimator D) ---
     n_models = len(models)

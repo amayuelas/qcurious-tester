@@ -10,6 +10,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from ..llm import llm_generate
 from ..runner.trace_parser import format_test_history, extract_function_signature
+from .parse_utils import parse_candidate
 
 log = logging.getLogger(__name__)
 
@@ -87,22 +88,10 @@ Generate a single test call. Respond with ONLY the function call, nothing else. 
 
     candidates = []
     for response in responses:
-        call = _parse_candidate(response, func_name)
+        call = parse_candidate(response, func_name)
         if call and call not in candidates:  # deduplicate
             candidates.append(call)
 
     return candidates
 
 
-def _parse_candidate(response: str, func_name: str) -> str | None:
-    """Parse an LLM response into a valid function call, or None."""
-    if not response:
-        return None
-    call = response.strip().split("\n")[0].strip()
-    if call.startswith("```"):
-        call = call.strip("`").strip()
-    if not call.startswith(func_name + "("):
-        return None
-    if call.count("(") != call.count(")"):
-        return None
-    return call
