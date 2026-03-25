@@ -1,0 +1,14 @@
+Loaded 4 programs from 'toy' benchmark
+======================================================================
+Curiosity-Guided Code Exploration
+  Programs: 4, Budget: 15, K: 5, S: 6
+======================================================================
+Traceback (most recent call last):
+  File "/share/edc/home/aamayuelasfernandez/inference-curiosity/run_experiment.py", line 391, in <module>
+    main()
+  File "/share/edc/home/aamayuelasfernandez/inference-curiosity/run_experiment.py", line 382, in main
+    run_experiment(
+  File "/share/edc/home/aamayuelasfernandez/inference-curiosity/run_experiment.py", line 99, in run_experiment
+    if not config.API_KEY:
+           ^^^^^^^^^^^^^^
+AttributeError: module 'config' has no attribute 'API_KEY'
