@@ -135,6 +135,20 @@ class DockerCoverageRunner:
         self.cumulative_branches = set()
         self._test_count = 0
 
+    def cleanup(self):
+        """Remove temporary coverage data directory."""
+        import shutil
+        shutil.rmtree(self._coverage_data_dir, ignore_errors=True)
+
+    def __del__(self):
+        self.cleanup()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *args):
+        self.cleanup()
+
 
 class DockerTestResult:
     """Result of running a test in Docker."""
