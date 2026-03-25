@@ -1,0 +1,24 @@
+[project]
+name = "inference-curiosity"
+version = "0.1.0"
+description = "Curiosity-guided inference-time code exploration"
+requires-python = ">=3.10"
+dependencies = [
+    "openai>=1.0.0",
+    "coverage>=7.0",
+    "python-dotenv>=1.0.0",
+    "requests>=2.28.0",
+    "numpy",
+    "scipy>=1.10.0",
+]
+
+[project.scripts]
+run-experiment = "run_experiment:main"
+run-calibration = "run_calibration:main"
+run-phase0b = "run_phase0b:main"
+
+[tool.setuptools]
+py-modules = ["config", "run_experiment", "run_calibration", "run_phase0b"]
+
+[tool.setuptools.packages.find]
+include = ["curiosity_explorer*"]
