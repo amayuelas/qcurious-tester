@@ -5,12 +5,14 @@
 __pycache__/
 *.pyc
 *.pyo
+*.egg-info/
 
 # Coverage
 .coverage
 htmlcov/
 
-# Results (keep directory, ignore outputs)
+# Results (keep directories and .md files, ignore JSON outputs)
+results/**/*.json
 results/*.json
 
 # Downloaded datasets
@@ -21,3 +23,6 @@ data/
 .idea/
 *.swp
 *.swo
+
+# Temp files
+/tmp/
