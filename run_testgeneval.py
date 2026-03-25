@@ -31,12 +31,12 @@ logging.basicConfig(
 logging.getLogger("httpx").setLevel(logging.WARNING)
 log = logging.getLogger(__name__)
 
-DOCKER_IMAGE = "aorwall/swe-bench-django_django-testbed:4.0"
+DOCKER_IMAGE_TEMPLATE = "aorwall/swe-bench-django_django-testbed:{version}"
 SETUP_CODE = "import django; django.setup()"
 ENV = {"DJANGO_SETTINGS_MODULE": "tests.test_sqlite"}
 WORKING_DIR = "/opt/django__django"
 
-STRATEGIES = ["reflective_qvalue"]
+STRATEGIES = ["random", "greedy", "reflective_qvalue"]
 
 
 def parse_args():
@@ -50,20 +50,35 @@ def parse_args():
     return parser.parse_args()
 
 
-def load_django_examples(n=3):
-    """Load Django 4.0 examples from TestGenEval-Lite."""
+def load_django_examples(n=None, version=None):
+    """Load Django examples from TestGenEval-Lite.
+
+    Args:
+        n: Max examples (None = all available)
+        version: Specific version (None = all versions with Docker images)
+    """
     from datasets import load_dataset
     ds = load_dataset("kjain14/testgenevallite")
     test = ds["test"]
 
-    django40 = [ex for ex in test
-                if ex["repo"] == "django/django" and ex["version"] == "4.0"]
+    available_versions = {"3.0", "3.1", "3.2", "4.0", "4.1", "4.2", "5.0"}
 
-    # Pick examples with moderate baseline coverage (room to improve)
-    django40.sort(key=lambda ex: ex["baseline_covs"]["first"])
+    if version:
+        django_exs = [ex for ex in test
+                      if ex["repo"] == "django/django" and ex["version"] == version]
+    else:
+        django_exs = [ex for ex in test
+                      if ex["repo"] == "django/django"
+                      and ex["version"] in available_versions]
+
+    # Sort by baseline coverage (lowest first — most room to improve)
+    django_exs.sort(key=lambda ex: ex["baseline_covs"]["first"])
+
+    if n:
+        django_exs = django_exs[:n]
 
     examples = []
-    for ex in django40[:n]:
+    for ex in django_exs:
         # Determine the module path from code_file
         # django/forms/boundfield.py -> django.forms.boundfield
         module = ex["code_file"].replace("/", ".").replace(".py", "")
@@ -76,6 +91,7 @@ def load_django_examples(n=3):
             "test_src": ex["test_src"],
             "baseline_cov": ex["baseline_covs"]["first"],
             "local_imports": ex["local_imports"],
+            "version": ex["version"],
         })
 
     return examples
@@ -471,8 +487,9 @@ def run_strategy(example, strategy, budget, K, S, seed):
     """Run a strategy on a Django example, return coverage curve."""
     random.seed(seed)
 
+    docker_image = DOCKER_IMAGE_TEMPLATE.format(version=example.get("version", "4.0"))
     runner = DockerCoverageRunner(
-        image=DOCKER_IMAGE,
+        image=docker_image,
         source_module=example["module"],
         setup_code=SETUP_CODE,
         working_dir=WORKING_DIR,
@@ -554,13 +571,16 @@ def main():
     print(f"  Model: {config.MODEL}", flush=True)
     print(f"  Budget: {args.budget}, K={args.K}, S={args.S}", flush=True)
     print(f"  Strategies: {STRATEGIES}", flush=True)
-    print(f"  Examples: {args.n_examples} Django 4.0 files", flush=True)
     print("=" * 70, flush=True)
 
     examples = load_django_examples(args.n_examples)
+    print(f"  Loaded {len(examples)} Django examples", flush=True)
+    versions = {}
     for ex in examples:
-        print(f"  {ex['code_file']} (baseline={ex['baseline_cov']:.0f}%)",
-              flush=True)
+        versions.setdefault(ex["version"], 0)
+        versions[ex["version"]] += 1
+    for v, c in sorted(versions.items()):
+        print(f"    v{v}: {c} files", flush=True)
 
     test = generate_with_model(config.MODEL, "Say 'ok'", 0.3, 10)
     print(f"  Connectivity: {'OK' if test else 'FAILED'}", flush=True)
