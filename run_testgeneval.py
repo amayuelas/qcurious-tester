@@ -131,14 +131,20 @@ def run_strategy(example, strategy, seed, exec_budget, K, gamma):
     if example.get("pre_install"):
         pre_command = example["pre_install"]
 
+    # Use top-level package for --source (so coverage tracks even if test
+    # doesn't directly import the target submodule), filter to target file
+    top_package = module.split(".")[0]
+    target_file = example.get("code_file", None)
+
     runner = DockerCoverageRunner(
         image=example["image"],
-        source_module=module,
+        source_module=top_package,
         setup_code=example["setup_code"],
         working_dir=example["working_dir"],
         env=example["env"],
         python_bin=python_bin,
         pre_command=pre_command,
+        target_file=target_file,
     )
 
     hist = []
