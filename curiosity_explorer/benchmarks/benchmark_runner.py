@@ -38,8 +38,12 @@ class RunResult:
 
 
 def run_single(func_name, source, strategy, budget=30, K=5, S=8,
-               gamma=0.5, seed=42, code_visible=True):
+               gamma=0.5, seed=42, code_visible=True, script_mode=False):
     """Run a single strategy on a single function, return coverage curve.
+
+    Args:
+        script_mode: If True, generate multi-line test scripts instead of
+            single function calls. Use for full-module benchmarks.
 
     Strategies:
       - random: standard gen + random pick
@@ -53,13 +57,23 @@ def run_single(func_name, source, strategy, budget=30, K=5, S=8,
     runner = CoverageRunner(func_name, source)
     test_history = []
     curve = []
-    gate_steps = {}  # gate_error_code -> first step that passed it
+    gate_steps = {}
     learnings = ""
     prev_max_gate = -1
 
     for step in range(budget):
         # Generation
-        if strategy == "reflective_qvalue":
+        if script_mode:
+            if strategy == "reflective_qvalue":
+                candidates = _generate_script_reflective(
+                    func_name, source, test_history, learnings, K, code_visible)
+            elif strategy in ("curiosity_entropy", "curiosity_qvalue"):
+                candidates = _generate_scripts_diverse(
+                    func_name, source, test_history, K, code_visible)
+            else:
+                candidates = _generate_scripts(
+                    func_name, source, test_history, K, code_visible)
+        elif strategy == "reflective_qvalue":
             candidates = _generate_reflective(func_name, source, test_history,
                                               learnings, K, code_visible)
         elif strategy in ("curiosity_entropy", "curiosity_qvalue"):
@@ -111,7 +125,10 @@ def run_single(func_name, source, strategy, budget=30, K=5, S=8,
                                  code_visible)
 
         # Execute
-        result = runner.run_test(selected)
+        if script_mode:
+            result = runner.run_script(selected)
+        else:
+            result = runner.run_test(selected)
         test_history.append((selected, result))
         curve.append(runner.get_cumulative_coverage())
 
@@ -206,7 +223,10 @@ def _select_greedy(candidates, func_name, source, test_history, runner,
         for tc, res in test_history[-5:]:
             history_str += f"  {tc} → {res.output or res.exception}\n"
 
-    cand_list = "\n".join(f"  {i+1}. {c}" for i, c in enumerate(candidates))
+    cand_list = ""
+    for i, c in enumerate(candidates):
+        short = c.strip()[:120].replace('\n', ' | ')
+        cand_list += f"  {i+1}. {short}\n"
     prompt = (f"Function:\n{code_section}\n\n"
               f"Previous results:\n{history_str}\n\n"
               f"Which test discovers the most NEW behavior? "
@@ -293,3 +313,171 @@ def _generate_reflective(func_name, source, test_history, learnings, K,
         if call and call not in candidates:
             candidates.append(call)
     return candidates
+
+
+# ---------------------------------------------------------------------------
+# Script-mode generation (for full modules)
+# ---------------------------------------------------------------------------
+
+def _generate_scripts(func_name, source, test_history, K, code_visible):
+    """Generate K test scripts (multi-line) for full modules."""
+    if code_visible:
+        code_section = f"```python\n{source[:3000]}\n```"
+    else:
+        from ..runner.trace_parser import extract_function_signature
+        code_section = f"```python\n{extract_function_signature(source)}\n```"
+
+    history_str = ""
+    if test_history:
+        for tc, res in test_history[-5:]:
+            short = tc.strip()[:150]
+            out = (res.output or res.exception or "None")[:80]
+            history_str += f"  Script: {short}\n  → {out}\n\n"
+
+    prompt = f"""You are testing this Python module:
+
+{code_section}
+
+{history_str}
+
+Write a short test script (3-10 lines) that exercises UNTESTED behavior.
+The script should import from the module and call methods/functions.
+Print results to verify behavior.
+
+IMPORTANT:
+- The module code is already available — just use its classes/functions directly
+- Focus on behavior NOT covered by previous tests
+- Respond with ONLY the Python code, no explanations
+
+```python
+"""
+
+    responses = batch_generate([prompt] * K, temperature=0.9, max_tokens=400)
+    scripts = []
+    for resp in responses:
+        script = _parse_script(resp)
+        if script and script not in scripts:
+            scripts.append(script)
+    return scripts
+
+
+SCRIPT_DIVERSITY_STRATEGIES = [
+    "Test EDGE CASES — empty inputs, None values, boundary conditions, empty strings.",
+    "Test ERROR HANDLING — pass invalid arguments, wrong types, trigger exceptions.",
+    "Test the MAIN FUNCTIONALITY — normal usage with typical inputs.",
+    "Test a DIFFERENT CLASS or FUNCTION than previous tests focused on.",
+    "Take the most recent test and MODIFY it — change one argument or method call.",
+    "Test INTERACTIONS between classes — create instances and pass them to each other.",
+    "Test with COMPLEX inputs — nested objects, large data, multiple items.",
+]
+
+
+def _generate_scripts_diverse(func_name, source, test_history, K, code_visible):
+    """Generate K diverse test scripts using different prompting strategies."""
+    if code_visible:
+        code_section = f"```python\n{source[:3000]}\n```"
+    else:
+        from ..runner.trace_parser import extract_function_signature
+        code_section = f"```python\n{extract_function_signature(source)}\n```"
+
+    history_str = ""
+    if test_history:
+        for tc, res in test_history[-5:]:
+            short = tc.strip()[:150]
+            out = (res.output or res.exception or "None")[:80]
+            history_str += f"  Script: {short}\n  → {out}\n\n"
+
+    import random as _rng
+    strats = list(SCRIPT_DIVERSITY_STRATEGIES)
+    _rng.shuffle(strats)
+
+    prompts = []
+    for i in range(K):
+        strat = strats[i % len(strats)]
+        prompt = f"""You are testing this Python module:
+
+{code_section}
+
+{history_str}
+
+Write a short test script (3-10 lines) that exercises UNTESTED behavior.
+Import from the module and call methods/functions. Print results to verify.
+
+Strategy: {strat}
+
+IMPORTANT: Respond with ONLY the Python code, no explanations.
+
+```python
+"""
+        prompts.append(prompt)
+
+    responses = batch_generate(prompts, temperature=0.9, max_tokens=400)
+    scripts = []
+    for resp in responses:
+        script = _parse_script(resp)
+        if script and script not in scripts:
+            scripts.append(script)
+    return scripts
+
+
+def _generate_script_reflective(func_name, source, test_history, learnings,
+                                 K, code_visible):
+    """Generate scripts guided by accumulated learnings."""
+    if code_visible:
+        code_section = f"```python\n{source[:3000]}\n```"
+    else:
+        from ..runner.trace_parser import extract_function_signature
+        code_section = f"```python\n{extract_function_signature(source)}\n```"
+
+    history_str = ""
+    if test_history:
+        for tc, res in test_history[-5:]:
+            short = tc.strip()[:150]
+            out = (res.output or res.exception or "None")[:80]
+            history_str += f"  Script: {short}\n  → {out}\n\n"
+
+    prompt = f"""You are testing this Python module:
+
+{code_section}
+
+{history_str}
+
+{"LEARNINGS: " + learnings if learnings else ""}
+
+Based on what you've learned, write a test script (3-10 lines) that will
+discover NEW behavior. Focus on classes/methods you haven't tested yet.
+
+IMPORTANT:
+- Use the module's classes/functions directly
+- Respond with ONLY the Python code
+
+```python
+"""
+
+    responses = batch_generate([prompt] * K, temperature=0.9, max_tokens=400)
+    scripts = []
+    for resp in responses:
+        script = _parse_script(resp)
+        if script and script not in scripts:
+            scripts.append(script)
+    return scripts
+
+
+def _parse_script(response):
+    """Extract Python code from LLM response."""
+    if not response:
+        return None
+    code = response.strip()
+    if code.startswith("```python"):
+        code = code[9:]
+    if code.startswith("```"):
+        code = code[3:]
+    if code.endswith("```"):
+        code = code[:-3]
+    code = code.strip()
+    if not code or len(code) < 10:
+        return None
+    # Remove any django.setup() or import django lines
+    lines = code.split("\n")
+    lines = [l for l in lines if "django.setup()" not in l]
+    return "\n".join(lines)
