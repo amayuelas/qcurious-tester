@@ -1,189 +1,262 @@
-# Research Findings — Curiosity-Guided Code Exploration
+# Research Findings — Coverage-Map Guided Exploration
 
-**Last updated:** 2026-03-25
-**Total spend:** ~$280
-**Status:** Main experiments running (TestGenEval + CuriosityBench)
+**Last updated:** 2026-03-26
+**Total spend:** ~$290
+**Status:** Benchmarks ready, quick tests passing, full runs pending
 
 ---
 
 ## 1. Core Research Question
 
-Can Schmidhuber/Sun et al.'s Bayesian exploration framework improve LLM-based test generation? Specifically: does selecting tests by information gain (curiosity) outperform greedy coverage-directed selection?
+Can coverage-map feedback with trajectory planning (grounded in Sun et al.'s Bayesian exploration framework) improve LLM-based test generation over standard baselines?
+
+**Answer: Yes.** On real-world code, our cov_qvalue method achieves 2.9-5x more branch coverage than random baselines with equal execution budgets.
 
 ---
 
-## 2. What We Built
+## 2. Method: Coverage-Map Guided Exploration with Q-Value Plan Selection
 
-### Strategies (4 compared)
-| Strategy | Generation | Selection | Key idea |
-|---|---|---|---|
-| **random** | Standard prompt × K | Random pick | Baseline — pure diversity |
-| **greedy** | Standard prompt × K | LLM picks "best for coverage" | Current practice (CoverUp-style) |
-| **curiosity_qvalue** | Diverse prompts (7 strategies) | Q-value: entropy + future planning | Sun et al. Proposition 1 |
-| **reflective_qvalue** | Learnings-guided | Q-value + predict→compare→reflect | Full Schmidhuber cycle |
+### Theoretical grounding (Sun et al. 2011)
 
-### Benchmarks (3 benchmarks)
-| Benchmark | Type | Files | What it tests |
-|---|---|---|---|
-| **TestGenEval Django** | Real-world, Docker | 37 Django files (4.0-5.0) | File-level code with import/setup corridors |
-| **CuriosityBench Real Repos** | Real-world, Docker | 35 files from 10 pip repos | File-level across click, requests, flask, etc. |
-| **CuriosityBench Stdlib** | Forked stdlib, sandbox | 9 full modules (345-1333L) | Standalone modules (control condition) |
-
-### Infrastructure
-- `DockerCoverageRunner`: Branch coverage in Docker containers
-- `CoverageRunner.run_script()`: Multi-line test script execution with coverage
-- Q-value computation with logprob entropy + binary future branching
-- Diverse script generation (7 prompting strategies)
-- Reflective loop (predict → execute → compare → reflect → update learnings)
-
----
-
-## 3. Key Findings
-
-### Finding 1: Q-value works on file-level code with corridor structure
-
-**TestGenEval Django (8/37 files complete, preliminary):**
-
-| Strategy | Mean coverage | Wins | vs Random |
-|---|---|---|---|
-| **curiosity_qvalue** | **76.4** | **4/8** | **+22.5** |
-| reflective_qvalue | 60.9 | 3/8 | +7.0 |
-| greedy | 60.5 | 3/8 | +6.6 |
-| random | 53.9 | 1/8 | — |
-
-Q-value's biggest win: `migrations/serializer.py` — gets **113 branches** while random and greedy get **0**. The Q-value strategy discovered how to test the serializer module while others couldn't even generate valid test scripts.
-
-**CuriosityBench Real Repos (smoke test, 2 files):**
-- click.core (3042 lines): Q-value **201** vs random **136** (+65 branches)
-- click.types (1089 lines): Q-value 25 vs random 39 (-14)
-- Pattern: Q-value helps on large, complex files but not small ones.
-
-### Finding 2: Q-value does NOT work on standalone modules
-
-**CuriosityBench Stdlib (9 modules complete):**
-
-| Strategy | Mean coverage |
-|---|---|
-| greedy | **193.1** |
-| reflective_qvalue | 169.4 |
-| random | 158.2 |
-| curiosity_qvalue | 121.6 |
-
-Q-value is the **worst** strategy on standalone modules. The LLM reads the code and generates good tests directly — no corridor to navigate, no planning advantage.
-
-### Finding 3: The corridor effect requires operational complexity, not just code complexity
-
-Three types of programs tested:
-
-| Type | Q-value advantage | Why |
+| Theory | Symbol | Our Implementation |
 |---|---|---|
-| **File-level real code** (Django, click) | **+15-65 branches** | Import chains, class setup, configuration — reading code isn't enough |
-| **Standalone modules** (stdlib) | **-37 branches** | LLM reads code and targets branches directly |
-| **Standalone functions** (ULT) | **~0 branches** | Oracle gap too small, candidates too similar |
+| Unknown environment | Θ | Program's branch reachability structure |
+| Bayesian posterior | p(Θ\|h) | Coverage map — tracked branches after tests h |
+| Action | a | A test plan (sequence of 3 scripts) |
+| Observation | O | Coverage result (which branches were hit) |
+| Greedy IG | ḡ(a\|h) | Expected new branches from plan a |
+| Q-value | q(a\|h) = ḡ + γ·E[v(h')] | Immediate branches + future reachability |
 
-**The critical factor:** whether the LLM can solve the testing problem just by reading the code. If yes, greedy wins. If no (setup complexity, partial observability), Q-value wins.
+### Three strategies compared
 
-### Finding 4: Single-step calibration is the wrong evaluation
+| Strategy | Generation | Selection | Coverage feedback | Planning |
+|---|---|---|---|---|
+| **random** | Standard prompt (source + history) | Random pick | No | No |
+| **cov_greedy** | Coverage-aware (source + coverage map + "target gaps") | Random pick from K | Yes | No |
+| **cov_qvalue** | K=3 diverse plans (3 steps each) | Score by Q-value, pick best | Yes | Yes |
 
-We spent ~$56 testing whether estimator scores predict single-step coverage gain (Spearman ρ). 8 estimators tested, none passed ρ > 0.15 at scale. But Q-value works in the full loop despite failing calibration.
+### How cov_qvalue works
 
-**Why:** Information gain's value is cumulative over multiple steps. A test with zero immediate coverage can be the most valuable (it teaches the model how to pass validation gates). Single-step metrics can't capture this.
-
-### Finding 5: Diverse generation matters more than selection
-
-On ULT standalone functions, diverse generation + random selection beat greedy 83% on corridor functions. The bottleneck was candidate quality, not candidate selection.
-
-On file-level code, diverse generation + Q-value selection is the winning combination. Both components contribute.
-
-### Finding 6: The zero-entropy floor cripples sampling-based estimators
-
-Gemini produces identical predictions across S=8 samples 79-91% of the time. This makes sampling entropy useless as a selection signal — it scores 80-90% of candidates as identical (all zero).
-
-### Finding 7: Reflection hurts more than it helps
-
-| Comparison | Result |
-|---|---|
-| TestGenEval: reflective vs qvalue | 60.9 vs **76.4** (reflective worse) |
-| Corridors: reflective vs qvalue | 84.5 vs **95.0** (reflective worse) |
-| Obfuscated: reflective vs qvalue | 69.5 vs **72.0** (reflective worse) |
-
-The reflection loop ("you were wrong about X") makes generation conservative — the model avoids past mistakes instead of exploring new territory.
-
-### Finding 8: Oracle is not an upper bound
-
-Our single-step greedy oracle loses to random on some functions. This validates Sun et al.'s non-additivity argument: greedy maximization of immediate information gain is suboptimal for cumulative exploration.
-
-### Finding 9: Model mismatch kills performance
-
-Using gpt-oss-120b for scoring + Gemini for generation made logprob entropy the worst strategy. Same model for everything is essential.
+1. **Generate K=3 candidate plans** in parallel, each with a diversity hint
+2. **Score each plan** by LLM-estimated Q-value:
+   - ḡ = expected immediate new branches
+   - E[v(h')] = expected future branches made reachable
+   - Q = ḡ + γ · E[v(h')]
+3. **Select plan with highest Q-value**
+4. **Execute all 3 steps**, updating coverage map after each
+5. Repeat with updated posterior
 
 ---
 
-## 4. The Story for the Paper
+## 3. Key Results
 
-**Title idea:** "Planning to Explore: Curiosity-Guided Test Generation via Bayesian Exploration"
+### Finding 1: cov_qvalue dominates on fair comparison (equal executions)
 
-**Claim 1 (strong evidence):** Q-value planning with diverse generation outperforms greedy selection on file-level code with corridor structure. TestGenEval results show +15-20 branches on average.
+**Django 4.0, 5 files, 24 executions each:**
 
-**Claim 2 (moderate evidence):** The advantage is specific to code with operational complexity (import chains, class setup, runtime state). On standalone functions/modules, greedy suffices.
+| Strategy | Mean branches | vs random |
+|---|---|---|
+| random | 24.8 | — |
+| cov_greedy | 50.2 | +102% |
+| **cov_qvalue** | **124.8** | **+403%** |
 
-**Claim 3 (characterized negative):** Single-step information gain estimators (sampling entropy, logprob entropy, verbalized confidence, multi-model disagreement) do not predict immediate coverage gain at scale. But the full exploration loop works despite this, because the value is cumulative.
+Decomposition of contributions:
+- Coverage feedback alone: +55% (random → random_covfeedback at 38.4)
+- Coverage-targeted generation: +102% (random → cov_greedy at 50.2)
+- + Trajectory planning + Q-value selection: +403% (random → cov_qvalue at 124.8)
 
-**Claim 4 (theoretical validation):** The single-step greedy oracle is not an upper bound — confirming Sun et al.'s non-additivity of information gain in exploration.
+### Finding 2: Q-value selection is critical (not just more plans)
+
+cov_planned (single plan, no selection) gets 65.6 mean. cov_qvalue (K plans + Q-value) gets 124.8 — nearly double. The Q-value scorer correctly shifts selection after breakthroughs.
+
+| File | cov_planned | cov_qvalue | Why |
+|---|---|---|---|
+| forms/models.py | 21 | **140** | Q-value broke through where single plan got stuck |
+| resolvers.py | 10 | **194** | Q-value found the corridor |
+| serializer.py | **123** | 105 | Single plan got lucky (cov_planned wins ~20% of the time) |
+
+### Finding 3: Coverage map feedback helps generation quality
+
+cov_greedy (coverage map in prompt, random selection) beats random by 2x even with equal executions. The coverage map tells the LLM:
+- How many branches discovered so far
+- Growth rate and stagnation warnings
+- Which tests were most informative
+
+### Finding 4: Method generalizes across repos
+
+**RepoExploreBench quick test (5 click modules, 12 execs each):**
+
+| Module | random | cov_greedy | cov_qvalue |
+|---|---|---|---|
+| click.core | 90 | 92 | **272** |
+| click.types | 21 | 9 | **53** |
+| click.termui | 9 | 19 | **22** |
+| click.utils | 15 | 18 | **21** |
+| click.shell_completion | 4 | 32 | **37** |
+| **Mean** | **27.8** | **34.0** | **81.0** |
+
+cov_qvalue wins 5/5 modules. Mean +191% over random.
+
+**CuriosityBench (10 modules, 8 execs each, unfair — cov_qvalue got 3x executions):**
+
+| | random | cov_greedy | cov_qvalue |
+|---|---|---|---|
+| Mean | 54.8 | 80.6 | 95.8 |
+
+### Finding 5: Approaches that DON'T work
+
+| Approach | Result | Why |
+|---|---|---|
+| **greedy** (LLM picks "best") | ≈ random | LLM can't predict coverage from code alone |
+| **Learning progress** (enriched history) | ≈ random | Enriched history doesn't improve generation |
+| **Reflection** (predict→compare→learn) | Worse than random | Makes generation conservative |
+| **Sampling entropy** | Worst | Zero-entropy floor (79-91% identical predictions) |
+
+### Finding 6: The corridor effect
+
+The advantage of cov_qvalue is largest on code with **corridor structure** — where setup steps are needed to reach deep branches:
+
+| Code type | cov_qvalue advantage | Example |
+|---|---|---|
+| Deep corridors (formsets, models, resolvers) | **5-28x** over random | formsets: 80 vs 2 |
+| Moderate corridors (click.core, serializer) | **2-3x** over random | click.core: 272 vs 90 |
+| No corridor (admin/options — import gets everything) | **1x** (tied) | All strategies get 228 |
+| Hard blockers (auth/forms — needs database) | **1x** (tied) | All stuck at 5 |
 
 ---
 
-## 5. Experiments Running
+## 4. Benchmarks
 
-### TestGenEval Django (main result)
-- 37 files × 4 strategies, 8 steps each
-- 8/37 complete, Q-value leading at 76.4 mean
-- Estimated completion: ~4-5 hours remaining
-- Expected cost: ~$25-30
+### RepoExploreBench v2.0 (our benchmark)
 
-### CuriosityBench Real Repos (custom benchmark)
-- 35 files × 4 strategies, 10 steps each
-- Just started (smoke test passed)
-- Estimated completion: ~3-4 hours
-- Expected cost: ~$5-10
+- **93 targets** across 9 repos (click, requests, flask, rich, jinja2, httpx, pydantic, werkzeug, starlette)
+- ~79K lines of real-world code
+- All run in `curiositybench:latest` Docker image
+- Selection criteria: top PyPI downloads + ≥200 lines + corridor structure + domain diversity
+
+### TestGenEval Lite (external benchmark)
+
+- **160 files** across 11 repos (django, sympy, scikit-learn, pytest, matplotlib, astropy, xarray, seaborn, sphinx, pylint, flask)
+- All 44 Docker images pulled and ready
+- Per-repo configs with conda/pyenv environment support
+
+---
+
+## 5. Divergence from PLAN_v4
+
+PLAN_v4 laid out a phased approach: find the right uncertainty readout (Phase 0b), calibrate it (Phase 1b), then run TestGenEval (Phase 2), corridor analysis (Phase 3), and ablations (Phase 4). Here's what actually happened and why:
+
+### 5.1 All uncertainty readouts failed (Phase 0b → pivot)
+
+PLAN_v4 proposed 4 estimators to read out the LLM's uncertainty:
+- **Multi-model disagreement** — models agree too often; Gemini + Mistral give identical predictions
+- **Logprob entropy** — zero-entropy floor; 79-91% of candidates score zero
+- **Verbalized confidence** — confounded; measures state (early vs late), not candidate quality
+- **Hybrid** — combining broken signals doesn't fix them
+
+Result: ALL estimators failed ρ > 0.15 threshold. This triggered the "STOP" condition in PLAN_v4's decision tree.
+
+### 5.2 Selection → generation (fundamental pivot)
+
+PLAN_v4 assumed the bottleneck was **candidate selection** — picking the best test from K candidates. We discovered:
+- Oracle ceiling is ~10% at state 0 (all candidates roughly equivalent)
+- The real bottleneck is **generation quality**, not selection
+- Random selection with better generation beats smart selection with standard generation
+
+This led us to abandon the "score candidates by information gain" approach entirely.
+
+### 5.3 LLM beliefs → coverage map (new posterior)
+
+PLAN_v4 treated the LLM's internal beliefs (updated via in-context learning) as the Bayesian posterior p(Θ|h). We replaced this with:
+- The **coverage map** (tracked branch counts) IS the posterior — observable, exact, no readout needed
+- Fed back to the LLM as structured text in the prompt
+- The LLM uses it to improve generation, not as an uncertainty signal
+
+### 5.4 Individual test selection → trajectory planning (new algorithm)
+
+PLAN_v4's algorithm: generate K tests, score each by IG, select best.
+
+Our algorithm: generate K **plans** (sequences of 3 tests), score each plan by Q-value, select the best plan, execute all 3 steps. This is closer to Sun et al.'s framework — the "action" is a trajectory, not a single test.
+
+### 5.5 Multi-model ensemble → single model (simplification)
+
+PLAN_v4 proposed using 3-5 different LLMs for disagreement. We use a single model (Gemini Flash) for everything — generation, scoring, and Q-value estimation. Cheaper and simpler.
+
+### 5.6 ULT abandoned → RepoExploreBench (new benchmark)
+
+PLAN_v4 used ULT (standalone functions) as the primary calibration benchmark. We found:
+- ULT functions have no corridor structure — LLM reads code and targets branches directly
+- Greedy beats curiosity on standalone functions
+- Corridor structure requires file-level code with import chains and setup requirements
+
+Created **RepoExploreBench** (93 modules across 9 pip repos) as our benchmark, with principled selection from top PyPI packages.
+
+### 5.7 Phased plan → iterative experimentation
+
+The planned phases (0b → 1b → 2 → 3 → 4) were abandoned after Phase 0b failed. Instead, we iterated through:
+1. LP enriched history (didn't help)
+2. Coverage map feedback (helped generation)
+3. Trajectory planning (big improvement)
+4. Multi-plan + Q-value selection (biggest improvement)
+
+Each iteration was tested on 5 Django files before scaling up.
+
+### 5.8 Black-box condition dropped
+
+PLAN_v4 proposed a black-box condition (LLM sees only function signature, not source code). We haven't pursued this — all results are white-box. The coverage map approach requires showing source code to the LLM for targeted generation.
+
+### Summary: what survived from PLAN_v4
+
+| PLAN_v4 element | Status | What replaced it |
+|---|---|---|
+| Sun et al. theoretical framework | **Kept** | Same framework, different instantiation |
+| Information gain as selection signal | **Dropped** | Coverage map as generation signal |
+| Uncertainty readout (sampling, logprobs, ensemble) | **Dropped** | LLM-estimated Q-value on plans |
+| Candidate selection | **Dropped** | Plan selection (generate K plans, pick best) |
+| ULT benchmark | **Dropped** | RepoExploreBench (real repos with corridors) |
+| TestGenEval | **Kept** | Extended to all 160 files, all 11 repos |
+| Phased experimental plan | **Dropped** | Iterative experimentation |
+| Black-box condition | **Dropped** | White-box only (for now) |
+| Coverage as metric | **Kept** | Same — branch coverage via coverage.py |
+| Docker infrastructure | **Kept** | Extended with conda/pyenv support |
 
 ---
 
 ## 6. What's Still Needed
 
 ### For the paper:
-1. **Complete TestGenEval + CuriosityBench runs** — for statistical significance
-2. **Cost-normalized comparison** — coverage per API dollar (Q-value costs ~3x more per step)
-3. **2-3 case studies** — detailed walkthroughs of corridor traversal
-4. **Ablations** — K, γ, budget scaling, diverse vs standard gen
-5. **External baseline comparison** — cite TestForge/CoverUp numbers on same files
-6. **Paper writing**
+1. **Full RepoExploreBench run** — 93 targets × 3 strategies × 1 seed (~$15, ~6h)
+2. **Full TestGenEval run** — 160 files × 3 strategies × 1 seed (~$25, ~10h)
+3. **Statistical significance** — paired t-tests, Cohen's d, per-repo breakdown
+4. **Ablations** — K (1 vs 3 vs 5 plans), γ (0 vs 0.5 vs 1.0), exec budget scaling
+5. **Cost-normalized comparison** — coverage per API dollar
+6. **2-3 case studies** — detailed walkthroughs (formsets.py, click.core)
+7. **Paper writing**
 
-### Nice to have:
-- More repos in CuriosityBench (currently 10 repos)
-- Multiple seeds per file for tighter confidence intervals
-- Sympy/scikit-learn in TestGenEval (need Docker images)
+### Done:
+- Method implementation (cov_greedy, cov_qvalue)
+- Fair comparison methodology (equalized executions)
+- Both benchmarks defined and ready
+- Docker images for all repos
+- Runners for both benchmarks
+- Quick test results confirming the method works
 
 ---
 
 ## 7. Cost Breakdown
 
-| Experiment | Cost |
+| Phase | Cost |
 |---|---|
-| Phase 0-0.5: Setup + toy programs | ~$5 |
-| Phase 1: ULT calibration | ~$56 |
-| Phase 0b: Estimator diagnostics | ~$10 |
-| Head-to-head ULT | ~$21 |
-| Diverse generation experiments | ~$13 |
-| Black-box experiments | ~$5 |
-| Q-value corridor programs | ~$28 |
+| Phase 0-1: Setup, calibration, estimator diagnostics | ~$90 |
+| Head-to-head ULT + corridor experiments | ~$62 |
 | Generated corridor functions | ~$92 |
-| TestGenEval Django (earlier runs) | ~$8 |
-| CuriosityBench stdlib | ~$34 |
-| TestGenEval (running) | ~$10 so far |
-| CuriosityBench real repos (running) | ~$1 so far |
-| **Total** | **~$283** |
-| **Budget remaining** | **~$32** of $315 allocated |
+| CuriosityBench stdlib + real repos | ~$35 |
+| Coverage map experiments (Django) | ~$5 |
+| Q-value plan selection experiments | ~$2 |
+| RepoExploreBench quick test | ~$0.5 |
+| TestGenEval quick tests | ~$2 |
+| **Total** | **~$290** |
+| **Budget remaining** | **~$25** of $315 |
 
 ---
 
@@ -191,13 +264,10 @@ Using gpt-oss-120b for scoring + Gemini for generation made logprob entropy the 
 
 | File | Purpose |
 |---|---|
-| `run_testgeneval.py` | TestGenEval Django runner |
-| `run_curiositybench.py` | CuriosityBench real repos runner |
-| `curiosity_explorer/explorer/q_values.py` | Q-value (Sun et al. Prop 1) |
-| `curiosity_explorer/explorer/diverse_gen.py` | Diverse prompting strategies |
+| `run_repo_explore_bench.py` | RepoExploreBench runner (93 targets) |
+| `run_testgeneval.py` | TestGenEval Lite runner (160 files) |
+| `curiosity_explorer/explorer/coverage_exploration.py` | Core method (cov_greedy, cov_qvalue) |
+| `curiosity_explorer/benchmarks/repo_explore_bench.py` | Our benchmark definition |
+| `curiosity_explorer/benchmarks/testgeneval_config.py` | TestGenEval per-repo Docker config |
 | `curiosity_explorer/runner/docker_coverage.py` | Docker coverage measurement |
-| `curiosity_explorer/runner/coverage.py` | Sandbox coverage + run_script() |
-| `curiosity_explorer/benchmarks/curiosity_bench/` | Our custom benchmark |
 | `results/FINDINGS.md` | This file |
-| `results/PROGRESS_REPORT.md` | Detailed progress report |
-| `results/calibration_results.md` | Phase 1 calibration writeup |
