@@ -19,17 +19,22 @@ class DockerCoverageRunner:
     def __init__(self, image: str, source_module: str, setup_code: str = "",
                  working_dir: str = "/opt/django__django",
                  env: dict = None, python_bin: str = "python",
-                 pre_command: str = ""):
+                 pre_command: str = "", target_file: str = None):
         """
         Args:
             image: Docker image name (e.g. 'aorwall/swe-bench-django_django-testbed:4.0')
-            source_module: Module to track coverage on (e.g. 'django.forms.boundfield')
+            source_module: Module to track coverage on (e.g. 'django.forms.boundfield').
+                For broad tracking, use top-level package (e.g. 'sympy') and
+                set target_file to filter results.
             setup_code: Python code to run before each test (e.g. 'import django; django.setup()')
             working_dir: Working directory inside container
             env: Environment variables to set
             python_bin: Path to Python binary (for conda envs, e.g.
                 '/home/swe-bench/miniconda3/envs/sympy__sympy__1.13/bin/python')
             pre_command: Shell command to run before Python (e.g. 'pip install -e .')
+            target_file: If set, only count branches from files matching this
+                substring (e.g. 'sympy/physics/units/util.py'). Used when
+                --source is a broad package but we want file-level coverage.
         """
         self.image = image
         self.source_module = source_module
@@ -38,6 +43,7 @@ class DockerCoverageRunner:
         self.env = env or {}
         self.python_bin = python_bin
         self.pre_command = pre_command
+        self.target_file = target_file
         self.cumulative_branches = set()
         self._coverage_data_dir = tempfile.mkdtemp(prefix="docker_cov_")
         self._test_count = 0
@@ -119,6 +125,9 @@ class DockerCoverageRunner:
                 with open(cov_json_path) as f:
                     cov_data = json.load(f)
                 for file_path, file_data in cov_data.get("files", {}).items():
+                    # Filter to target file if specified
+                    if self.target_file and self.target_file not in file_path:
+                        continue
                     # Prefer executed_branches (coverage.py 7.x)
                     exec_branches = file_data.get("executed_branches", [])
                     if exec_branches:
