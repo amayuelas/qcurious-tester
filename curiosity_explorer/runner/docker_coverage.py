@@ -18,7 +18,8 @@ class DockerCoverageRunner:
 
     def __init__(self, image: str, source_module: str, setup_code: str = "",
                  working_dir: str = "/opt/django__django",
-                 env: dict = None):
+                 env: dict = None, python_bin: str = "python",
+                 pre_command: str = ""):
         """
         Args:
             image: Docker image name (e.g. 'aorwall/swe-bench-django_django-testbed:4.0')
@@ -26,12 +27,17 @@ class DockerCoverageRunner:
             setup_code: Python code to run before each test (e.g. 'import django; django.setup()')
             working_dir: Working directory inside container
             env: Environment variables to set
+            python_bin: Path to Python binary (for conda envs, e.g.
+                '/home/swe-bench/miniconda3/envs/sympy__sympy__1.13/bin/python')
+            pre_command: Shell command to run before Python (e.g. 'pip install -e .')
         """
         self.image = image
         self.source_module = source_module
         self.setup_code = setup_code
         self.working_dir = working_dir
         self.env = env or {}
+        self.python_bin = python_bin
+        self.pre_command = pre_command
         self.cumulative_branches = set()
         self._coverage_data_dir = tempfile.mkdtemp(prefix="docker_cov_")
         self._test_count = 0
@@ -67,6 +73,11 @@ class DockerCoverageRunner:
                                      f"cov_{self._test_count}.json")
 
         # Run with coverage, write JSON to mounted volume
+        py = self.python_bin
+        pre = f"{self.pre_command} && " if self.pre_command else ""
+        # pip install coverage if not available (some testbeds don't have it)
+        ensure_coverage = f"{py} -m pip install coverage -q 2>/dev/null; "
+
         cmd = [
             "docker", "run", "--rm",
             "--entrypoint", "bash",
@@ -75,11 +86,11 @@ class DockerCoverageRunner:
             *env_args,
             self.image,
             "-c",
-            f"cd {self.working_dir} && "
-            f"python -m coverage run --branch "
+            f"cd {self.working_dir} && {pre}{ensure_coverage}"
+            f"{py} -m coverage run --branch "
             f"--source={self.source_module} "
             f"/tmp/test_script.py 2>&1; "
-            f"python -m coverage json -o /tmp/covdata/cov_{self._test_count}.json 2>/dev/null"
+            f"{py} -m coverage json -o /tmp/covdata/cov_{self._test_count}.json 2>/dev/null"
         ]
 
         try:
@@ -108,11 +119,22 @@ class DockerCoverageRunner:
                 with open(cov_json_path) as f:
                     cov_data = json.load(f)
                 for file_path, file_data in cov_data.get("files", {}).items():
-                    for arc in file_data.get("executed_branches", []):
-                        branch = (file_path, tuple(arc))
-                        if branch not in self.cumulative_branches:
-                            new_branches.add(branch)
-                            self.cumulative_branches.add(branch)
+                    # Prefer executed_branches (coverage.py 7.x)
+                    exec_branches = file_data.get("executed_branches", [])
+                    if exec_branches:
+                        for arc in exec_branches:
+                            branch = (file_path, tuple(arc))
+                            if branch not in self.cumulative_branches:
+                                new_branches.add(branch)
+                                self.cumulative_branches.add(branch)
+                    else:
+                        # Fallback: use executed_lines as branch proxy
+                        # (older coverage.py without executed_branches)
+                        for line in file_data.get("executed_lines", []):
+                            branch = (file_path, line)
+                            if branch not in self.cumulative_branches:
+                                new_branches.add(branch)
+                                self.cumulative_branches.add(branch)
             except (json.JSONDecodeError, KeyError) as e:
                 log.debug(f"Coverage parse error: {e}")
         else:

@@ -1,560 +1,240 @@
-"""Head-to-head on TestGenEval Django examples.
+"""TestGenEval Lite runner.
 
-Runs strategies on real Django code inside Docker containers.
-The LLM generates test SCRIPTS (not function calls) that get executed
-in a full Django environment with coverage tracking.
+Runs exploration strategies on all 160 files across 11 repos
+in the TestGenEval Lite benchmark (SWE-bench Docker containers).
 
 Usage:
-    python run_testgeneval.py --budget 10 --K 3
+    # All repos, 3 strategies, 1 seed
+    python run_testgeneval.py
+
+    # Django only
+    python run_testgeneval.py --repos django/django
+
+    # Quick test
+    python run_testgeneval.py --max-examples 3 --exec-budget 6
+
+    # Specific strategies
+    python run_testgeneval.py --strategies random cov_qvalue
 """
 
 import argparse
-import json
-import logging
-import random
+import random as _random
 import re
 import time
-from concurrent.futures import ThreadPoolExecutor, as_completed
-from collections import Counter
-import math
+import json
+import logging
+import statistics
+from concurrent.futures import ThreadPoolExecutor
 
 import config
-from curiosity_explorer.llm import (
-    generate_with_model, batch_generate, get_cost, reset_cost,
-)
+from curiosity_explorer.llm import generate_with_model, batch_generate, get_cost, reset_cost
 from curiosity_explorer.runner.docker_coverage import DockerCoverageRunner
-
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(name)s] %(levelname)s: %(message)s",
+from curiosity_explorer.explorer.coverage_exploration import (
+    CoverageMap, generate_coverage_greedy, generate_coverage_qvalue, _parse_script,
 )
+from curiosity_explorer.benchmarks.testgeneval_config import (
+    load_testgeneval_examples, get_repo_config,
+)
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s: %(message)s")
 logging.getLogger("httpx").setLevel(logging.WARNING)
 log = logging.getLogger(__name__)
 
-DOCKER_IMAGE_TEMPLATE = "aorwall/swe-bench-django_django-testbed:{version}"
-SETUP_CODE = "import django; django.setup()"
-ENV = {"DJANGO_SETTINGS_MODULE": "tests.test_sqlite"}
-WORKING_DIR = "/opt/django__django"
-
-STRATEGIES = ["random", "greedy", "reflective_qvalue"]
+ALL_STRATEGIES = ["random", "cov_greedy", "cov_qvalue"]
+EXEC_BUDGET = 24
+K = 3
+PLAN_LENGTH = 3
+GAMMA = 0.5
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="TestGenEval head-to-head")
-    parser.add_argument("--budget", type=int, default=10)
-    parser.add_argument("--K", type=int, default=3)
-    parser.add_argument("--S", type=int, default=6)
-    parser.add_argument("--seed", type=int, default=42)
-    parser.add_argument("--n-examples", type=int, default=3,
-                        help="Number of Django examples to test")
-    return parser.parse_args()
-
-
-def load_django_examples(n=None, version=None):
-    """Load Django examples from TestGenEval-Lite.
-
-    Args:
-        n: Max examples (None = all available)
-        version: Specific version (None = all versions with Docker images)
-    """
-    from datasets import load_dataset
-    ds = load_dataset("kjain14/testgenevallite")
-    test = ds["test"]
-
-    available_versions = {"3.0", "3.1", "3.2", "4.0", "4.1", "4.2", "5.0"}
-
-    if version:
-        django_exs = [ex for ex in test
-                      if ex["repo"] == "django/django" and ex["version"] == version]
-    else:
-        django_exs = [ex for ex in test
-                      if ex["repo"] == "django/django"
-                      and ex["version"] in available_versions]
-
-    # Sort by baseline coverage (lowest first — most room to improve)
-    django_exs.sort(key=lambda ex: ex["baseline_covs"]["first"])
-
-    if n:
-        django_exs = django_exs[:n]
-
-    examples = []
-    for ex in django_exs:
-        # Determine the module path from code_file
-        # django/forms/boundfield.py -> django.forms.boundfield
-        module = ex["code_file"].replace("/", ".").replace(".py", "")
-
-        examples.append({
-            "instance_id": ex["instance_id"],
-            "code_file": ex["code_file"],
-            "module": module,
-            "code_src": ex["code_src"],
-            "test_src": ex["test_src"],
-            "baseline_cov": ex["baseline_covs"]["first"],
-            "local_imports": ex["local_imports"],
-            "version": ex["version"],
-        })
-
-    return examples
+    p = argparse.ArgumentParser(description="TestGenEval Lite runner")
+    p.add_argument("--max-examples", type=int, default=None)
+    p.add_argument("--repos", nargs="+", default=None,
+                   help="Filter by repo (e.g., django/django sympy/sympy)")
+    p.add_argument("--strategies", nargs="+", default=ALL_STRATEGIES)
+    p.add_argument("--seeds", nargs="+", type=int, default=[42])
+    p.add_argument("--exec-budget", type=int, default=EXEC_BUDGET)
+    p.add_argument("--K", type=int, default=K)
+    p.add_argument("--gamma", type=float, default=GAMMA)
+    p.add_argument("--output", default="testgeneval_results.json")
+    return p.parse_args()
 
 
 # ---------------------------------------------------------------------------
-# Test script generation (LLM generates Python scripts, not function calls)
+# Generation
 # ---------------------------------------------------------------------------
 
-def _build_context(example, test_history):
-    """Build prompt context for test script generation."""
-    code = example["code_src"]
-    module = example["module"]
-    imports = example["local_imports"][:3]
-
-    ctx = f"""You are writing test scripts for this Django module:
-File: {example['code_file']}
-
-```python
-{code[:3000]}
-{"..." if len(code) > 3000 else ""}
-```
-
-The module is: {module}
-Example imports from test file: {imports[0] if imports else ""}
-"""
-
-    if test_history:
-        ctx += "\nPrevious test scripts and their results:\n"
-        for script, result in test_history[-5:]:
-            # Show abbreviated script
-            short = script.strip().split("\n")
-            if len(short) > 5:
-                short = short[:3] + ["..."] + short[-2:]
-            ctx += f"  Script:\n"
-            for line in short:
-                ctx += f"    {line}\n"
-            output = result.output[:100] if result.output else ""
-            exc = result.exception[:100] if result.exception else ""
-            ctx += f"  → output: {output}\n"
-            if exc:
-                ctx += f"  → exception: {exc}\n"
-            ctx += f"  → new_branches: {result.new_branches}\n\n"
-
-    return ctx
-
-
-SCRIPT_STRATEGIES = [
-    "Test EDGE CASES — empty inputs, None values, empty strings, boundary conditions.",
-    "Test ERROR HANDLING — pass invalid arguments, wrong types, trigger exceptions.",
-    "Test the MAIN FUNCTIONALITY — normal usage with typical, well-formed inputs.",
-    "Test a DIFFERENT CLASS or FUNCTION than previous tests focused on. Look at the module and find something untested.",
-    "Take the most recent test and MODIFY it slightly — change one argument, use a different method, add a parameter.",
-    "Look at the import list and test INTERACTIONS between classes — create instances and pass them to each other.",
-    "Test with COMPLEX inputs — nested objects, large data, multiple items, edge-case combinations.",
-]
-
-
-def generate_test_scripts(example, test_history, K=3, diverse=False):
-    """Generate K test scripts for a Django module.
-
-    Args:
-        diverse: if True, use different prompting strategies per script
-    """
-    ctx = _build_context(example, test_history)
-
-    base_instructions = """The script runs in a Django environment (django.setup() already called).
-Import what you need and exercise the code — print results to verify.
-
-IMPORTANT:
-- Do NOT use unittest or pytest — just write executable Python code
-- Do NOT import django or call django.setup() — already done
-- Focus on behavior NOT covered by previous tests
-- Respond with ONLY the Python code, no explanations"""
-
-    if diverse:
-        import random as _rng
-        strategies = list(SCRIPT_STRATEGIES)
-        _rng.shuffle(strategies)
-        prompts = []
-        for i in range(K):
-            strat = strategies[i % len(strategies)]
-            prompt = f"""{ctx}
-
-Write a short Python test script (5-15 lines).
-{base_instructions}
-
-Strategy: {strat}
-
-```python
-"""
-            prompts.append(prompt)
-    else:
-        prompt = f"""{ctx}
-
-Write a short Python test script (5-15 lines) that tests UNTESTED behavior of this module.
-{base_instructions}
-
-```python
-"""
-        prompts = [prompt] * K
-
-    responses = batch_generate(prompts, temperature=0.9, max_tokens=500)
-
-    scripts = []
-    for resp in responses:
-        script = _parse_script(resp)
-        if script and script not in scripts:
-            scripts.append(script)
-
-    return scripts
-
-
-def _parse_script(response):
-    """Extract Python code from LLM response."""
-    if not response:
-        return None
-
-    # Remove markdown fences
-    code = response.strip()
-    if code.startswith("```python"):
-        code = code[9:]
-    if code.startswith("```"):
-        code = code[3:]
-    if code.endswith("```"):
-        code = code[:-3]
-    code = code.strip()
-
-    # Basic validation
-    if not code or len(code) < 10:
-        return None
-    if "import os" in code and "system" in code:
-        return None  # safety
-    if "subprocess" in code:
-        return None
-
-    # Remove any django.setup() that the LLM might add despite instructions
-    lines = code.split("\n")
-    lines = [l for l in lines if "django.setup()" not in l
-             and l.strip() != "import django"]
-    return "\n".join(lines)
-
-
-# ---------------------------------------------------------------------------
-# Selection strategies
-# ---------------------------------------------------------------------------
-
-def select_random(scripts, example, test_history, runner, S):
-    return random.choice(scripts)
-
-
-def select_greedy(scripts, example, test_history, runner, S):
-    """Ask LLM which script will cover the most new code."""
-    ctx = _build_context(example, test_history)
-    script_list = ""
-    for i, s in enumerate(scripts):
-        short = s.strip()[:200]
-        script_list += f"\n  Script {i+1}:\n    {short}\n"
-
-    prompt = f"""{ctx}
-
-Which of these test scripts is MOST LIKELY to cover NEW, untested code paths?
-
-{script_list}
-
-Respond with ONLY the number (1-{len(scripts)})."""
-
-    resp = generate_with_model(config.MODEL, prompt, 0.3, 20)
-    for n in re.findall(r'\d+', resp):
-        idx = int(n) - 1
-        if 0 <= idx < len(scripts):
-            return scripts[idx]
-    return scripts[0]
-
-
-def select_curiosity(scripts, example, test_history, runner, S):
-    """Select by output prediction entropy."""
-    ctx = _build_context(example, test_history)
-
-    scores = {}
-    for script in scripts:
-        short = script.strip()[:300]
-        prompt = f"""{ctx}
-
-What will be the output of this test script?
-
-```python
-{short}
-```
-
-Respond with ONLY the expected output, nothing else."""
-
-        predictions = batch_generate([prompt] * S, temperature=0.9,
-                                     max_tokens=200)
-        predictions = [p.strip().lower()[:150] for p in predictions if p]
-
-        if not predictions:
-            scores[id(script)] = 0
-            continue
-
-        counts = Counter(predictions)
-        total = len(predictions)
-        entropy = -sum((c/total) * math.log2(c/total) for c in counts.values())
-        scores[id(script)] = entropy
-
-    return max(scripts, key=lambda s: scores.get(id(s), 0))
-
-
-def select_qvalue(scripts, example, test_history, runner, S, gamma=0.5):
-    """Select by Q-value with 1-step lookahead."""
-    ctx = _build_context(example, test_history)
-
-    q_scores = {}
-    for script in scripts:
-        short = script.strip()[:300]
-
-        # Immediate info gain
-        prompt = f"""{ctx}
-
-What will be the output of this test script?
-
-```python
-{short}
-```
-
-Respond with ONLY the expected output, nothing else."""
-
-        predictions = batch_generate([prompt] * S, temperature=0.9,
-                                     max_tokens=200)
-        predictions = [p.strip().lower()[:150] for p in predictions if p]
-
-        if not predictions:
-            ig = 0.0
-            predicted_output = "unknown"
-        else:
-            counts = Counter(predictions)
-            total = len(predictions)
-            ig = -sum((c/total) * math.log2(c/total) for c in counts.values())
-            predicted_output = counts.most_common(1)[0][0]
-
-        # Future value: simulate running this script, generate future scripts
-        sim_history = list(test_history) + [(script, type('R', (), {
-            'output': predicted_output, 'exception': None,
-            'new_branches': 0, 'cumulative': runner.get_cumulative_coverage()
-        })())]
-
-        future_scripts = generate_test_scripts(example, sim_history, K=2)
-        future_value = 0.0
-
-        if future_scripts:
-            for fs in future_scripts:
-                fs_short = fs.strip()[:300]
-                fs_prompt = f"""{ctx}
-
-After running previous tests, what will this new script output?
-
-```python
-{fs_short}
-```
-
-Respond with ONLY the expected output."""
-
-                fs_preds = batch_generate([fs_prompt] * max(3, S // 2),
-                                          temperature=0.9, max_tokens=200)
-                fs_preds = [p.strip().lower()[:150] for p in fs_preds if p]
-
-                if fs_preds:
-                    fc = Counter(fs_preds)
-                    ft = len(fs_preds)
-                    fs_ig = -sum((c/ft) * math.log2(c/ft) for c in fc.values())
-                    future_value = max(future_value, fs_ig)
-
-        q = ig + gamma * future_value
-        q_scores[id(script)] = q
-
-    return max(scripts, key=lambda s: q_scores.get(id(s), 0))
-
-
-# ---------------------------------------------------------------------------
-# Reflective strategy: predict → execute → compare → reflect → generate
-# ---------------------------------------------------------------------------
-
-def _predict_output(script, example, test_history):
-    """Predict what a test script will output."""
-    ctx = _build_context(example, test_history)
-    short = script.strip()[:300]
-    prompt = f"""{ctx}
-
-What will be the output of this test script?
-
-```python
-{short}
-```
-
-Respond with ONLY the expected output (2-3 lines max), nothing else."""
-
-    return generate_with_model(config.MODEL, prompt, temperature=0.3,
-                               max_tokens=150)
-
-
-def _reflect_on_result(example, test_history, script, predicted, actual,
-                       learnings_so_far):
-    """Compare prediction vs reality and extract lessons."""
-    ctx = _build_context(example, test_history)
-
-    prompt = f"""{ctx}
-
-You predicted this test would output:
-  {predicted[:200]}
-
-But the actual result was:
-  {actual[:200]}
-
-{"Your previous learnings: " + learnings_so_far if learnings_so_far else ""}
-
-In 2-3 sentences:
-1. Were you right or wrong? What specifically did you get wrong?
-2. What does this tell you about the module's behavior?
-3. What should you test NEXT to learn the most?"""
-
-    return generate_with_model(config.MODEL, prompt, temperature=0.3,
-                               max_tokens=300)
-
-
-def generate_reflective_scripts(example, test_history, learnings, K=3):
-    """Generate scripts guided by accumulated learnings."""
-    ctx = _build_context(example, test_history)
-
-    base = """The script runs in a Django environment (django.setup() already called).
-Import what you need and exercise the code — print results to verify.
-
-IMPORTANT:
-- Do NOT use unittest or pytest — just write executable Python code
-- Do NOT import django or call django.setup() — already done
-- Respond with ONLY the Python code, no explanations"""
-
-    prompt = f"""{ctx}
-
-{"LEARNINGS FROM PREVIOUS TESTS: " + learnings if learnings else ""}
-
-Based on what you've learned so far, write a test script (5-15 lines) that will
-MAXIMIZE your learning about UNTESTED behavior of this module.
-
-Focus on code paths you haven't explored yet. Avoid repeating tests that
-triggered errors you already understand.
-
-{base}
-
-```python
-"""
-
+def gen_standard(module, code, hist, K, prompt_note=""):
+    """Standard generation — show source code and history."""
+    code_ctx = f"```python\n{code[:2500]}\n```" if code else ""
+    ctx = f"Module: {module}\n{code_ctx}"
+
+    h = ""
+    if hist:
+        h = "\nPrevious:\n"
+        for s, r in hist[-3:]:
+            out = (r.output or r.exception or "None")[:50]
+            h += f"  {s.strip()[:80]} -> {out}\n"
+
+    note = f"\nIMPORTANT: {prompt_note}\n" if prompt_note else "\n"
+    prompt = (f"{ctx}\n{h}\nWrite a test script (5-15 lines). "
+              f"Import from the module and print results.{note}"
+              f"Respond with ONLY executable Python code.\n\n```python\n")
     responses = batch_generate([prompt] * K, temperature=0.9, max_tokens=500)
+    scripts = [_parse_script(r) for r in responses if _parse_script(r)]
 
-    scripts = []
-    for resp in responses:
-        script = _parse_script(resp)
-        if script and script not in scripts:
-            scripts.append(script)
+    # Remove repo-specific setup if LLM adds it despite instructions
+    cleaned = []
+    for s in scripts:
+        lines = s.split("\n")
+        lines = [l for l in lines if "django.setup()" not in l
+                 and l.strip() != "import django"
+                 and "settings.configure" not in l]
+        cleaned_script = "\n".join(lines).strip()
+        if cleaned_script and len(cleaned_script) >= 10:
+            cleaned.append(cleaned_script)
+    return cleaned
 
-    return scripts
+
+def gen_cov_greedy(module, code, hist, cov_map, K, prompt_note=""):
+    """Coverage-aware generation with source + coverage map."""
+    if code:
+        return generate_coverage_greedy(code, module, hist, cov_map, K=K)
+    # Fallback for repos without embedded source
+    return gen_standard(module, code, hist, K, prompt_note)
 
 
-def select_reflective(scripts, example, test_history, learnings, S=6):
-    """Select by predicting which test the model is most uncertain about,
-    but filtered to avoid known error paths."""
-    ctx = _build_context(example, test_history)
-
-    prompt = f"""{ctx}
-
-{"LEARNINGS: " + learnings if learnings else ""}
-
-Which of these tests will exercise the MOST NEW code paths (not error handling)?
-Pick the test that reaches deep into the module's main logic.
-
-{chr(10).join(f'  Script {i+1}: ' + s.strip()[:150] for i, s in enumerate(scripts))}
-
-Respond with ONLY the number."""
-
-    resp = generate_with_model(config.MODEL, prompt, temperature=0.3,
-                               max_tokens=20)
-    for n in re.findall(r'\d+', resp):
-        idx = int(n) - 1
-        if 0 <= idx < len(scripts):
-            return scripts[idx]
-    return scripts[0]
+def gen_cov_qvalue(module, code, hist, cov_map, K, gamma, prompt_note=""):
+    """Multi-plan generation with Q-value selection."""
+    if code:
+        return generate_coverage_qvalue(code, module, hist, cov_map,
+                                         K=K, plan_length=PLAN_LENGTH, gamma=gamma)
+    return gen_standard(module, code, hist, K, prompt_note)
 
 
 # ---------------------------------------------------------------------------
-# Run one strategy on one example
+# Strategy runner
 # ---------------------------------------------------------------------------
 
-def run_strategy(example, strategy, budget, K, S, seed):
-    """Run a strategy on a Django example, return coverage curve."""
-    random.seed(seed)
+def run_strategy(example, strategy, seed, exec_budget, K, gamma):
+    """Run one strategy on one example. Returns {final, curve}."""
+    _random.seed(seed)
 
-    docker_image = DOCKER_IMAGE_TEMPLATE.format(version=example.get("version", "4.0"))
+    module = example["module"]
+    code = example["code_src"]
+    prompt_note = example.get("prompt_note", "")
+
+    # Build Docker runner with correct Python binary
+    python_bin = example.get("python_bin", "python")
+    pre_command = ""
+    if example.get("pre_install"):
+        pre_command = example["pre_install"]
+
     runner = DockerCoverageRunner(
-        image=docker_image,
-        source_module=example["module"],
-        setup_code=SETUP_CODE,
-        working_dir=WORKING_DIR,
-        env=ENV,
+        image=example["image"],
+        source_module=module,
+        setup_code=example["setup_code"],
+        working_dir=example["working_dir"],
+        env=example["env"],
+        python_bin=python_bin,
+        pre_command=pre_command,
     )
 
-    test_history = []
+    hist = []
+    cov_map = CoverageMap()
+    executions = 0
     curve = []
-    learnings = ""  # accumulated reflections for reflective strategy
 
-    for step in range(budget):
-        # Generation: learnings-guided for reflective strategies
-        if strategy in ("reflective", "reflective_qvalue"):
-            scripts = generate_reflective_scripts(example, test_history,
-                                                  learnings, K=K)
+    while executions < exec_budget:
+        # --- Generation ---
+        if strategy == "cov_greedy":
+            scripts = gen_cov_greedy(module, code, hist, cov_map, K, prompt_note)
+        elif strategy == "cov_qvalue":
+            scripts = gen_cov_qvalue(module, code, hist, cov_map, K, gamma, prompt_note)
         else:
-            use_diverse = strategy in ("curiosity_sampling", "curiosity_qvalue",
-                                       "diverse_random")
-            scripts = generate_test_scripts(example, test_history, K=K,
-                                            diverse=use_diverse)
+            scripts = gen_standard(module, code, hist, K, prompt_note)
 
         if not scripts:
+            executions += 1
             curve.append(runner.get_cumulative_coverage())
             continue
 
-        # Selection
-        if strategy == "random":
-            selected = select_random(scripts, example, test_history, runner, S)
-        elif strategy == "diverse_random":
-            selected = select_random(scripts, example, test_history, runner, S)
-        elif strategy == "greedy":
-            selected = select_greedy(scripts, example, test_history, runner, S)
-        elif strategy == "curiosity_sampling":
-            selected = select_curiosity(scripts, example, test_history, runner, S)
-        elif strategy == "curiosity_qvalue":
-            selected = select_qvalue(scripts, example, test_history, runner, S)
-        elif strategy == "reflective":
-            selected = select_reflective(scripts, example, test_history,
-                                         learnings, S)
-        elif strategy == "reflective_qvalue":
-            selected = select_qvalue(scripts, example, test_history, runner, S)
+        # --- Execution ---
+        if strategy == "cov_qvalue":
+            for plan_script in scripts:
+                if executions >= exec_budget:
+                    break
+                result = runner.run_test(plan_script)
+                hist.append((plan_script, result))
+                cov_map.update(plan_script, set(), result.new_branches)
+                executions += 1
+                curve.append(runner.get_cumulative_coverage())
         else:
-            selected = scripts[0]
+            selected = _random.choice(scripts)
+            result = runner.run_test(selected)
+            hist.append((selected, result))
+            cov_map.update(selected, set(), result.new_branches)
+            executions += 1
+            curve.append(runner.get_cumulative_coverage())
 
-        # Predict before execution (for reflective strategies)
-        predicted = None
-        if strategy in ("reflective", "reflective_qvalue"):
-            predicted = _predict_output(selected, example, test_history)
+    final = runner.get_cumulative_coverage()
+    return {"final": final, "curve": curve}
 
-        result = runner.run_test(selected)
-        test_history.append((selected, result))
-        curve.append(runner.get_cumulative_coverage())
 
-        # Reflect: compare prediction vs reality, update learnings
-        if strategy in ("reflective", "reflective_qvalue") and predicted:
-            actual = result.output or result.exception or "None"
-            reflection = _reflect_on_result(
-                example, test_history, selected, predicted, actual, learnings
-            )
-            learnings = (learnings + "\n" + reflection)[-500:]
+# ---------------------------------------------------------------------------
+# Statistical analysis
+# ---------------------------------------------------------------------------
 
-        print(f"      Step {step+1}: new={result.new_branches}, "
-              f"cum={runner.get_cumulative_coverage()}", flush=True)
+def analyze_results(all_results, strategies):
+    """Compute summary statistics and paired tests."""
+    from scipy import stats as sp_stats
 
-    return curve
+    analysis = {}
+
+    for s in strategies:
+        vals = [r["strategies"][s]["final"] for r in all_results
+                if s in r["strategies"]]
+        analysis[s] = {
+            "mean": statistics.mean(vals) if vals else 0,
+            "std": statistics.stdev(vals) if len(vals) > 1 else 0,
+            "se": statistics.stdev(vals) / len(vals)**0.5 if len(vals) > 1 else 0,
+            "n": len(vals),
+        }
+
+    if "random" in strategies:
+        analysis["paired_vs_random"] = {}
+        for s in strategies:
+            if s == "random":
+                continue
+            deltas = []
+            for r in all_results:
+                if "random" in r["strategies"] and s in r["strategies"]:
+                    d = r["strategies"][s]["final"] - r["strategies"]["random"]["final"]
+                    deltas.append(d)
+            if len(deltas) < 2:
+                continue
+            md = statistics.mean(deltas)
+            sd = statistics.stdev(deltas)
+            se = sd / len(deltas)**0.5
+            wins = sum(1 for d in deltas if d > 0)
+            losses = sum(1 for d in deltas if d < 0)
+            ties = sum(1 for d in deltas if d == 0)
+
+            if sd > 0:
+                t_stat, p_val = sp_stats.ttest_1samp(deltas, 0)
+                cohens_d = md / sd
+            else:
+                t_stat, p_val, cohens_d = 0, 1.0, 0
+
+            analysis["paired_vs_random"][s] = {
+                "mean_delta": md, "se": se,
+                "wins": wins, "losses": losses, "ties": ties,
+                "t_stat": t_stat, "p_value": p_val,
+                "cohens_d": cohens_d, "n": len(deltas),
+            }
+
+    return analysis
 
 
 # ---------------------------------------------------------------------------
@@ -565,98 +245,134 @@ def main():
     args = parse_args()
     reset_cost()
 
+    examples = load_testgeneval_examples(repos=args.repos,
+                                          max_examples=args.max_examples)
+    strategies = args.strategies
+    seeds = args.seeds
+
+    total_runs = len(examples) * len(strategies) * len(seeds)
+    repos_in_run = sorted(set(ex["repo"] for ex in examples))
+
     print("=" * 70, flush=True)
-    print("TestGenEval — Django Head-to-Head", flush=True)
-    print("=" * 70, flush=True)
-    print(f"  Model: {config.MODEL}", flush=True)
-    print(f"  Budget: {args.budget}, K={args.K}, S={args.S}", flush=True)
-    print(f"  Strategies: {STRATEGIES}", flush=True)
+    print("TestGenEval Lite", flush=True)
+    print(f"  Examples: {len(examples)} across {len(repos_in_run)} repos", flush=True)
+    for repo in repos_in_run:
+        count = sum(1 for ex in examples if ex["repo"] == repo)
+        print(f"    {repo}: {count}", flush=True)
+    print(f"  Strategies: {strategies}", flush=True)
+    print(f"  Seeds: {seeds}", flush=True)
+    print(f"  Exec budget: {args.exec_budget}", flush=True)
+    print(f"  Total runs: {total_runs}", flush=True)
     print("=" * 70, flush=True)
 
-    examples = load_django_examples(args.n_examples)
-    print(f"  Loaded {len(examples)} Django examples", flush=True)
-    versions = {}
-    for ex in examples:
-        versions.setdefault(ex["version"], 0)
-        versions[ex["version"]] += 1
-    for v, c in sorted(versions.items()):
-        print(f"    v{v}: {c} files", flush=True)
-
-    test = generate_with_model(config.MODEL, "Say 'ok'", 0.3, 10)
-    print(f"  Connectivity: {'OK' if test else 'FAILED'}", flush=True)
-    if not test:
+    t = generate_with_model(config.MODEL, "Say ok", 0.3, 10)
+    print(f"  Connectivity: {'OK' if t else 'FAILED'}", flush=True)
+    if not t:
         return
 
     start = time.time()
     all_results = []
+    run_count = 0
 
     for i, ex in enumerate(examples):
-        print(f"\n[{i+1}/{len(examples)}] {ex['code_file']}", flush=True)
+        for seed in seeds:
+            print(f"\n[{i+1}/{len(examples)}] {ex['code_file']} "
+                  f"({ex['repo']} v{ex['version']}) seed={seed}", flush=True)
 
-        ex_results = {
-            "code_file": ex["code_file"],
-            "module": ex["module"],
-            "baseline_cov": ex["baseline_cov"],
-            "strategies": {},
-        }
+            run_result = {
+                "module": ex["module"],
+                "repo": ex["repo"],
+                "version": ex["version"],
+                "code_file": ex["code_file"],
+                "seed": seed,
+                "strategies": {},
+            }
 
-        # Run strategies sequentially (Docker can't parallelize well)
-        for strategy in STRATEGIES:
-            print(f"  {strategy}:", flush=True)
-            curve = run_strategy(ex, strategy, args.budget, args.K,
-                                 args.S, args.seed)
-            ex_results["strategies"][strategy] = curve
-            final = curve[-1] if curve else 0
-            print(f"    final={final}", flush=True)
+            for strategy in strategies:
+                run_count += 1
+                print(f"  {strategy} ({run_count}/{total_runs}):", flush=True)
+                result = run_strategy(ex, strategy, seed,
+                                       args.exec_budget, args.K, args.gamma)
+                run_result["strategies"][strategy] = result
+                print(f"    final={result['final']}", flush=True)
 
-        all_results.append(ex_results)
+            all_results.append(run_result)
 
     elapsed = time.time() - start
     cost = get_cost()
 
-    # Analysis
-    def mean(v):
-        return sum(v) / len(v) if v else 0
-
+    # --- Summary ---
     print(f"\n{'=' * 70}", flush=True)
     print("RESULTS", flush=True)
     print(f"{'=' * 70}", flush=True)
 
-    print(f"\n  {'Strategy':<25} {'Mean Final':>10} {'Mean @5':>10}", flush=True)
-    print(f"  {'─' * 47}", flush=True)
-    for s in STRATEGIES:
-        finals = [r["strategies"][s][-1] for r in all_results if r["strategies"][s]]
-        at5 = [r["strategies"][s][4] for r in all_results
-               if r["strategies"][s] and len(r["strategies"][s]) >= 5]
-        print(f"  {s:<25} {mean(finals):>10.1f} {mean(at5):>10.1f}", flush=True)
-
-    # Per-file
-    print(f"\n  Per-file final coverage:", flush=True)
-    print(f"  {'File':<40}", end="", flush=True)
-    for s in STRATEGIES:
-        print(f" {s[:10]:>11}", end="")
+    print(f"\n{'Module':<40} {'repo':<15} {'seed':>4}", end="", flush=True)
+    for s in strategies:
+        print(f" {s[:11]:>12}", end="")
     print(flush=True)
+    print("-" * (60 + 13 * len(strategies)), flush=True)
+
     for r in all_results:
-        print(f"  {r['code_file']:<40}", end="")
-        for s in STRATEGIES:
-            v = r["strategies"][s][-1] if r["strategies"][s] else 0
-            print(f" {v:>11}", end="")
+        print(f"{r['module'][:39]:<40} {r['repo'][:14]:<15} {r['seed']:>4}", end="")
+        for s in strategies:
+            v = r["strategies"].get(s, {}).get("final", 0)
+            print(f" {v:>12}", end="")
         print(flush=True)
+
+    # --- Statistics ---
+    print(f"\n{'=' * 70}", flush=True)
+    print("STATISTICS", flush=True)
+    print(f"{'=' * 70}", flush=True)
+
+    analysis = analyze_results(all_results, strategies)
+
+    print(f"\nPer-strategy means (n={analysis[strategies[0]]['n']}):", flush=True)
+    for s in strategies:
+        a = analysis[s]
+        print(f"  {s:<20} mean={a['mean']:>6.1f} ± {a['se']:.1f}", flush=True)
+
+    if "paired_vs_random" in analysis:
+        print(f"\nPaired vs random:", flush=True)
+        for s, a in analysis["paired_vs_random"].items():
+            sig = "***" if a["p_value"] < 0.001 else ("**" if a["p_value"] < 0.01
+                    else ("*" if a["p_value"] < 0.05 else ""))
+            print(f"  {s:<20} Δ={a['mean_delta']:>+6.1f} ± {a['se']:.1f}  "
+                  f"W={a['wins']} L={a['losses']} T={a['ties']}  "
+                  f"p={a['p_value']:.4f} d={a['cohens_d']:.2f} {sig}", flush=True)
+
+    # Per-repo breakdown
+    print(f"\nPer-repo means:", flush=True)
+    for repo in repos_in_run:
+        repo_results = [r for r in all_results if r["repo"] == repo]
+        print(f"\n  {repo} ({len(repo_results)} runs):", flush=True)
+        for s in strategies:
+            vals = [r["strategies"][s]["final"] for r in repo_results
+                    if s in r["strategies"]]
+            if vals:
+                print(f"    {s:<20} mean={statistics.mean(vals):.1f}", flush=True)
 
     print(f"\nCost: ${cost['total_cost_usd']:.4f} | "
           f"Time: {elapsed:.0f}s ({elapsed/60:.1f}m)", flush=True)
 
-    # Save
+    # --- Save ---
     config.RESULTS_DIR.mkdir(parents=True, exist_ok=True)
-    with open(config.RESULTS_DIR / "testgeneval_results.json", "w") as f:
+    outpath = config.RESULTS_DIR / args.output
+    with open(outpath, "w") as f:
         json.dump({
-            "config": {"model": config.MODEL, "budget": args.budget,
-                       "K": args.K, "S": args.S},
+            "benchmark": "TestGenEval Lite",
+            "config": {
+                "strategies": strategies, "seeds": seeds,
+                "exec_budget": args.exec_budget, "K": args.K,
+                "gamma": args.gamma,
+            },
             "results": all_results,
+            "analysis": {k: v for k, v in analysis.items()
+                          if k != "paired_vs_random"},
+            "paired_vs_random": analysis.get("paired_vs_random", {}),
             "cost": cost,
-            "elapsed_seconds": round(elapsed, 1),
-        }, f, indent=2)
-    print(f"Saved to results/testgeneval_results.json", flush=True)
+            "elapsed": round(elapsed, 1),
+        }, f, indent=2, default=str)
+    print(f"Saved to {outpath}", flush=True)
 
 
 if __name__ == "__main__":
