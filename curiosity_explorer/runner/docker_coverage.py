@@ -95,11 +95,11 @@ class DockerCoverageRunner:
             self.image,
             "-c",
             f"cd {self.working_dir} && {pre}{ensure_coverage}"
-            f"{py} -m coverage run --branch "
+            f"{py} -m coverage run --rcfile=/dev/null --branch "
             f"--source={self.source_module} "
             f"/tmp/test_script.py 2>&1; "
             f"echo '{separator}'; "
-            f"{py} -m coverage json -o /tmp/cov.json 2>/dev/null && "
+            f"{py} -m coverage json --rcfile=/dev/null -o /tmp/cov.json 2>/dev/null && "
             f"cat /tmp/cov.json 2>/dev/null"
         ]
 
