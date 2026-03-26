@@ -114,6 +114,7 @@ REPO_CONFIGS = {
         "setup_code": "",
         "env": {},
         "prompt_note": "",
+        "pre_install": "pip install -e .",
         "available_versions": {"2.13", "2.15"},
     },
     "pallets/flask": {
@@ -159,6 +160,14 @@ def get_repo_config(repo, version):
         testbed = cfg.get("testbed_template", "").format(version=version)
         result["python_bin"] = f"/home/swe-bench/miniconda3/envs/{testbed}/bin/python"
         result["testbed_name"] = testbed
+
+    # For pyenv repos (scikit-learn), set python_bin from pyenv_version
+    if cfg["env_type"] == "pyenv" and "pyenv_version" in cfg:
+        result["python_bin"] = f"/opt/pyenv/versions/{cfg['pyenv_version']}/bin/python"
+
+    # Pass through pre_install if present
+    if "pre_install" in cfg:
+        result["pre_install"] = cfg["pre_install"]
 
     return result
 
