@@ -150,7 +150,8 @@ def run_strategy(example, strategy, seed, exec_budget, K, gamma):
     hist = []
     cov_map = CoverageMap()
     executions = 0
-    curve = []
+    branch_curve = []
+    line_curve = []
 
     while executions < exec_budget:
         # --- Generation ---
@@ -163,7 +164,8 @@ def run_strategy(example, strategy, seed, exec_budget, K, gamma):
 
         if not scripts:
             executions += 1
-            curve.append(runner.get_cumulative_coverage())
+            branch_curve.append(runner.get_cumulative_coverage())
+            line_curve.append(runner.get_cumulative_lines())
             continue
 
         # --- Execution ---
@@ -175,17 +177,27 @@ def run_strategy(example, strategy, seed, exec_budget, K, gamma):
                 hist.append((plan_script, result))
                 cov_map.update(plan_script, set(), result.new_branches)
                 executions += 1
-                curve.append(runner.get_cumulative_coverage())
+                branch_curve.append(runner.get_cumulative_coverage())
+                line_curve.append(runner.get_cumulative_lines())
         else:
             selected = _random.choice(scripts)
             result = runner.run_test(selected)
             hist.append((selected, result))
             cov_map.update(selected, set(), result.new_branches)
             executions += 1
-            curve.append(runner.get_cumulative_coverage())
+            branch_curve.append(runner.get_cumulative_coverage())
+            line_curve.append(runner.get_cumulative_lines())
 
-    final = runner.get_cumulative_coverage()
-    return {"final": final, "curve": curve}
+    stats = runner.get_stats()
+    return {
+        "final": stats["branches"],
+        "final_lines": stats["lines"],
+        "pass_rate": stats["pass_rate"],
+        "pass_count": stats["pass_count"],
+        "fail_count": stats["fail_count"],
+        "branch_curve": branch_curve,
+        "line_curve": line_curve,
+    }
 
 
 # ---------------------------------------------------------------------------
@@ -335,7 +347,14 @@ def main():
     print(f"\nPer-strategy means (n={analysis[strategies[0]]['n']}):", flush=True)
     for s in strategies:
         a = analysis[s]
-        print(f"  {s:<20} mean={a['mean']:>6.1f} ± {a['se']:.1f}", flush=True)
+        lines = [r["strategies"][s].get("final_lines", 0) for r in all_results
+                 if s in r["strategies"]]
+        pass_rates = [r["strategies"][s].get("pass_rate", 0) for r in all_results
+                      if s in r["strategies"]]
+        mean_lines = statistics.mean(lines) if lines else 0
+        mean_pr = statistics.mean(pass_rates) if pass_rates else 0
+        print(f"  {s:<20} branches={a['mean']:>6.1f} ± {a['se']:.1f}  "
+              f"lines={mean_lines:.1f}  pass_rate={mean_pr:.0%}", flush=True)
 
     if "paired_vs_random" in analysis:
         print(f"\nPaired vs random:", flush=True)

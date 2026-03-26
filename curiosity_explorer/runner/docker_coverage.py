@@ -45,10 +45,13 @@ class DockerCoverageRunner:
         self.pre_command = pre_command
         self.target_file = target_file
         self.cumulative_branches = set()
+        self.cumulative_lines = set()
         self._coverage_data_dir = tempfile.mkdtemp(prefix="docker_cov_")
         # Make world-writable so non-root Docker users (e.g. swe-bench) can write
         os.chmod(self._coverage_data_dir, 0o777)
         self._test_count = 0
+        self._pass_count = 0
+        self._fail_count = 0
 
     def run_test(self, test_script: str, timeout: int = 30):
         """Run a test script inside the container and measure coverage.
@@ -108,19 +111,24 @@ class DockerCoverageRunner:
             output_text = result.stdout.strip()
             stderr = result.stderr.strip()
         except subprocess.TimeoutExpired:
+            self._fail_count += 1
             return DockerTestResult(
                 output=None, exception="TimeoutError", new_branches=0,
-                cumulative=len(self.cumulative_branches)
+                cumulative_branches=len(self.cumulative_branches),
+                cumulative_lines=len(self.cumulative_lines),
             )
         except Exception as e:
+            self._fail_count += 1
             return DockerTestResult(
                 output=None, exception=str(e), new_branches=0,
-                cumulative=len(self.cumulative_branches)
+                cumulative_branches=len(self.cumulative_branches),
+                cumulative_lines=len(self.cumulative_lines),
             )
 
         # Parse coverage JSON
         exception_text = None
         new_branches = set()
+        new_lines = set()
 
         if os.path.exists(cov_json_path):
             try:
@@ -130,7 +138,7 @@ class DockerCoverageRunner:
                     # Filter to target file if specified
                     if self.target_file and self.target_file not in file_path:
                         continue
-                    # Prefer executed_branches (coverage.py 7.x)
+                    # Track branches (coverage.py 7.x)
                     exec_branches = file_data.get("executed_branches", [])
                     if exec_branches:
                         for arc in exec_branches:
@@ -138,9 +146,14 @@ class DockerCoverageRunner:
                             if branch not in self.cumulative_branches:
                                 new_branches.add(branch)
                                 self.cumulative_branches.add(branch)
-                    else:
-                        # Fallback: use executed_lines as branch proxy
-                        # (older coverage.py without executed_branches)
+                    # Track lines (always available)
+                    for line in file_data.get("executed_lines", []):
+                        line_key = (file_path, line)
+                        if line_key not in self.cumulative_lines:
+                            new_lines.add(line_key)
+                            self.cumulative_lines.add(line_key)
+                    # Fallback: if no branches, use lines as branch proxy
+                    if not exec_branches:
                         for line in file_data.get("executed_lines", []):
                             branch = (file_path, line)
                             if branch not in self.cumulative_branches:
@@ -151,6 +164,17 @@ class DockerCoverageRunner:
         else:
             log.debug(f"Coverage JSON not found at {cov_json_path}")
 
+        # Determine pass/fail
+        # A test "passes" if it produces output without crashing
+        has_output = bool(output_text and output_text.strip())
+        has_error = (result.returncode != 0) or ("Traceback" in (output_text or ""))
+        passed = has_output and not has_error
+
+        if passed:
+            self._pass_count += 1
+        else:
+            self._fail_count += 1
+
         if result.returncode != 0 and not output_text:
             exception_text = stderr[:200] if stderr else f"exit code {result.returncode}"
 
@@ -158,15 +182,39 @@ class DockerCoverageRunner:
             output=output_text[:500] if output_text else None,
             exception=exception_text,
             new_branches=len(new_branches),
-            cumulative=len(self.cumulative_branches),
+            new_lines=len(new_lines),
+            cumulative_branches=len(self.cumulative_branches),
+            cumulative_lines=len(self.cumulative_lines),
+            passed=passed,
         )
 
     def get_cumulative_coverage(self):
         return len(self.cumulative_branches)
 
+    def get_cumulative_lines(self):
+        return len(self.cumulative_lines)
+
+    def get_pass_rate(self):
+        total = self._pass_count + self._fail_count
+        return self._pass_count / total if total > 0 else 0.0
+
+    def get_stats(self):
+        """Return all tracked metrics."""
+        total = self._pass_count + self._fail_count
+        return {
+            "branches": len(self.cumulative_branches),
+            "lines": len(self.cumulative_lines),
+            "pass_count": self._pass_count,
+            "fail_count": self._fail_count,
+            "pass_rate": self._pass_count / total if total > 0 else 0.0,
+        }
+
     def reset(self):
         self.cumulative_branches = set()
+        self.cumulative_lines = set()
         self._test_count = 0
+        self._pass_count = 0
+        self._fail_count = 0
 
     def cleanup(self):
         """Remove temporary coverage data directory."""
@@ -185,8 +233,13 @@ class DockerCoverageRunner:
 
 class DockerTestResult:
     """Result of running a test in Docker."""
-    def __init__(self, output, exception, new_branches, cumulative):
+    def __init__(self, output, exception, new_branches, cumulative_branches,
+                 new_lines=0, cumulative_lines=0, passed=False):
         self.output = output
         self.exception = exception
         self.new_branches = new_branches
-        self.cumulative = cumulative
+        self.new_lines = new_lines
+        self.cumulative = cumulative_branches  # backward compat
+        self.cumulative_branches = cumulative_branches
+        self.cumulative_lines = cumulative_lines
+        self.passed = passed
