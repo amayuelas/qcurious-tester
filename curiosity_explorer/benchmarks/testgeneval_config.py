@@ -200,6 +200,12 @@ def load_testgeneval_examples(repos=None, max_examples=None):
 
         cfg = get_repo_config(repo, version)
         module = ex["code_file"].replace("/", ".").replace(".py", "")
+        # Strip source layout prefixes (lib/, src/) that aren't part of the
+        # Python package name. e.g., lib.matplotlib.figure → matplotlib.figure
+        for prefix in ("lib.", "src."):
+            if module.startswith(prefix):
+                module = module[len(prefix):]
+                break
 
         examples.append({
             "module": module,
