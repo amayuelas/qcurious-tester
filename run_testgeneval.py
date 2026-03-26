@@ -131,14 +131,22 @@ def run_strategy(example, strategy, seed, exec_budget, K, gamma):
     if example.get("pre_install"):
         pre_command = example["pre_install"]
 
-    # Use top-level package for --source (so coverage tracks even if test
-    # doesn't directly import the target submodule), filter to target file
-    top_package = module.split(".")[0]
+    # Use the parent package of the target module for --source
+    # e.g., sympy.physics.units.util → sympy.physics.units (not just "sympy")
+    # This is broad enough to catch indirect imports but narrow enough to not
+    # make coverage.py serialize 1400+ files
+    parts = module.split(".")
+    if len(parts) >= 3:
+        source_package = ".".join(parts[:-1])  # parent package
+    elif len(parts) == 2:
+        source_package = parts[0]  # top-level package
+    else:
+        source_package = module
     target_file = example.get("code_file", None)
 
     runner = DockerCoverageRunner(
         image=example["image"],
-        source_module=top_package,
+        source_module=source_package,
         setup_code=example["setup_code"],
         working_dir=example["working_dir"],
         env=example["env"],

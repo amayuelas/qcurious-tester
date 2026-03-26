@@ -79,21 +79,18 @@ class DockerCoverageRunner:
         for k, v in self.env.items():
             env_args.extend(["-e", f"{k}={v}"])
 
-        # Coverage JSON output file (mounted volume)
-        cov_json_path = os.path.join(self._coverage_data_dir,
-                                     f"cov_{self._test_count}.json")
-
-        # Run with coverage, write JSON to mounted volume
+        # Run with coverage, write JSON inside container then cat to stdout
         py = self.python_bin
         pre = f"{self.pre_command} && " if self.pre_command else ""
-        # pip install coverage if not available (some testbeds don't have it)
         ensure_coverage = f"{py} -m pip install coverage -q 2>/dev/null; "
 
+        # Strategy: run coverage, generate JSON inside container, print a
+        # separator then cat the JSON to stdout. We parse it from the output.
+        separator = "===COVERAGE_JSON_START==="
         cmd = [
             "docker", "run", "--rm",
             "--entrypoint", "bash",
             "-v", f"{script_path}:/tmp/test_script.py:ro",
-            "-v", f"{self._coverage_data_dir}:/tmp/covdata",
             *env_args,
             self.image,
             "-c",
@@ -101,14 +98,16 @@ class DockerCoverageRunner:
             f"{py} -m coverage run --branch "
             f"--source={self.source_module} "
             f"/tmp/test_script.py 2>&1; "
-            f"{py} -m coverage json -o /tmp/covdata/cov_{self._test_count}.json 2>/dev/null"
+            f"echo '{separator}'; "
+            f"{py} -m coverage json -o /tmp/cov.json 2>/dev/null && "
+            f"cat /tmp/cov.json 2>/dev/null"
         ]
 
         try:
             result = subprocess.run(
                 cmd, capture_output=True, text=True, timeout=timeout
             )
-            output_text = result.stdout.strip()
+            raw_stdout = result.stdout.strip()
             stderr = result.stderr.strip()
         except subprocess.TimeoutExpired:
             self._fail_count += 1
@@ -125,15 +124,27 @@ class DockerCoverageRunner:
                 cumulative_lines=len(self.cumulative_lines),
             )
 
-        # Parse coverage JSON
+        # Split output: test output before separator, coverage JSON after
+        separator = "===COVERAGE_JSON_START==="
+        if separator in raw_stdout:
+            parts = raw_stdout.split(separator, 1)
+            output_text = parts[0].strip()
+            after_sep = parts[1].strip()
+            # Find the JSON object start (skip "Wrote JSON report..." line)
+            json_start = after_sep.find("{")
+            cov_json_str = after_sep[json_start:] if json_start >= 0 else ""
+        else:
+            output_text = raw_stdout
+            cov_json_str = ""
+
+        # Parse coverage JSON from stdout
         exception_text = None
         new_branches = set()
         new_lines = set()
 
-        if os.path.exists(cov_json_path):
+        if cov_json_str:
             try:
-                with open(cov_json_path) as f:
-                    cov_data = json.load(f)
+                cov_data = json.loads(cov_json_str)
                 for file_path, file_data in cov_data.get("files", {}).items():
                     # Filter to target file if specified
                     if self.target_file and self.target_file not in file_path:
@@ -162,7 +173,7 @@ class DockerCoverageRunner:
             except (json.JSONDecodeError, KeyError) as e:
                 log.debug(f"Coverage parse error: {e}")
         else:
-            log.debug(f"Coverage JSON not found at {cov_json_path}")
+            log.debug("No coverage JSON in output")
 
         # Determine pass/fail
         # A test "passes" if it produces output without crashing
