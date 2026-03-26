@@ -46,6 +46,8 @@ class DockerCoverageRunner:
         self.target_file = target_file
         self.cumulative_branches = set()
         self._coverage_data_dir = tempfile.mkdtemp(prefix="docker_cov_")
+        # Make world-writable so non-root Docker users (e.g. swe-bench) can write
+        os.chmod(self._coverage_data_dir, 0o777)
         self._test_count = 0
 
     def run_test(self, test_script: str, timeout: int = 30):
