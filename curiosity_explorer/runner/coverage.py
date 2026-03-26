@@ -116,6 +116,112 @@ class CoverageRunner:
         self.test_history.append((test_input_code, cov_result))
         return cov_result
 
+    def run_script(self, script_code: str) -> CoverageResult:
+        """Execute a multi-line test script and measure coverage.
+
+        Unlike run_test (which wraps a single expression), this executes
+        arbitrary Python code that can import from the module, create objects,
+        and call multiple methods.
+        """
+        # Use a unique module name to avoid stdlib collisions
+        mod_name = f"_mod_{self.func_name}"
+        mod_file = os.path.join(self.temp_dir, f"{mod_name}.py")
+
+        # Copy source to uniquely-named file if not already done
+        if not os.path.exists(mod_file):
+            with open(mod_file, "w") as f:
+                f.write(self.source_code)
+
+        # Write the test script to a separate file
+        test_file = os.path.join(self.temp_dir, "_test_script.py")
+        with open(test_file, "w") as f:
+            f.write(f"from {mod_name} import *\n")
+            f.write(script_code)
+
+        runner_code = textwrap.dedent(f'''\
+            import json, sys, coverage, io
+
+            sys.path.insert(0, "{self.temp_dir}")
+
+            cov = coverage.Coverage(branch=True, source=["{self.temp_dir}"])
+            cov.start()
+
+            _old_stdout = sys.stdout
+            _captured = io.StringIO()
+            sys.stdout = _captured
+
+            try:
+                with open("{test_file}") as _f:
+                    exec(_f.read())
+                sys.stdout = _old_stdout
+                output = _captured.getvalue().strip()
+                print(json.dumps({{"output": output[:500] if output else "ok", "exception": None}}))
+            except Exception as e:
+                sys.stdout = _old_stdout
+                print(json.dumps({{"output": None, "exception": f"{{type(e).__name__}}: {{e}}"}}))
+
+            cov.stop()
+            cov.save()
+
+            analysis = cov.analysis2("{mod_file}")
+            executed_lines = analysis[1]
+            missing_lines = analysis[3]
+            total_lines = len(executed_lines) + len(missing_lines)
+
+            branch_data = cov.get_data()
+            arcs = branch_data.arcs("{mod_file}") or []
+
+            print("---COVERAGE---")
+            print(json.dumps({{
+                "lines_hit": sorted(executed_lines),
+                "total_lines": total_lines,
+                "arcs": [list(a) for a in arcs],
+            }}))
+        ''')
+
+        runner_file = os.path.join(self.temp_dir, "_runner.py")
+        with open(runner_file, "w") as f:
+            f.write(runner_code)
+
+        result = execute_in_sandbox(runner_file, cwd=self.temp_dir)
+
+        if result["timed_out"]:
+            return CoverageResult(exception="TimeoutError")
+
+        stdout = result["stdout"].strip()
+        if "---COVERAGE---" not in stdout:
+            return CoverageResult(
+                exception=f"Coverage extraction failed: {result['stderr'][:200]}"
+            )
+
+        parts = stdout.split("---COVERAGE---")
+        try:
+            exec_result = json.loads(parts[0].strip())
+            cov_data = json.loads(parts[1].strip())
+        except (json.JSONDecodeError, IndexError):
+            return CoverageResult(exception="Parse error")
+
+        arcs = set(tuple(a) for a in cov_data.get("arcs", []))
+        lines = set(cov_data.get("lines_hit", []))
+        new_branches = arcs - self.cumulative_branches
+        self.cumulative_branches |= arcs
+
+        total_lines = cov_data.get("total_lines", 1)
+        cov_result = CoverageResult(
+            output=exec_result.get("output"),
+            exception=exec_result.get("exception"),
+            branches_hit=len(arcs),
+            new_branches=len(new_branches),
+            branches_detail=arcs,
+            new_branches_detail=new_branches,
+            lines_hit=len(lines),
+            total_lines=total_lines,
+            line_coverage=len(lines) / max(total_lines, 1),
+        )
+
+        self.test_history.append((script_code, cov_result))
+        return cov_result
+
     def get_cumulative_coverage(self) -> int:
         """Return cumulative branch (arc) count."""
         return len(self.cumulative_branches)
