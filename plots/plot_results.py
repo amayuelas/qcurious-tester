@@ -29,10 +29,10 @@ matplotlib.rcParams.update({
 
 STRATEGY_COLORS = {
     "random": "#888888",
+    "greedy": "#E8A84C",
     "cov_greedy": "#4C9BE8",
     "cov_qvalue": "#E84C4C",
     "cov_planned": "#4CE88A",
-    "greedy": "#CCCC44",
 }
 
 STRATEGY_LABELS = {
