@@ -69,7 +69,8 @@ REPO_CONFIGS = {
     },
     "astropy/astropy": {
         "image_template": "aorwall/swe-bench-astropy_astropy-testbed:{version}",
-        "env_type": "pyenv",
+        "env_type": "conda",
+        "testbed_template": "astropy__astropy__{version}",
         "working_dir": "/home/swe-bench/astropy__astropy",
         "setup_code": "",
         "env": {},
