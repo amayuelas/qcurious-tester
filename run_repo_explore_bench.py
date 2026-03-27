@@ -336,6 +336,19 @@ def run_strategy(target, strategy, seed, exec_budget, K, gamma, source):
             line_curve.append(runner.get_cumulative_lines())
 
     stats = runner.get_stats()
+
+    # Serialize execution trace
+    trace = []
+    for script, result in hist:
+        trace.append({
+            "script": script,
+            "output": result.output,
+            "exception": result.exception,
+            "new_branches": result.new_branches,
+            "new_lines": result.new_lines,
+            "passed": result.passed,
+        })
+
     return {
         "final": stats["branches"],
         "final_lines": stats["lines"],
@@ -344,6 +357,7 @@ def run_strategy(target, strategy, seed, exec_budget, K, gamma, source):
         "fail_count": stats["fail_count"],
         "branch_curve": branch_curve,
         "line_curve": line_curve,
+        "trace": trace,
     }
 
 
