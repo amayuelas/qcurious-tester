@@ -28,7 +28,7 @@ import time
 import json
 import logging
 import statistics
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 import config
 from curiosity_explorer.llm import generate_with_model, batch_generate, get_cost, reset_cost
@@ -60,6 +60,8 @@ def parse_args():
     p.add_argument("--exec-budget", type=int, default=EXEC_BUDGET)
     p.add_argument("--K", type=int, default=K)
     p.add_argument("--gamma", type=float, default=GAMMA)
+    p.add_argument("--parallel", type=int, default=4,
+                   help="Number of targets to run in parallel")
     p.add_argument("--output", default="repo_explore_bench_results.json")
     return p.parse_args()
 
@@ -461,33 +463,46 @@ def main():
           flush=True)
 
     start = time.time()
-    all_results = []
-    run_count = 0
+    completed = [0]  # mutable counter for thread safety
 
-    for i, target in enumerate(targets):
+    def run_one_target(i, target, seed):
+        """Run all strategies on one target. Returns result dict."""
         source = source_cache.get(target["module"])
+        run_result = {
+            "module": target["module"],
+            "repo": target["repo"],
+            "seed": seed,
+            "strategies": {},
+        }
+        for strategy in strategies:
+            result = run_strategy(target, strategy, seed,
+                                   args.exec_budget, args.K, args.gamma,
+                                   source)
+            run_result["strategies"][strategy] = result
+        completed[0] += 1
+        finals = {s: run_result["strategies"][s]["final"] for s in strategies}
+        print(f"  [{completed[0]}/{len(targets)*len(seeds)}] "
+              f"{target['module']} seed={seed}: {finals}", flush=True)
+        return run_result
 
-        for seed in seeds:
-            print(f"\n[{i+1}/{len(targets)}] {target['module']} "
-                  f"({target['repo']}) seed={seed}", flush=True)
+    # Build list of (index, target, seed) jobs
+    jobs = [(i, target, seed)
+            for i, target in enumerate(targets)
+            for seed in seeds]
 
-            run_result = {
-                "module": target["module"],
-                "repo": target["repo"],
-                "seed": seed,
-                "strategies": {},
-            }
+    print(f"\nRunning {len(jobs)} targets with {args.parallel} workers...",
+          flush=True)
 
-            for strategy in strategies:
-                run_count += 1
-                print(f"  {strategy} ({run_count}/{total_runs}):", flush=True)
-                result = run_strategy(target, strategy, seed,
-                                       args.exec_budget, args.K, args.gamma,
-                                       source)
-                run_result["strategies"][strategy] = result
-                print(f"    final={result['final']}", flush=True)
-
-            all_results.append(run_result)
+    all_results = []
+    with ThreadPoolExecutor(max_workers=args.parallel) as executor:
+        futures = {executor.submit(run_one_target, i, t, s): (i, t, s)
+                   for i, t, s in jobs}
+        for future in as_completed(futures):
+            try:
+                all_results.append(future.result())
+            except Exception as e:
+                i, t, s = futures[future]
+                print(f"  ERROR on {t['module']} seed={s}: {e}", flush=True)
 
     elapsed = time.time() - start
     cost = get_cost()

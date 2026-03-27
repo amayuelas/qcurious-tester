@@ -24,7 +24,7 @@ import time
 import json
 import logging
 import statistics
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 import config
 from curiosity_explorer.llm import generate_with_model, batch_generate, get_cost, reset_cost
@@ -57,6 +57,8 @@ def parse_args():
     p.add_argument("--exec-budget", type=int, default=EXEC_BUDGET)
     p.add_argument("--K", type=int, default=K)
     p.add_argument("--gamma", type=float, default=GAMMA)
+    p.add_argument("--parallel", type=int, default=4,
+                   help="Number of targets to run in parallel")
     p.add_argument("--output", default="testgeneval_results.json")
     return p.parse_args()
 
@@ -315,32 +317,46 @@ def main():
         return
 
     start = time.time()
+    completed = [0]
+
+    def run_one_example(i, ex, seed):
+        """Run all strategies on one example. Returns result dict."""
+        run_result = {
+            "module": ex["module"],
+            "repo": ex["repo"],
+            "version": ex["version"],
+            "code_file": ex["code_file"],
+            "seed": seed,
+            "strategies": {},
+        }
+        for strategy in strategies:
+            result = run_strategy(ex, strategy, seed,
+                                   args.exec_budget, args.K, args.gamma)
+            run_result["strategies"][strategy] = result
+        completed[0] += 1
+        finals = {s: run_result["strategies"][s]["final"] for s in strategies}
+        print(f"  [{completed[0]}/{len(examples)*len(seeds)}] "
+              f"{ex['code_file']} ({ex['repo']} v{ex['version']}): {finals}",
+              flush=True)
+        return run_result
+
+    jobs = [(i, ex, seed)
+            for i, ex in enumerate(examples)
+            for seed in seeds]
+
+    print(f"\nRunning {len(jobs)} targets with {args.parallel} workers...",
+          flush=True)
+
     all_results = []
-    run_count = 0
-
-    for i, ex in enumerate(examples):
-        for seed in seeds:
-            print(f"\n[{i+1}/{len(examples)}] {ex['code_file']} "
-                  f"({ex['repo']} v{ex['version']}) seed={seed}", flush=True)
-
-            run_result = {
-                "module": ex["module"],
-                "repo": ex["repo"],
-                "version": ex["version"],
-                "code_file": ex["code_file"],
-                "seed": seed,
-                "strategies": {},
-            }
-
-            for strategy in strategies:
-                run_count += 1
-                print(f"  {strategy} ({run_count}/{total_runs}):", flush=True)
-                result = run_strategy(ex, strategy, seed,
-                                       args.exec_budget, args.K, args.gamma)
-                run_result["strategies"][strategy] = result
-                print(f"    final={result['final']}", flush=True)
-
-            all_results.append(run_result)
+    with ThreadPoolExecutor(max_workers=args.parallel) as executor:
+        futures = {executor.submit(run_one_example, i, ex, s): (i, ex, s)
+                   for i, ex, s in jobs}
+        for future in as_completed(futures):
+            try:
+                all_results.append(future.result())
+            except Exception as e:
+                i, ex, s = futures[future]
+                print(f"  ERROR on {ex['code_file']}: {e}", flush=True)
 
     elapsed = time.time() - start
     cost = get_cost()
