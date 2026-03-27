@@ -40,7 +40,7 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s: %(mes
 logging.getLogger("httpx").setLevel(logging.WARNING)
 log = logging.getLogger(__name__)
 
-ALL_STRATEGIES = ["random", "cov_greedy", "cov_qvalue"]
+ALL_STRATEGIES = ["random", "greedy", "cov_greedy", "cov_qvalue"]
 EXEC_BUDGET = 24
 K = 3
 PLAN_LENGTH = 3
@@ -64,6 +64,21 @@ def parse_args():
 # ---------------------------------------------------------------------------
 # Generation
 # ---------------------------------------------------------------------------
+
+def select_greedy(scripts, module, code, hist):
+    """LLM picks the script most likely to cover new code."""
+    code_ctx = f"```python\n{code[:2000]}\n```" if code else ""
+    ctx = f"Module: {module}\n{code_ctx}"
+    sl = "\n".join(f"  {i+1}. {s.strip()[:100]}" for i, s in enumerate(scripts))
+    prompt = (f"{ctx}\nWhich test covers the most NEW code?\n"
+              f"{sl}\nRespond with ONLY the number.")
+    resp = generate_with_model(config.MODEL, prompt, 0.3, 20)
+    for n in re.findall(r'\d+', resp):
+        idx = int(n) - 1
+        if 0 <= idx < len(scripts):
+            return scripts[idx]
+    return scripts[0]
+
 
 def gen_standard(module, code, hist, K, prompt_note=""):
     """Standard generation — show source code and history."""
@@ -188,7 +203,10 @@ def run_strategy(example, strategy, seed, exec_budget, K, gamma):
                 branch_curve.append(runner.get_cumulative_coverage())
                 line_curve.append(runner.get_cumulative_lines())
         else:
-            selected = _random.choice(scripts)
+            if strategy == "greedy":
+                selected = select_greedy(scripts, module, code, hist)
+            else:
+                selected = _random.choice(scripts)
             result = runner.run_test(selected)
             hist.append((selected, result))
             cov_map.update(selected, set(), result.new_branches)

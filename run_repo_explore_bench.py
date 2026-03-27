@@ -44,7 +44,7 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s: %(mes
 logging.getLogger("httpx").setLevel(logging.WARNING)
 log = logging.getLogger(__name__)
 
-ALL_STRATEGIES = ["random", "cov_greedy", "cov_qvalue"]
+ALL_STRATEGIES = ["random", "greedy", "cov_greedy", "cov_qvalue"]
 EXEC_BUDGET = 24
 K = 3
 PLAN_LENGTH = 3
@@ -102,6 +102,21 @@ def gen_standard(module, source, hist, K):
               f"Respond with ONLY executable Python code.\n\n```python\n")
     responses = batch_generate([prompt] * K, temperature=0.9, max_tokens=500)
     return [_parse_script(r) for r in responses if _parse_script(r)]
+
+
+def select_greedy(scripts, module, source, hist):
+    """LLM picks the script most likely to cover new code."""
+    code_ctx = f"```python\n{source[:2000]}\n```" if source else ""
+    ctx = f"Module: {module}\n{code_ctx}"
+    sl = "\n".join(f"  {i+1}. {s.strip()[:100]}" for i, s in enumerate(scripts))
+    prompt = (f"{ctx}\nWhich test covers the most NEW code?\n"
+              f"{sl}\nRespond with ONLY the number.")
+    resp = generate_with_model(config.MODEL, prompt, 0.3, 20)
+    for n in re.findall(r'\d+', resp):
+        idx = int(n) - 1
+        if 0 <= idx < len(scripts):
+            return scripts[idx]
+    return scripts[0]
 
 
 def gen_cov_greedy(module, source, hist, cov_map, K):
@@ -304,6 +319,8 @@ def run_strategy(target, strategy, seed, exec_budget, K, gamma, source):
         else:
             if strategy == "random":
                 selected = _random.choice(scripts)
+            elif strategy == "greedy":
+                selected = select_greedy(scripts, module, source, hist)
             elif strategy == "cov_greedy":
                 selected = _random.choice(scripts)
             else:
