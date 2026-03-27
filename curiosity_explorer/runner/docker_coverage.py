@@ -53,7 +53,7 @@ class DockerCoverageRunner:
         self._pass_count = 0
         self._fail_count = 0
 
-    def run_test(self, test_script: str, timeout: int = 30):
+    def run_test(self, test_script: str, timeout: int = 60):
         """Run a test script inside the container and measure coverage.
 
         Args:
