@@ -1,0 +1,24 @@
+\begin{table}[t]
+\centering
+\caption{Per-repository branch coverage on RepoExploreBench by model. CovQValue bolded.}
+\label{tab:perrepo_repoexplorebench}
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{l cccc cccc cccc}
+\toprule
+& \multicolumn{4}{c}{Gemini Flash}& \multicolumn{4}{c}{GPT-5.4 Mini}& \multicolumn{4}{c}{Mistral Large} \\
+\cmidrule(lr){2-5} \cmidrule(lr){6-9} \cmidrule(lr){10-13}
+Repo & Rnd & Gdy & CG & CQ & Rnd & Gdy & CG & CQ & Rnd & Gdy & CG & CQ \\
+\midrule
+click & 38 & 28 & 32 & \textbf{68} & 23 & 24 & 27 & \textbf{29} & 29 & 27 & 26 & \textbf{51} \\
+flask & 19 & 24 & 31 & \textbf{53} & 28 & 18 & 28 & \textbf{39} & 20 & 20 & 17 & \textbf{37} \\
+httpx & 37 & 38 & 45 & \textbf{67} & 33 & 33 & 39 & \textbf{54} & 35 & 33 & 44 & \textbf{54} \\
+jinja2 & 51 & 46 & 57 & \textbf{84} & 29 & 30 & 32 & \textbf{56} & 43 & 50 & 40 & \textbf{61} \\
+pydantic & 70 & 58 & 83 & \textbf{88} & 52 & 48 & 58 & \textbf{80} & 72 & 66 & 76 & \textbf{87} \\
+requests & 17 & 20 & 46 & \textbf{66} & 21 & 19 & 31 & \textbf{31} & 14 & 17 & 25 & \textbf{36} \\
+rich & 88 & 94 & 103 & \textbf{128} & 42 & 35 & 45 & \textbf{81} & 84 & 99 & 72 & \textbf{105} \\
+starlette & 23 & 23 & 19 & \textbf{34} & 18 & 16 & 20 & \textbf{21} & 20 & 18 & 13 & \textbf{32} \\
+werkzeug & 31 & 30 & 40 & \textbf{54} & 30 & 30 & 46 & \textbf{46} & 37 & 33 & 37 & \textbf{53} \\
+\bottomrule
+\end{tabular}
+\end{table}
