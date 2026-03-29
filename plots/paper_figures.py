@@ -277,7 +277,7 @@ def fig_pass_rate_vs_coverage(data):
 
                 # Small transparent dot
                 ax.scatter(mean_pr, mean_br, color=STRATEGY_COLORS[s],
-                          s=80, alpha=0.35, edgecolors="none", zorder=2)
+                          s=150, alpha=0.35, edgecolors="none", zorder=2)
 
     # Grand mean per strategy: large opaque dot with label
     label_offsets = {
@@ -292,17 +292,18 @@ def fig_pass_rate_vs_coverage(data):
         mean_pr = np.mean(grand[s]["pr"])
         mean_br = np.mean(grand[s]["br"])
         ax.scatter(mean_pr, mean_br, color=STRATEGY_COLORS[s],
-                  s=250, alpha=1.0, edgecolors="black", linewidths=1.2,
+                  s=400, alpha=1.0, edgecolors="black", linewidths=1.5,
                   zorder=4, label=STRATEGY_LABELS[s])
         ax.annotate(STRATEGY_LABELS[s], (mean_pr, mean_br),
                    textcoords="offset points",
-                   xytext=label_offsets.get(s, (8, 5)),
-                   fontsize=10, fontweight="bold" if s == "cov_qvalue" else "normal",
+                   xytext=label_offsets.get(s, (10, 6)),
+                   fontsize=13, fontweight="bold" if s == "cov_qvalue" else "normal",
                    zorder=5)
 
-    ax.set_xlabel("Pass Rate (%)")
-    ax.set_ylabel("Mean Branch Coverage")
-    ax.legend(loc="upper right", fontsize=9)
+    ax.set_xlabel("Pass Rate (%)", fontsize=14)
+    ax.set_ylabel("Mean Branch Coverage", fontsize=14)
+    ax.tick_params(labelsize=12)
+    ax.legend(loc="upper right", fontsize=11)
     ax.grid(True, alpha=0.2)
 
     plt.tight_layout()
