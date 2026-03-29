@@ -35,6 +35,7 @@ from curiosity_explorer.llm import generate_with_model, batch_generate, get_cost
 from curiosity_explorer.runner.docker_coverage import DockerCoverageRunner
 from curiosity_explorer.explorer.coverage_exploration import (
     CoverageMap, _parse_script, _parse_plan,
+    generate_plans_for_exec_selection,
 )
 from curiosity_explorer.benchmarks.repo_explore_bench import (
     load_benchmark, get_benchmark_info, DEFAULT_SEEDS, DOCKER_IMAGE,
@@ -298,8 +299,51 @@ def run_strategy(target, strategy, seed, exec_budget, K, gamma, source):
         elif strategy == "cov_qvalue":
             scripts = gen_cov_qvalue(module, source, hist, cov_map,
                                       K, PLAN_LENGTH, gamma)
+        elif strategy == "cov_qvalue_exec":
+            scripts = None  # handled below
         else:
             scripts = gen_standard(module, source, hist, K)
+
+        # --- Execution-based Q-value selection ---
+        if strategy == "cov_qvalue_exec":
+            plans = generate_plans_for_exec_selection(
+                source, module, hist, cov_map, K=K, plan_length=PLAN_LENGTH)
+
+            if not plans or executions >= exec_budget:
+                executions += 1
+                branch_curve.append(runner.get_cumulative_coverage())
+                line_curve.append(runner.get_cumulative_lines())
+                continue
+
+            # Execute step 1 of each plan — observe actual coverage
+            step1_results = []
+            for plan in plans:
+                if executions >= exec_budget:
+                    break
+                result = runner.run_test(plan[0])
+                hist.append((plan[0], result))
+                cov_map.update(plan[0], set(), result.new_branches)
+                executions += 1
+                branch_curve.append(runner.get_cumulative_coverage())
+                line_curve.append(runner.get_cumulative_lines())
+                step1_results.append((plan, result.new_branches))
+
+            # Select the plan whose step 1 discovered the most branches
+            if step1_results:
+                best_plan, _ = max(step1_results, key=lambda x: x[1])
+
+                # Execute remaining steps of the winning plan
+                for plan_script in best_plan[1:]:
+                    if executions >= exec_budget:
+                        break
+                    result = runner.run_test(plan_script)
+                    hist.append((plan_script, result))
+                    cov_map.update(plan_script, set(), result.new_branches)
+                    executions += 1
+                    branch_curve.append(runner.get_cumulative_coverage())
+                    line_curve.append(runner.get_cumulative_lines())
+
+            continue
 
         if not scripts:
             executions += 1
@@ -307,7 +351,7 @@ def run_strategy(target, strategy, seed, exec_budget, K, gamma, source):
             line_curve.append(runner.get_cumulative_lines())
             continue
 
-        # --- Execution ---
+        # --- Standard execution ---
         if strategy == "cov_qvalue":
             for plan_script in scripts:
                 if executions >= exec_budget:

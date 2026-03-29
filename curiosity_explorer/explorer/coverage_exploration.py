@@ -353,6 +353,32 @@ Example: 15, 25"""
     return plans[best_idx]
 
 
+def generate_plans_for_exec_selection(source, module_name, test_history,
+                                       coverage_map, K=3, plan_length=3):
+    """Generate K diverse plans and return them for execution-based selection.
+
+    Instead of LLM-estimated Q-values, the RUNNER executes step 1 of each
+    plan and selects the plan whose step 1 discovered the most branches.
+    This is a 1-step lookahead with real observation — the truest form of
+    Sun et al.'s framework.
+
+    Returns:
+        list of plans, where each plan is a list of S scripts.
+        The runner should:
+        1. Execute plan[0] for each plan → observe actual coverage
+        2. Pick the plan with highest step-1 coverage
+        3. Execute plan[1:] of the winning plan
+    """
+    plans = _generate_k_plans(source, module_name, test_history, coverage_map,
+                               K=K, plan_length=plan_length)
+    if not plans:
+        scripts = generate_coverage_greedy(source, module_name, test_history,
+                                            coverage_map, K)
+        return [[s] for s in scripts] if scripts else []
+
+    return plans
+
+
 def select_by_coverage_qvalue(scripts, source, module_name, test_history,
                                 coverage_map, gamma=0.5):
     """Select the script with highest Q-value based on coverage potential.
