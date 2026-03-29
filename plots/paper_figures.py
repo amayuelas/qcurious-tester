@@ -13,16 +13,29 @@ from collections import defaultdict
 
 matplotlib.rcParams.update({
     "font.family": "serif",
-    "font.size": 11,
-    "axes.labelsize": 12,
-    "axes.titlesize": 13,
-    "legend.fontsize": 10,
-    "xtick.labelsize": 10,
-    "ytick.labelsize": 10,
+    "font.serif": ["Times New Roman", "DejaVu Serif", "serif"],
+    "font.size": 14,
+    "axes.labelsize": 16,
+    "axes.titlesize": 17,
+    "axes.titleweight": "bold",
+    "axes.linewidth": 1.2,
+    "legend.fontsize": 12,
+    "legend.framealpha": 0.9,
+    "legend.edgecolor": "0.7",
+    "xtick.labelsize": 13,
+    "ytick.labelsize": 13,
+    "xtick.major.width": 1.0,
+    "ytick.major.width": 1.0,
+    "xtick.major.size": 5,
+    "ytick.major.size": 5,
+    "lines.linewidth": 2.5,
     "figure.dpi": 150,
     "savefig.dpi": 300,
     "savefig.bbox": "tight",
+    "savefig.pad_inches": 0.1,
     "text.usetex": False,
+    "grid.alpha": 0.3,
+    "grid.linewidth": 0.8,
 })
 
 RESULTS_DIR = Path("results")
@@ -43,10 +56,10 @@ STRATEGY_LABELS = {
     "cov_qvalue": "CovQValue",
 }
 STRATEGY_COLORS = {
-    "random": "#888888",
-    "greedy": "#E8A84C",
-    "cov_greedy": "#4C9BE8",
-    "cov_qvalue": "#E84C4C",
+    "random": "#7F7F7F",
+    "greedy": "#D4A03E",
+    "cov_greedy": "#3A7EBF",
+    "cov_qvalue": "#C44E52",
 }
 
 
@@ -106,10 +119,10 @@ def _plot_exploration_curves(data, bench_keys, model_keys, title_suffix, filenam
             se = arr.std(axis=0) / np.sqrt(len(arr))
             steps = np.arange(1, max_len + 1)
 
-            ax.plot(steps, mean, color=STRATEGY_COLORS[s], linewidth=2,
-                    label=STRATEGY_LABELS[s])
+            ax.plot(steps, mean, color=STRATEGY_COLORS[s], linewidth=2.5,
+                    label=STRATEGY_LABELS[s], zorder=3)
             ax.fill_between(steps, mean - se, mean + se,
-                           color=STRATEGY_COLORS[s], alpha=0.12)
+                           color=STRATEGY_COLORS[s], alpha=0.15, zorder=2)
 
         title = bench_labels[bench]
         if title_suffix:
@@ -214,7 +227,8 @@ def _plot_per_repo(data, bench, model_keys, title_suffix, filename):
                     if r.get("repo") == repo and s in r["strategies"]]
             means.append(np.mean(vals) if vals else 0)
         ax.bar(x + i * width - 0.3, means, width,
-               label=STRATEGY_LABELS[s], color=STRATEGY_COLORS[s], alpha=0.85)
+               label=STRATEGY_LABELS[s], color=STRATEGY_COLORS[s],
+               alpha=0.88, edgecolor="white", linewidth=0.5)
 
     ax.set_xticks(x)
     ax.set_xticklabels([short[r] for r in repos], rotation=45, ha="right")
@@ -277,7 +291,7 @@ def fig_pass_rate_vs_coverage(data):
 
                 # Small transparent dot
                 ax.scatter(mean_pr, mean_br, color=STRATEGY_COLORS[s],
-                          s=150, alpha=0.35, edgecolors="none", zorder=2)
+                          s=180, alpha=0.3, edgecolors="none", zorder=2)
 
     # Grand mean per strategy: large opaque dot with label
     label_offsets = {
@@ -292,18 +306,17 @@ def fig_pass_rate_vs_coverage(data):
         mean_pr = np.mean(grand[s]["pr"])
         mean_br = np.mean(grand[s]["br"])
         ax.scatter(mean_pr, mean_br, color=STRATEGY_COLORS[s],
-                  s=400, alpha=1.0, edgecolors="black", linewidths=1.5,
+                  s=450, alpha=1.0, edgecolors="black", linewidths=1.5,
                   zorder=4, label=STRATEGY_LABELS[s])
         ax.annotate(STRATEGY_LABELS[s], (mean_pr, mean_br),
                    textcoords="offset points",
                    xytext=label_offsets.get(s, (10, 6)),
-                   fontsize=13, fontweight="bold" if s == "cov_qvalue" else "normal",
+                   fontsize=14, fontweight="bold" if s == "cov_qvalue" else "normal",
                    zorder=5)
 
-    ax.set_xlabel("Pass Rate (%)", fontsize=14)
-    ax.set_ylabel("Mean Branch Coverage", fontsize=14)
-    ax.tick_params(labelsize=12)
-    ax.legend(loc="upper right", fontsize=11)
+    ax.set_xlabel("Pass Rate (%)")
+    ax.set_ylabel("Mean Branch Coverage")
+    ax.legend(loc="upper right")
     ax.grid(True, alpha=0.2)
 
     plt.tight_layout()

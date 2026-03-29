@@ -12,15 +12,25 @@ from pathlib import Path
 
 matplotlib.rcParams.update({
     "font.family": "serif",
-    "font.size": 11,
-    "axes.labelsize": 12,
-    "axes.titlesize": 13,
-    "legend.fontsize": 10,
-    "xtick.labelsize": 10,
-    "ytick.labelsize": 10,
+    "font.serif": ["Times New Roman", "DejaVu Serif", "serif"],
+    "font.size": 14,
+    "axes.labelsize": 16,
+    "axes.titlesize": 17,
+    "axes.titleweight": "bold",
+    "axes.linewidth": 1.2,
+    "legend.fontsize": 12,
+    "legend.framealpha": 0.9,
+    "legend.edgecolor": "0.7",
+    "xtick.labelsize": 13,
+    "ytick.labelsize": 13,
+    "xtick.major.width": 1.0,
+    "ytick.major.width": 1.0,
     "figure.dpi": 150,
     "savefig.dpi": 300,
     "savefig.bbox": "tight",
+    "savefig.pad_inches": 0.1,
+    "grid.alpha": 0.3,
+    "grid.linewidth": 0.8,
 })
 
 RESULTS_DIR = Path("results/ablations")
@@ -99,17 +109,18 @@ def fig_ablation_grid():
         x_labels = [str(v) for v in values]
 
         # CovQValue bars
-        bars = ax.bar(x, qv_means, 0.5, yerr=qv_ses, color="#E84C4C",
-                      alpha=0.85, capsize=5, label="CovQValue")
+        bars = ax.bar(x, qv_means, 0.5, yerr=qv_ses, color="#C44E52",
+                      alpha=0.88, capsize=5, label="CovQValue",
+                      edgecolor="white", linewidth=0.5)
 
         # Random dashed line
-        ax.plot(x, rand_means, "k--o", markersize=6, linewidth=1.5,
+        ax.plot(x, rand_means, "k--o", markersize=7, linewidth=2,
                 label="Random", zorder=5)
 
         # Delta annotations on bars
         for i, (qv, d) in enumerate(zip(qv_means, deltas)):
-            ax.annotate(f"+{d:.0f}", (i, qv + qv_ses[i] + 1),
-                       ha="center", fontsize=9, color="#B03030")
+            ax.annotate(f"+{d:.0f}", (i, qv + qv_ses[i] + 1.5),
+                       ha="center", fontsize=12, color="#8B2020", fontweight="bold")
 
         ax.set_xticks(x)
         ax.set_xticklabels(x_labels)
