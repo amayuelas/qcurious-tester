@@ -302,7 +302,7 @@ def fig_pass_rate_vs_coverage(data):
 
     ax.set_xlabel("Pass Rate (%)")
     ax.set_ylabel("Mean Branch Coverage")
-    ax.legend(loc="lower left", fontsize=9)
+    ax.legend(loc="upper right", fontsize=9)
     ax.grid(True, alpha=0.2)
 
     plt.tight_layout()
