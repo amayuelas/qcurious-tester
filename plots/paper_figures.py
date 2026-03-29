@@ -251,39 +251,51 @@ def fig_per_repo(data):
 # ---------------------------------------------------------------------------
 
 def fig_pass_rate_vs_coverage(data):
-    """Show that lower pass rate → higher coverage for coverage-map strategies."""
-    fig, ax = plt.subplots(figsize=(6, 5))
+    """Dual-axis chart: coverage bars + pass rate line, averaged across all models."""
+    fig, axes = plt.subplots(1, 2, figsize=(11, 4.5))
 
-    for bench_key, marker in [("repo_explore_bench", "o"), ("testgeneval", "s")]:
-        for model_key in MODELS:
-            if model_key not in data[bench_key]:
-                continue
-            results = data[bench_key][model_key]["results"]
-            for s in STRATEGIES:
-                vals = [(r["strategies"][s].get("pass_rate", 0),
-                         r["strategies"][s]["final"])
-                        for r in results if s in r["strategies"]]
-                if not vals:
-                    continue
-                mean_pr = np.mean([v[0] for v in vals]) * 100
-                mean_br = np.mean([v[1] for v in vals])
-                ax.scatter(mean_pr, mean_br, color=STRATEGY_COLORS[s],
-                          marker=marker, s=80, alpha=0.7,
-                          edgecolors="black", linewidths=0.5)
+    bench_labels = {
+        "repo_explore_bench": "RepoExploreBench",
+        "testgeneval": "TestGenEval Lite",
+    }
 
-    # Legend for strategies
-    for s in STRATEGIES:
-        ax.scatter([], [], color=STRATEGY_COLORS[s], label=STRATEGY_LABELS[s],
-                  s=80, edgecolors="black", linewidths=0.5)
-    # Legend for benchmarks
-    ax.scatter([], [], marker="o", color="gray", label="REB", s=80)
-    ax.scatter([], [], marker="s", color="gray", label="TGE", s=80)
+    for ax, bench in zip(axes, ["repo_explore_bench", "testgeneval"]):
+        # Average across all models
+        all_results = []
+        for mk in MODELS:
+            if mk in data[bench]:
+                all_results.extend(data[bench][mk]["results"])
 
-    ax.set_xlabel("Pass Rate (%)")
-    ax.set_ylabel("Mean Branch Coverage")
-    ax.set_title("Pass Rate vs. Coverage")
-    ax.legend(loc="upper left", fontsize=9)
-    ax.grid(True, alpha=0.3)
+        means_br = []
+        means_pr = []
+        for s in STRATEGIES:
+            vals_br = [r["strategies"][s]["final"] for r in all_results
+                       if s in r["strategies"]]
+            vals_pr = [r["strategies"][s].get("pass_rate", 0) for r in all_results
+                       if s in r["strategies"]]
+            means_br.append(np.mean(vals_br))
+            means_pr.append(np.mean(vals_pr) * 100)
+
+        x = np.arange(len(STRATEGIES))
+        colors = [STRATEGY_COLORS[s] for s in STRATEGIES]
+        labels = [STRATEGY_LABELS[s] for s in STRATEGIES]
+
+        # Bars for coverage
+        bars = ax.bar(x, means_br, 0.6, color=colors, alpha=0.85)
+        ax.set_ylabel("Mean Branch Coverage")
+        ax.set_xticks(x)
+        ax.set_xticklabels(labels)
+        ax.set_title(bench_labels[bench])
+
+        # Line for pass rate on secondary axis
+        ax2 = ax.twinx()
+        ax2.plot(x, means_pr, "k--o", markersize=7, linewidth=1.5,
+                 label="Pass Rate", zorder=5)
+        ax2.set_ylabel("Pass Rate (%)")
+        ax2.set_ylim(0, 100)
+        ax2.legend(loc="upper right", fontsize=9)
+
+        ax.grid(True, alpha=0.2, axis="y")
 
     plt.tight_layout()
     plt.savefig(PLOTS_DIR / "fig4_pass_rate_vs_coverage.pdf")
