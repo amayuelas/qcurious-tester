@@ -250,7 +250,11 @@ def fig_per_repo(data):
 
 def fig_pass_rate_vs_coverage(data):
     """Pass rate vs coverage: transparent dots per (model,bench), bold means."""
-    fig, ax = plt.subplots(figsize=(7, 5))
+    # Larger sizes for 50% textwidth display
+    fig, ax = plt.subplots(figsize=(7, 6))
+    ax.tick_params(labelsize=16)
+    ax.xaxis.label.set_size(18)
+    ax.yaxis.label.set_size(18)
 
     # Collect all individual points: one per (strategy, model, benchmark)
     grand = {s: {"pr": [], "br": []} for s in STRATEGIES}
@@ -275,7 +279,7 @@ def fig_pass_rate_vs_coverage(data):
 
                 # Small transparent dot
                 ax.scatter(mean_pr, mean_br, color=STRATEGY_COLORS[s],
-                          s=180, alpha=0.3, edgecolors="none", zorder=2)
+                          s=250, alpha=0.3, edgecolors="none", zorder=2)
 
     # Grand mean per strategy: large opaque dot with label
     label_offsets = {
@@ -290,17 +294,17 @@ def fig_pass_rate_vs_coverage(data):
         mean_pr = np.mean(grand[s]["pr"])
         mean_br = np.mean(grand[s]["br"])
         ax.scatter(mean_pr, mean_br, color=STRATEGY_COLORS[s],
-                  s=450, alpha=1.0, edgecolors="black", linewidths=1.5,
+                  s=600, alpha=1.0, edgecolors="black", linewidths=2.0,
                   zorder=4, label=STRATEGY_LABELS[s])
         ax.annotate(STRATEGY_LABELS[s], (mean_pr, mean_br),
                    textcoords="offset points",
-                   xytext=label_offsets.get(s, (10, 6)),
-                   fontsize=14, fontweight="bold" if s == "cov_qvalue" else "normal",
+                   xytext=label_offsets.get(s, (12, 7)),
+                   fontsize=17, fontweight="bold" if s == "cov_qvalue" else "normal",
                    zorder=5)
 
     ax.set_xlabel("Pass Rate (%)")
     ax.set_ylabel("Mean Branch Coverage")
-    ax.legend(loc="upper right")
+    ax.legend(loc="upper right", fontsize=14)
     ax.grid(True, alpha=0.2)
 
     plt.tight_layout()
