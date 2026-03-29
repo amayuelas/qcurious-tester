@@ -251,7 +251,7 @@ def fig_per_repo(data):
 # ---------------------------------------------------------------------------
 
 def fig_pass_rate_vs_coverage(data):
-    """Dual-axis chart: coverage bars + pass rate line, averaged across all models."""
+    """Branches per passing test + pass rate: shows CovQValue is more efficient."""
     fig, axes = plt.subplots(1, 2, figsize=(11, 4.5))
 
     bench_labels = {
@@ -260,34 +260,43 @@ def fig_pass_rate_vs_coverage(data):
     }
 
     for ax, bench in zip(axes, ["repo_explore_bench", "testgeneval"]):
-        # Average across all models
         all_results = []
         for mk in MODELS:
             if mk in data[bench]:
                 all_results.extend(data[bench][mk]["results"])
 
-        means_br = []
+        means_eff = []
         means_pr = []
         for s in STRATEGIES:
-            vals_br = [r["strategies"][s]["final"] for r in all_results
-                       if s in r["strategies"]]
-            vals_pr = [r["strategies"][s].get("pass_rate", 0) for r in all_results
-                       if s in r["strategies"]]
-            means_br.append(np.mean(vals_br))
-            means_pr.append(np.mean(vals_pr) * 100)
+            # Compute branches per passing test for each run
+            effs = []
+            prs = []
+            for r in all_results:
+                if s not in r["strategies"]:
+                    continue
+                final = r["strategies"][s]["final"]
+                pr = r["strategies"][s].get("pass_rate", 0)
+                pc = r["strategies"][s].get("pass_count", 0)
+                prs.append(pr)
+                if pc > 0:
+                    effs.append(final / pc)
+                else:
+                    effs.append(0)
+            means_eff.append(np.mean(effs))
+            means_pr.append(np.mean(prs) * 100)
 
         x = np.arange(len(STRATEGIES))
         colors = [STRATEGY_COLORS[s] for s in STRATEGIES]
         labels = [STRATEGY_LABELS[s] for s in STRATEGIES]
 
-        # Bars for coverage
-        bars = ax.bar(x, means_br, 0.6, color=colors, alpha=0.85)
-        ax.set_ylabel("Mean Branch Coverage")
+        # Bars for branches per passing test
+        ax.bar(x, means_eff, 0.6, color=colors, alpha=0.85)
+        ax.set_ylabel("Branches per Passing Test")
         ax.set_xticks(x)
         ax.set_xticklabels(labels)
         ax.set_title(bench_labels[bench])
 
-        # Line for pass rate on secondary axis
+        # Line for pass rate
         ax2 = ax.twinx()
         ax2.plot(x, means_pr, "k--o", markersize=7, linewidth=1.5,
                  label="Pass Rate", zorder=5)
