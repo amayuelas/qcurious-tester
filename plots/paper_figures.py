@@ -130,7 +130,7 @@ def _plot_exploration_curves(data, bench_keys, model_keys, title_suffix, filenam
         ax.set_xlabel("Execution Step")
         ax.set_ylabel("Cumulative Branch Coverage")
         ax.set_title(title)
-        ax.legend(loc="lower right")
+        ax.legend(loc="upper left")
         ax.grid(True, alpha=0.3)
         ax.set_xlim(1, max_len)
 
