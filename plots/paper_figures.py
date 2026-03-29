@@ -72,8 +72,8 @@ def fig_exploration_curves(data):
     fig, axes = plt.subplots(1, 2, figsize=(12, 4.5))
 
     bench_labels = {
-        "repo_explore_bench": "RepoExploreBench (93 targets)",
-        "testgeneval": "TestGenEval Lite (140 targets)",
+        "repo_explore_bench": "RepoExploreBench",
+        "testgeneval": "TestGenEval Lite",
     }
 
     for ax, bench in zip(axes, ["repo_explore_bench", "testgeneval"]):
