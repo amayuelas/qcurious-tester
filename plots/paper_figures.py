@@ -251,25 +251,16 @@ def fig_per_repo(data):
 # ---------------------------------------------------------------------------
 
 def fig_pass_rate_vs_coverage(data):
-    """Relative change from Random: coverage gain vs pass rate cost."""
+    """Pass rate vs coverage scatter: each point = (strategy, model, benchmark)."""
     fig, ax = plt.subplots(figsize=(7, 5))
 
-    # Compute relative changes for each (strategy, model, benchmark)
-    other_strats = [s for s in STRATEGIES if s != "random"]
-
     for bench_key, marker in [("repo_explore_bench", "o"), ("testgeneval", "s")]:
-        for model_key, (model_name, _) in MODELS.items():
+        for model_key in MODELS:
             if model_key not in data[bench_key]:
                 continue
             results = data[bench_key][model_key]["results"]
 
-            # Get random baseline
-            random_br = np.mean([r["strategies"]["random"]["final"]
-                                for r in results if "random" in r["strategies"]])
-            random_pr = np.mean([r["strategies"]["random"].get("pass_rate", 0)
-                                for r in results if "random" in r["strategies"]]) * 100
-
-            for s in other_strats:
+            for s in STRATEGIES:
                 vals_br = [r["strategies"][s]["final"] for r in results
                           if s in r["strategies"]]
                 vals_pr = [r["strategies"][s].get("pass_rate", 0) for r in results
@@ -280,19 +271,12 @@ def fig_pass_rate_vs_coverage(data):
                 mean_br = np.mean(vals_br)
                 mean_pr = np.mean(vals_pr) * 100
 
-                pct_br = ((mean_br - random_br) / random_br) * 100
-                pct_pr = mean_pr - random_pr  # absolute change in pass rate
-
-                ax.scatter(pct_pr, pct_br, color=STRATEGY_COLORS[s],
+                ax.scatter(mean_pr, mean_br, color=STRATEGY_COLORS[s],
                           marker=marker, s=120, alpha=0.8,
                           edgecolors="black", linewidths=0.5, zorder=3)
 
-    # Add reference lines
-    ax.axhline(0, color="gray", linewidth=0.8, linestyle="-", alpha=0.5)
-    ax.axvline(0, color="gray", linewidth=0.8, linestyle="-", alpha=0.5)
-
     # Legend
-    for s in other_strats:
+    for s in STRATEGIES:
         ax.scatter([], [], color=STRATEGY_COLORS[s], label=STRATEGY_LABELS[s],
                   s=100, edgecolors="black", linewidths=0.5)
     ax.scatter([], [], marker="o", color="gray", label="REB", s=80,
@@ -300,9 +284,9 @@ def fig_pass_rate_vs_coverage(data):
     ax.scatter([], [], marker="s", color="gray", label="TGE", s=80,
               edgecolors="black", linewidths=0.5)
 
-    ax.set_xlabel("Pass Rate Change (pp vs Random)")
-    ax.set_ylabel("Branch Coverage Change (% vs Random)")
-    ax.set_title("Coverage Gain vs. Pass Rate Cost")
+    ax.set_xlabel("Pass Rate (%)")
+    ax.set_ylabel("Mean Branch Coverage")
+    ax.set_title("Test Quality vs. Exploration Effectiveness")
     ax.legend(loc="upper left", fontsize=9)
     ax.grid(True, alpha=0.2)
 
