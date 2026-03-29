@@ -1,20 +1,45 @@
 \begin{table}[t]
 \centering
-\caption{Branch coverage (mean $\pm$ SE) across 3 models and 2 benchmarks. All CovQValue results are significant at $p < 0.0001$ (paired $t$-test).}
+\caption{Branch coverage (mean $\pm$ SE) across 3 models and 2 benchmarks. $\Delta$: CovQValue $-$ Random. All $p < 0.0001$ (paired $t$-test).}
 \label{tab:main}
 \small
-\begin{tabular}{l|ccc|ccc}
+\begin{tabular}{llcccc}
 \toprule
- & \multicolumn{3}{c|}{\textbf{RepoExploreBench} (93 targets)} & \multicolumn{3}{c}{\textbf{TestGenEval Lite} (140 targets)} \\
-\textbf{Strategy} & Gemini & GPT-5.4m & Mistral & Gemini & GPT-5.4m & Mistral \\
+\textbf{Model} & \textbf{Strategy} & \textbf{Branches} & \textbf{$\Delta$} & \textbf{$d$} & \textbf{Win} \\
 \midrule
-Random & 43.2 $\pm$ 4.5 & 31.2 $\pm$ 3.0 & 41.2 $\pm$ 4.2 & 64.4 $\pm$ 6.3 & 50.4 $\pm$ 4.6 & 65.9 $\pm$ 5.9 \\
-Greedy & 41.8 $\pm$ 3.9 & 28.6 $\pm$ 2.8 & 42.3 $\pm$ 4.4 & 61.5 $\pm$ 6.0 & 53.2 $\pm$ 4.8 & 65.0 $\pm$ 5.8 \\
-CovGreedy & 51.7 $\pm$ 5.7 & 36.5 $\pm$ 3.5 & 40.0 $\pm$ 4.5 & 77.6 $\pm$ 7.3 & 66.0 $\pm$ 6.2 & 74.7 $\pm$ 7.1 \\
-CovQValue & \textbf{72.4} $\pm$ 6.5 & \textbf{49.8} $\pm$ 5.0 & \textbf{59.1} $\pm$ 6.0 & \textbf{108.9} $\pm$ 9.0 & \textbf{80.5} $\pm$ 7.2 & \textbf{100.0} $\pm$ 8.4 \\
+\multicolumn{6}{l}{\textsc{RepoExploreBench} (93 targets)} \\
+  Gemini Flash & Random & 43.2 $\pm$ 4.5 &  &  &  \\
+   & Greedy & 41.8 $\pm$ 3.9 &  &  &  \\
+   & CovGreedy & 51.7 $\pm$ 5.7 &  &  &  \\
+   & CovQValue & \textbf{72.4} $\pm$ 6.5 & +29.2 & 0.86 & 78/93 \\
+  \addlinespace
+  GPT-5.4 Mini & Random & 31.2 $\pm$ 3.0 &  &  &  \\
+   & Greedy & 28.6 $\pm$ 2.8 &  &  &  \\
+   & CovGreedy & 36.5 $\pm$ 3.5 &  &  &  \\
+   & CovQValue & \textbf{49.8} $\pm$ 5.0 & +18.6 & 0.50 & 72/93 \\
+  \addlinespace
+  Mistral Large & Random & 41.2 $\pm$ 4.2 &  &  &  \\
+   & Greedy & 42.3 $\pm$ 4.4 &  &  &  \\
+   & CovGreedy & 40.0 $\pm$ 4.5 &  &  &  \\
+   & CovQValue & \textbf{59.1} $\pm$ 6.0 & +17.9 & 0.54 & 73/93 \\
+  \addlinespace
 \midrule
-$\Delta$ vs Random & +29.2 ($d$=0.86)*** & +18.6 ($d$=0.50)*** & +17.9 ($d$=0.54)*** & +44.5 ($d$=0.68)*** & +30.1 ($d$=0.50)*** & +34.1 ($d$=0.46)*** \\
-Win rate & 78/93 & 72/93 & 73/93 & 111/140 & 109/140 & 109/140 \\
+\multicolumn{6}{l}{\textsc{TestGenEval Lite} (140 targets)} \\
+  Gemini Flash & Random & 64.4 $\pm$ 6.3 &  &  &  \\
+   & Greedy & 61.5 $\pm$ 6.0 &  &  &  \\
+   & CovGreedy & 77.6 $\pm$ 7.3 &  &  &  \\
+   & CovQValue & \textbf{108.9} $\pm$ 9.0 & +44.5 & 0.68 & 111/140 \\
+  \addlinespace
+  GPT-5.4 Mini & Random & 50.4 $\pm$ 4.6 &  &  &  \\
+   & Greedy & 53.2 $\pm$ 4.8 &  &  &  \\
+   & CovGreedy & 66.0 $\pm$ 6.2 &  &  &  \\
+   & CovQValue & \textbf{80.5} $\pm$ 7.2 & +30.1 & 0.50 & 109/140 \\
+  \addlinespace
+  Mistral Large & Random & 65.9 $\pm$ 5.9 &  &  &  \\
+   & Greedy & 65.0 $\pm$ 5.8 &  &  &  \\
+   & CovGreedy & 74.7 $\pm$ 7.1 &  &  &  \\
+   & CovQValue & \textbf{100.0} $\pm$ 8.4 & +34.1 & 0.46 & 109/140 \\
+  \addlinespace
 \bottomrule
 \end{tabular}
 \end{table}
