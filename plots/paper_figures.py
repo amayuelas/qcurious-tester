@@ -221,10 +221,6 @@ def _plot_per_repo(data, bench, model_keys, title_suffix, filename):
     ax.set_xticks(x)
     ax.set_xticklabels([short[r] for r in repos], rotation=45, ha="right")
     ax.set_ylabel("Mean Branch Coverage")
-    title = "Coverage by Repository"
-    if title_suffix:
-        title += f" ({title_suffix})"
-    ax.set_title(title)
     ax.legend()
     ax.grid(True, alpha=0.3, axis="y")
 
