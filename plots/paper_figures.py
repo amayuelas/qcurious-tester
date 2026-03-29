@@ -251,47 +251,69 @@ def fig_per_repo(data):
 # ---------------------------------------------------------------------------
 
 def fig_pass_rate_vs_coverage(data):
-    """Pass rate vs coverage: single plot, averaged across models, shape=benchmark."""
-    fig, ax = plt.subplots(figsize=(6, 5))
+    """Pass rate vs coverage: connected trajectory per benchmark."""
+    fig, ax = plt.subplots(figsize=(7, 5))
 
-    BENCH_MARKERS = {
-        "repo_explore_bench": ("o", "REB"),
-        "testgeneval": ("s", "TGE"),
+    BENCH_STYLES = {
+        "repo_explore_bench": ("o", "-", "RepoExploreBench"),
+        "testgeneval": ("s", "--", "TestGenEval Lite"),
     }
 
-    for bench_key, (marker, bench_label) in BENCH_MARKERS.items():
-        # Average across all models
+    # Strategy order for the path
+    path_order = ["random", "greedy", "cov_greedy", "cov_qvalue"]
+
+    for bench_key, (marker, linestyle, bench_label) in BENCH_STYLES.items():
         all_results = []
         for mk in MODELS:
             if mk in data[bench_key]:
                 all_results.extend(data[bench_key][mk]["results"])
 
-        for s in STRATEGIES:
+        prs, brs, colors = [], [], []
+        for s in path_order:
             vals_br = [r["strategies"][s]["final"] for r in all_results
                       if s in r["strategies"]]
             vals_pr = [r["strategies"][s].get("pass_rate", 0) for r in all_results
                       if s in r["strategies"]]
             if not vals_br:
                 continue
+            prs.append(np.mean(vals_pr) * 100)
+            brs.append(np.mean(vals_br))
+            colors.append(STRATEGY_COLORS[s])
 
-            mean_br = np.mean(vals_br)
-            mean_pr = np.mean(vals_pr) * 100
+        # Draw connecting line
+        ax.plot(prs, brs, color="gray", linestyle=linestyle, linewidth=1.5,
+                alpha=0.4, zorder=1)
 
-            ax.scatter(mean_pr, mean_br, color=STRATEGY_COLORS[s],
-                      marker=marker, s=150, alpha=0.85,
-                      edgecolors="black", linewidths=0.5, zorder=3)
+        # Draw arrows between consecutive points
+        for i in range(len(prs) - 1):
+            ax.annotate("", xy=(prs[i+1], brs[i+1]), xytext=(prs[i], brs[i]),
+                       arrowprops=dict(arrowstyle="->", color="gray",
+                                      alpha=0.5, lw=1.2,
+                                      linestyle=linestyle),
+                       zorder=1)
 
-    # Legend — strategies (color) + benchmarks (shape)
-    for s in STRATEGIES:
-        ax.scatter([], [], color=STRATEGY_COLORS[s], label=STRATEGY_LABELS[s],
-                  s=100, edgecolors="black", linewidths=0.5, marker="o")
-    for bench_key, (marker, bench_label) in BENCH_MARKERS.items():
+        # Draw points (labels only on TGE to avoid overlap)
+        for i, s in enumerate(path_order):
+            if i < len(prs):
+                ax.scatter(prs[i], brs[i], color=colors[i], marker=marker,
+                          s=180, edgecolors="black", linewidths=0.8, zorder=4)
+                if bench_key == "testgeneval":
+                    offsets = {"random": (8, -8), "greedy": (8, 5),
+                              "cov_greedy": (-70, 8), "cov_qvalue": (8, 5)}
+                    ax.annotate(STRATEGY_LABELS[s], (prs[i], brs[i]),
+                               textcoords="offset points",
+                               xytext=offsets.get(s, (5, 5)),
+                               fontsize=9, fontweight="bold" if s == "cov_qvalue" else "normal",
+                               zorder=5)
+
+    # Legend for benchmarks only (strategies are labeled on points)
+    for bench_key, (marker, linestyle, bench_label) in BENCH_STYLES.items():
         ax.scatter([], [], color="gray", marker=marker, label=bench_label,
-                  s=80, edgecolors="black", linewidths=0.5)
+                  s=100, edgecolors="black", linewidths=0.5)
 
     ax.set_xlabel("Pass Rate (%)")
     ax.set_ylabel("Mean Branch Coverage")
-    ax.legend(loc="upper left", fontsize=9)
+    ax.legend(loc="lower left", fontsize=10)
     ax.grid(True, alpha=0.2)
 
     plt.tight_layout()
