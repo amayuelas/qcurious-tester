@@ -251,60 +251,48 @@ def fig_per_repo(data):
 # ---------------------------------------------------------------------------
 
 def fig_pass_rate_vs_coverage(data):
-    """Pass rate vs coverage: 2 panels (REB|TGE), color=strategy, marker=model."""
-    fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+    """Pass rate vs coverage: single plot, averaged across models, shape=benchmark."""
+    fig, ax = plt.subplots(figsize=(6, 5))
 
-    MODEL_MARKERS = {
-        "gemini": "o",
-        "gpt54mini": "D",
-        "mistral": "s",
+    BENCH_MARKERS = {
+        "repo_explore_bench": ("o", "REB"),
+        "testgeneval": ("s", "TGE"),
     }
 
-    bench_labels = {
-        "repo_explore_bench": "RepoExploreBench",
-        "testgeneval": "TestGenEval Lite",
-    }
+    for bench_key, (marker, bench_label) in BENCH_MARKERS.items():
+        # Average across all models
+        all_results = []
+        for mk in MODELS:
+            if mk in data[bench_key]:
+                all_results.extend(data[bench_key][mk]["results"])
 
-    for ax, bench in zip(axes, ["repo_explore_bench", "testgeneval"]):
-        for model_key, (model_name, _) in MODELS.items():
-            if model_key not in data[bench]:
+        for s in STRATEGIES:
+            vals_br = [r["strategies"][s]["final"] for r in all_results
+                      if s in r["strategies"]]
+            vals_pr = [r["strategies"][s].get("pass_rate", 0) for r in all_results
+                      if s in r["strategies"]]
+            if not vals_br:
                 continue
-            results = data[bench][model_key]["results"]
-            marker = MODEL_MARKERS[model_key]
 
-            for s in STRATEGIES:
-                vals_br = [r["strategies"][s]["final"] for r in results
-                          if s in r["strategies"]]
-                vals_pr = [r["strategies"][s].get("pass_rate", 0) for r in results
-                          if s in r["strategies"]]
-                if not vals_br:
-                    continue
+            mean_br = np.mean(vals_br)
+            mean_pr = np.mean(vals_pr) * 100
 
-                mean_br = np.mean(vals_br)
-                mean_pr = np.mean(vals_pr) * 100
+            ax.scatter(mean_pr, mean_br, color=STRATEGY_COLORS[s],
+                      marker=marker, s=150, alpha=0.85,
+                      edgecolors="black", linewidths=0.5, zorder=3)
 
-                ax.scatter(mean_pr, mean_br, color=STRATEGY_COLORS[s],
-                          marker=marker, s=120, alpha=0.8,
-                          edgecolors="black", linewidths=0.5, zorder=3)
-
-        ax.set_xlabel("Pass Rate (%)")
-        ax.set_ylabel("Mean Branch Coverage")
-        ax.set_title(bench_labels[bench])
-        ax.grid(True, alpha=0.2)
-
-    # Shared legend — strategies (color) + models (shape)
-    legend_elements = []
+    # Legend — strategies (color) + benchmarks (shape)
     for s in STRATEGIES:
-        legend_elements.append(plt.scatter([], [], color=STRATEGY_COLORS[s],
-                              label=STRATEGY_LABELS[s], s=100,
-                              edgecolors="black", linewidths=0.5))
-    for model_key, (model_name, _) in MODELS.items():
-        legend_elements.append(plt.scatter([], [], color="gray",
-                              marker=MODEL_MARKERS[model_key],
-                              label=model_name, s=80,
-                              edgecolors="black", linewidths=0.5))
+        ax.scatter([], [], color=STRATEGY_COLORS[s], label=STRATEGY_LABELS[s],
+                  s=100, edgecolors="black", linewidths=0.5, marker="o")
+    for bench_key, (marker, bench_label) in BENCH_MARKERS.items():
+        ax.scatter([], [], color="gray", marker=marker, label=bench_label,
+                  s=80, edgecolors="black", linewidths=0.5)
 
-    axes[1].legend(loc="upper left", fontsize=9)
+    ax.set_xlabel("Pass Rate (%)")
+    ax.set_ylabel("Mean Branch Coverage")
+    ax.legend(loc="upper left", fontsize=9)
+    ax.grid(True, alpha=0.2)
 
     plt.tight_layout()
     plt.savefig(PLOTS_DIR / "fig4_pass_rate_vs_coverage.pdf")
