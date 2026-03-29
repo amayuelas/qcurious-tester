@@ -80,60 +80,47 @@ def load_all():
 # Figure 1: Exploration curves (2 panels, one model)
 # ---------------------------------------------------------------------------
 
-def _plot_exploration_curves(data, bench_keys, model_keys, title_suffix, filename):
-    """Helper: plot exploration curves for given benchmarks and models."""
-    fig, axes = plt.subplots(1, len(bench_keys), figsize=(6 * len(bench_keys), 4.5))
-    if len(bench_keys) == 1:
-        axes = [axes]
+def _plot_exploration_curves_single(data, bench, model_keys, filename):
+    """Plot exploration curves for a single benchmark."""
+    fig, ax = plt.subplots(figsize=(6, 4.5))
 
-    bench_labels = {
-        "repo_explore_bench": "RepoExploreBench",
-        "testgeneval": "TestGenEval Lite",
-    }
-
-    for ax, bench in zip(axes, bench_keys):
-        curves_by_strat = defaultdict(list)
-        for model_key in model_keys:
-            if model_key not in data[bench]:
-                continue
-            for r in data[bench][model_key]["results"]:
-                for s in STRATEGIES:
-                    if s in r["strategies"]:
-                        curve = r["strategies"][s].get("branch_curve", [])
-                        if curve:
-                            curves_by_strat[s].append(curve)
-
-        if not curves_by_strat:
+    curves_by_strat = defaultdict(list)
+    for model_key in model_keys:
+        if model_key not in data[bench]:
             continue
+        for r in data[bench][model_key]["results"]:
+            for s in STRATEGIES:
+                if s in r["strategies"]:
+                    curve = r["strategies"][s].get("branch_curve", [])
+                    if curve:
+                        curves_by_strat[s].append(curve)
 
-        max_len = max(len(c) for curves in curves_by_strat.values() for c in curves)
+    if not curves_by_strat:
+        return
 
-        for s in STRATEGIES:
-            curves = curves_by_strat.get(s, [])
-            if not curves:
-                continue
-            padded = [c + [c[-1]] * (max_len - len(c)) if len(c) < max_len else c[:max_len]
-                      for c in curves]
-            arr = np.array(padded)
-            mean = arr.mean(axis=0)
-            se = arr.std(axis=0) / np.sqrt(len(arr))
-            steps = np.arange(1, max_len + 1)
+    max_len = max(len(c) for curves in curves_by_strat.values() for c in curves)
 
-            ax.plot(steps, mean, color=STRATEGY_COLORS[s], linewidth=2.5,
-                    label=STRATEGY_LABELS[s], zorder=3)
-            ax.fill_between(steps, mean - se, mean + se,
-                           color=STRATEGY_COLORS[s], alpha=0.15, zorder=2)
+    for s in STRATEGIES:
+        curves = curves_by_strat.get(s, [])
+        if not curves:
+            continue
+        padded = [c + [c[-1]] * (max_len - len(c)) if len(c) < max_len else c[:max_len]
+                  for c in curves]
+        arr = np.array(padded)
+        mean = arr.mean(axis=0)
+        se = arr.std(axis=0) / np.sqrt(len(arr))
+        steps = np.arange(1, max_len + 1)
 
-        panel_label = chr(ord('a') + list(bench_keys).index(bench))
-        title = bench_labels[bench]
-        if title_suffix:
-            title += f" ({title_suffix})"
-        ax.set_xlabel("Execution Step")
-        ax.set_ylabel("Cumulative Branch Coverage")
-        ax.set_title(f"({panel_label}) {title}")
-        ax.legend(loc="upper left")
-        ax.grid(True, alpha=0.3)
-        ax.set_xlim(1, max_len)
+        ax.plot(steps, mean, color=STRATEGY_COLORS[s], linewidth=2.5,
+                label=STRATEGY_LABELS[s], zorder=3)
+        ax.fill_between(steps, mean - se, mean + se,
+                       color=STRATEGY_COLORS[s], alpha=0.15, zorder=2)
+
+    ax.set_xlabel("Execution Step")
+    ax.set_ylabel("Cumulative Branch Coverage")
+    ax.legend(loc="upper left")
+    ax.grid(True, alpha=0.3)
+    ax.set_xlim(1, max_len)
 
     plt.tight_layout()
     plt.savefig(PLOTS_DIR / f"{filename}.pdf")
@@ -143,17 +130,17 @@ def _plot_exploration_curves(data, bench_keys, model_keys, title_suffix, filenam
 
 
 def fig_exploration_curves(data):
-    """Generate exploration curves: averaged across all models + per model."""
-    benches = ["repo_explore_bench", "testgeneval"]
+    """Generate exploration curves: separate images per benchmark."""
+    # All models averaged — separate per benchmark
+    for bench, short in [("repo_explore_bench", "reb"), ("testgeneval", "tge")]:
+        _plot_exploration_curves_single(data, bench, list(MODELS.keys()),
+                                        f"fig1_exploration_curves_{short}")
 
-    # All models averaged
-    _plot_exploration_curves(data, benches, list(MODELS.keys()),
-                            "all models", "fig1_exploration_curves")
-
-    # Per model
+    # Per model — separate per benchmark
     for model_key, (model_name, _) in MODELS.items():
-        _plot_exploration_curves(data, benches, [model_key],
-                                model_name, f"fig1_exploration_curves_{model_key}")
+        for bench, short in [("repo_explore_bench", "reb"), ("testgeneval", "tge")]:
+            _plot_exploration_curves_single(data, bench, [model_key],
+                                            f"fig1_exploration_curves_{short}_{model_key}")
 
 
 # ---------------------------------------------------------------------------
