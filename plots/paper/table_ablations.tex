@@ -1,0 +1,28 @@
+\begin{table}[t]
+\centering
+\caption{Ablation studies on RepoExploreBench (93 targets, Gemini Flash). Default values: $\gamma{=}0.5$, $K{=}3$, $S{=}3$, $N{=}24$. Bold indicates the default setting.}
+\label{tab:ablations}
+\small
+\begin{tabular}{llcccc}
+\toprule
+\textbf{Ablation} & \textbf{Value} & \textbf{Random} & \textbf{CovQValue} & \textbf{$\Delta$} & \textbf{Wins} \\
+\midrule
+  $\gamma$ & 0.0 & 42.7 & 68.6 & +25.8 & 78/93 \\
+   & \textbf{0.5} & 41.5 & \textbf{71.1} & +29.5 & 78/93 \\
+   & 1.0 & 41.7 & 70.0 & +28.3 & 75/93 \\
+  \addlinespace
+  $K$ & 1 & 43.1 & 70.5 & +27.4 & 77/93 \\
+   & \textbf{3} & 42.8 & \textbf{70.0} & +27.2 & 75/93 \\
+   & 5 & 41.5 & 72.8 & +31.3 & 80/93 \\
+  \addlinespace
+  $S$ & 1 & 42.2 & 71.5 & +29.3 & 78/93 \\
+   & \textbf{3} & 43.1 & \textbf{69.4} & +26.3 & 78/93 \\
+   & 5 & 42.8 & 72.4 & +29.6 & 78/93 \\
+  \addlinespace
+  $N$ & 8 & 40.5 & 58.0 & +17.5 & 75/93 \\
+   & 16 & 41.5 & 66.7 & +25.2 & 78/93 \\
+   & \textbf{24} & 41.5 & \textbf{71.2} & +29.7 & 78/93 \\
+   & 32 & 41.9 & 70.8 & +28.9 & 77/93 \\
+\bottomrule
+\end{tabular}
+\end{table}
