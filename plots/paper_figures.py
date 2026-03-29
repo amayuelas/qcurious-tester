@@ -251,69 +251,57 @@ def fig_per_repo(data):
 # ---------------------------------------------------------------------------
 
 def fig_pass_rate_vs_coverage(data):
-    """Pass rate vs coverage: connected trajectory per benchmark."""
+    """Pass rate vs coverage: transparent dots per (model,bench), bold means."""
     fig, ax = plt.subplots(figsize=(7, 5))
 
-    BENCH_STYLES = {
-        "repo_explore_bench": ("o", "-", "RepoExploreBench"),
-        "testgeneval": ("s", "--", "TestGenEval Lite"),
-    }
+    # Collect all individual points: one per (strategy, model, benchmark)
+    grand = {s: {"pr": [], "br": []} for s in STRATEGIES}
 
-    # Strategy order for the path
-    path_order = ["random", "greedy", "cov_greedy", "cov_qvalue"]
-
-    for bench_key, (marker, linestyle, bench_label) in BENCH_STYLES.items():
-        all_results = []
-        for mk in MODELS:
-            if mk in data[bench_key]:
-                all_results.extend(data[bench_key][mk]["results"])
-
-        prs, brs, colors = [], [], []
-        for s in path_order:
-            vals_br = [r["strategies"][s]["final"] for r in all_results
-                      if s in r["strategies"]]
-            vals_pr = [r["strategies"][s].get("pass_rate", 0) for r in all_results
-                      if s in r["strategies"]]
-            if not vals_br:
+    for bench_key in ["repo_explore_bench", "testgeneval"]:
+        for model_key in MODELS:
+            if model_key not in data[bench_key]:
                 continue
-            prs.append(np.mean(vals_pr) * 100)
-            brs.append(np.mean(vals_br))
-            colors.append(STRATEGY_COLORS[s])
+            results = data[bench_key][model_key]["results"]
 
-        # Draw connecting line
-        ax.plot(prs, brs, color="gray", linestyle=linestyle, linewidth=1.5,
-                alpha=0.4, zorder=1)
+            for s in STRATEGIES:
+                vals_br = [r["strategies"][s]["final"] for r in results
+                          if s in r["strategies"]]
+                vals_pr = [r["strategies"][s].get("pass_rate", 0) for r in results
+                          if s in r["strategies"]]
+                if not vals_br:
+                    continue
+                mean_br = np.mean(vals_br)
+                mean_pr = np.mean(vals_pr) * 100
+                grand[s]["pr"].append(mean_pr)
+                grand[s]["br"].append(mean_br)
 
-        # Draw arrows between consecutive points
-        for i in range(len(prs) - 1):
-            ax.annotate("", xy=(prs[i+1], brs[i+1]), xytext=(prs[i], brs[i]),
-                       arrowprops=dict(arrowstyle="->", color="gray",
-                                      alpha=0.5, lw=1.2,
-                                      linestyle=linestyle),
-                       zorder=1)
+                # Small transparent dot
+                ax.scatter(mean_pr, mean_br, color=STRATEGY_COLORS[s],
+                          s=80, alpha=0.35, edgecolors="none", zorder=2)
 
-        # Draw points (labels only on TGE to avoid overlap)
-        for i, s in enumerate(path_order):
-            if i < len(prs):
-                ax.scatter(prs[i], brs[i], color=colors[i], marker=marker,
-                          s=180, edgecolors="black", linewidths=0.8, zorder=4)
-                if bench_key == "testgeneval":
-                    offsets = {"random": (8, -8), "greedy": (8, 5),
-                              "cov_greedy": (-70, 8), "cov_qvalue": (8, 5)}
-                    ax.annotate(STRATEGY_LABELS[s], (prs[i], brs[i]),
-                               textcoords="offset points",
-                               xytext=offsets.get(s, (5, 5)),
-                               fontsize=9, fontweight="bold" if s == "cov_qvalue" else "normal",
-                               zorder=5)
-
-    # Legend for benchmarks only (strategies are labeled on points)
-    for bench_key, (marker, linestyle, bench_label) in BENCH_STYLES.items():
-        ax.scatter([], [], color="gray", marker=marker, label=bench_label,
-                  s=100, edgecolors="black", linewidths=0.5)
+    # Grand mean per strategy: large opaque dot with label
+    label_offsets = {
+        "random": (8, -10),
+        "greedy": (8, 5),
+        "cov_greedy": (-12, 8),
+        "cov_qvalue": (8, 5),
+    }
+    for s in STRATEGIES:
+        if not grand[s]["pr"]:
+            continue
+        mean_pr = np.mean(grand[s]["pr"])
+        mean_br = np.mean(grand[s]["br"])
+        ax.scatter(mean_pr, mean_br, color=STRATEGY_COLORS[s],
+                  s=250, alpha=1.0, edgecolors="black", linewidths=1.2,
+                  zorder=4, label=STRATEGY_LABELS[s])
+        ax.annotate(STRATEGY_LABELS[s], (mean_pr, mean_br),
+                   textcoords="offset points",
+                   xytext=label_offsets.get(s, (8, 5)),
+                   fontsize=10, fontweight="bold" if s == "cov_qvalue" else "normal",
+                   zorder=5)
 
     ax.set_xlabel("Pass Rate (%)")
     ax.set_ylabel("Mean Branch Coverage")
-    ax.legend(loc="lower left", fontsize=10)
     ax.grid(True, alpha=0.2)
 
     plt.tight_layout()
