@@ -282,10 +282,11 @@ def table_main_results(data):
                 vals = [r["strategies"][s]["final"] for r in results
                         if s in r["strategies"]]
                 mean = np.mean(vals)
+                se = np.std(vals) / np.sqrt(len(vals))
                 if s == "cov_qvalue":
-                    row.append(f"\\textbf{{{mean:.1f}}}")
+                    row.append(f"\\textbf{{{mean:.1f}}} {{\\tiny$\\pm${se:.1f}}}")
                 else:
-                    row.append(f"{mean:.1f}")
+                    row.append(f"{mean:.1f} {{\\tiny$\\pm${se:.1f}}}")
         lines.append(" & ".join(row) + r" \\")
 
     lines.append(r"\midrule")
