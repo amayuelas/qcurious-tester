@@ -251,14 +251,26 @@ def fig_per_repo(data):
 # ---------------------------------------------------------------------------
 
 def fig_pass_rate_vs_coverage(data):
-    """Pass rate vs coverage scatter: each point = (strategy, model, benchmark)."""
-    fig, ax = plt.subplots(figsize=(7, 5))
+    """Pass rate vs coverage: 2 panels (REB|TGE), color=strategy, marker=model."""
+    fig, axes = plt.subplots(1, 2, figsize=(12, 5))
 
-    for bench_key, marker in [("repo_explore_bench", "o"), ("testgeneval", "s")]:
-        for model_key in MODELS:
-            if model_key not in data[bench_key]:
+    MODEL_MARKERS = {
+        "gemini": "o",
+        "gpt54mini": "D",
+        "mistral": "s",
+    }
+
+    bench_labels = {
+        "repo_explore_bench": "RepoExploreBench",
+        "testgeneval": "TestGenEval Lite",
+    }
+
+    for ax, bench in zip(axes, ["repo_explore_bench", "testgeneval"]):
+        for model_key, (model_name, _) in MODELS.items():
+            if model_key not in data[bench]:
                 continue
-            results = data[bench_key][model_key]["results"]
+            results = data[bench][model_key]["results"]
+            marker = MODEL_MARKERS[model_key]
 
             for s in STRATEGIES:
                 vals_br = [r["strategies"][s]["final"] for r in results
@@ -275,20 +287,24 @@ def fig_pass_rate_vs_coverage(data):
                           marker=marker, s=120, alpha=0.8,
                           edgecolors="black", linewidths=0.5, zorder=3)
 
-    # Legend
-    for s in STRATEGIES:
-        ax.scatter([], [], color=STRATEGY_COLORS[s], label=STRATEGY_LABELS[s],
-                  s=100, edgecolors="black", linewidths=0.5)
-    ax.scatter([], [], marker="o", color="gray", label="REB", s=80,
-              edgecolors="black", linewidths=0.5)
-    ax.scatter([], [], marker="s", color="gray", label="TGE", s=80,
-              edgecolors="black", linewidths=0.5)
+        ax.set_xlabel("Pass Rate (%)")
+        ax.set_ylabel("Mean Branch Coverage")
+        ax.set_title(bench_labels[bench])
+        ax.grid(True, alpha=0.2)
 
-    ax.set_xlabel("Pass Rate (%)")
-    ax.set_ylabel("Mean Branch Coverage")
-    ax.set_title("Test Quality vs. Exploration Effectiveness")
-    ax.legend(loc="upper left", fontsize=9)
-    ax.grid(True, alpha=0.2)
+    # Shared legend — strategies (color) + models (shape)
+    legend_elements = []
+    for s in STRATEGIES:
+        legend_elements.append(plt.scatter([], [], color=STRATEGY_COLORS[s],
+                              label=STRATEGY_LABELS[s], s=100,
+                              edgecolors="black", linewidths=0.5))
+    for model_key, (model_name, _) in MODELS.items():
+        legend_elements.append(plt.scatter([], [], color="gray",
+                              marker=MODEL_MARKERS[model_key],
+                              label=model_name, s=80,
+                              edgecolors="black", linewidths=0.5))
+
+    axes[1].legend(loc="upper left", fontsize=9)
 
     plt.tight_layout()
     plt.savefig(PLOTS_DIR / "fig4_pass_rate_vs_coverage.pdf")
