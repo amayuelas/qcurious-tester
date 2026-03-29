@@ -192,12 +192,15 @@ def fig_model_comparison(data):
 # Figure 3: Per-repo breakdown (Gemini Flash, TGE)
 # ---------------------------------------------------------------------------
 
-def fig_per_repo(data):
-    """Per-repo bar chart for TestGenEval (Gemini Flash)."""
-    results = data["testgeneval"]["gemini"]["results"]
+def _plot_per_repo(data, bench, model_keys, title_suffix, filename):
+    """Helper: per-repo bar chart for given models."""
+    # Collect all results across specified models
+    all_results = []
+    for mk in model_keys:
+        if mk in data[bench]:
+            all_results.extend(data[bench][mk]["results"])
 
-    repos = sorted(set(r.get("repo", "unknown") for r in results))
-    # Shorten names
+    repos = sorted(set(r.get("repo", "unknown") for r in all_results))
     short = {r: r.split("/")[-1] for r in repos}
 
     fig, ax = plt.subplots(figsize=(10, 5))
@@ -207,7 +210,7 @@ def fig_per_repo(data):
     for i, s in enumerate(STRATEGIES):
         means = []
         for repo in repos:
-            vals = [r["strategies"][s]["final"] for r in results
+            vals = [r["strategies"][s]["final"] for r in all_results
                     if r.get("repo") == repo and s in r["strategies"]]
             means.append(np.mean(vals) if vals else 0)
         ax.bar(x + i * width - 0.3, means, width,
@@ -216,15 +219,30 @@ def fig_per_repo(data):
     ax.set_xticks(x)
     ax.set_xticklabels([short[r] for r in repos], rotation=45, ha="right")
     ax.set_ylabel("Mean Branch Coverage")
-    ax.set_title("Coverage by Repository (Gemini Flash, TestGenEval Lite)")
+    title = "Coverage by Repository"
+    if title_suffix:
+        title += f" ({title_suffix})"
+    ax.set_title(title)
     ax.legend()
     ax.grid(True, alpha=0.3, axis="y")
 
     plt.tight_layout()
-    plt.savefig(PLOTS_DIR / "fig3_per_repo.pdf")
-    plt.savefig(PLOTS_DIR / "fig3_per_repo.png")
+    plt.savefig(PLOTS_DIR / f"{filename}.pdf")
+    plt.savefig(PLOTS_DIR / f"{filename}.png")
     plt.close()
-    print("Saved fig3_per_repo")
+    print(f"Saved {filename}")
+
+
+def fig_per_repo(data):
+    """Generate per-repo charts: all models averaged + per model."""
+    # All models averaged
+    _plot_per_repo(data, "testgeneval", list(MODELS.keys()),
+                   "all models", "fig3_per_repo")
+
+    # Per model
+    for model_key, (model_name, _) in MODELS.items():
+        _plot_per_repo(data, "testgeneval", [model_key],
+                       model_name, f"fig3_per_repo_{model_key}")
 
 
 # ---------------------------------------------------------------------------
