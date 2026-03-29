@@ -1,0 +1,24 @@
+\begin{table}[t]
+\centering
+\caption{Line coverage and pass rate (appendix). Results consistent with branch coverage.}
+\label{tab:lines}
+\small
+\begin{tabular}{l|cc|cc|cc}
+\toprule
+ & \multicolumn{2}{c|}{Gemini Flash} & \multicolumn{2}{c|}{GPT-5.4 Mini} & \multicolumn{2}{c}{Mistral Large} \\
+\textbf{Strategy} & Lines & Pass\% & Lines & Pass\% & Lines & Pass\% \\
+\midrule
+\multicolumn{7}{l}{\textit{RepoExploreBench}} \\
+\quad Random & 146 & 84\% & 113 & 95\% & 142 & 79\% \\
+\quad Greedy & 142 & 83\% & 109 & 95\% & 144 & 80\% \\
+\quad CovGreedy & 157 & 57\% & 123 & 86\% & 129 & 48\% \\
+\quad CovQValue & \textbf{197} & 71\% & \textbf{151} & 87\% & \textbf{171} & 67\% \\
+\midrule
+\multicolumn{7}{l}{\textit{TestGenEval Lite}} \\
+\quad Random & 149 & 75\% & 135 & 81\% & 148 & 63\% \\
+\quad Greedy & 149 & 73\% & 141 & 82\% & 148 & 61\% \\
+\quad CovGreedy & 161 & 62\% & 151 & 69\% & 157 & 40\% \\
+\quad CovQValue & \textbf{193} & 64\% & \textbf{164} & 77\% & \textbf{180} & 56\% \\
+\bottomrule
+\end{tabular}
+\end{table}
