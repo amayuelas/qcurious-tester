@@ -67,25 +67,31 @@ def load_all():
 # Figure 1: Exploration curves (2 panels, one model)
 # ---------------------------------------------------------------------------
 
-def fig_exploration_curves(data):
-    """Side-by-side exploration curves for REB and TGE (Gemini Flash)."""
-    fig, axes = plt.subplots(1, 2, figsize=(12, 4.5))
+def _plot_exploration_curves(data, bench_keys, model_keys, title_suffix, filename):
+    """Helper: plot exploration curves for given benchmarks and models."""
+    fig, axes = plt.subplots(1, len(bench_keys), figsize=(6 * len(bench_keys), 4.5))
+    if len(bench_keys) == 1:
+        axes = [axes]
 
     bench_labels = {
         "repo_explore_bench": "RepoExploreBench",
         "testgeneval": "TestGenEval Lite",
     }
 
-    for ax, bench in zip(axes, ["repo_explore_bench", "testgeneval"]):
-        results = data[bench]["gemini"]["results"]
-
+    for ax, bench in zip(axes, bench_keys):
         curves_by_strat = defaultdict(list)
-        for r in results:
-            for s in STRATEGIES:
-                if s in r["strategies"]:
-                    curve = r["strategies"][s].get("branch_curve", [])
-                    if curve:
-                        curves_by_strat[s].append(curve)
+        for model_key in model_keys:
+            if model_key not in data[bench]:
+                continue
+            for r in data[bench][model_key]["results"]:
+                for s in STRATEGIES:
+                    if s in r["strategies"]:
+                        curve = r["strategies"][s].get("branch_curve", [])
+                        if curve:
+                            curves_by_strat[s].append(curve)
+
+        if not curves_by_strat:
+            continue
 
         max_len = max(len(c) for curves in curves_by_strat.values() for c in curves)
 
@@ -105,18 +111,35 @@ def fig_exploration_curves(data):
             ax.fill_between(steps, mean - se, mean + se,
                            color=STRATEGY_COLORS[s], alpha=0.12)
 
+        title = bench_labels[bench]
+        if title_suffix:
+            title += f" ({title_suffix})"
         ax.set_xlabel("Execution Step")
         ax.set_ylabel("Cumulative Branch Coverage")
-        ax.set_title(bench_labels[bench])
+        ax.set_title(title)
         ax.legend(loc="lower right")
         ax.grid(True, alpha=0.3)
         ax.set_xlim(1, max_len)
 
     plt.tight_layout()
-    plt.savefig(PLOTS_DIR / "fig1_exploration_curves.pdf")
-    plt.savefig(PLOTS_DIR / "fig1_exploration_curves.png")
+    plt.savefig(PLOTS_DIR / f"{filename}.pdf")
+    plt.savefig(PLOTS_DIR / f"{filename}.png")
     plt.close()
-    print("Saved fig1_exploration_curves")
+    print(f"Saved {filename}")
+
+
+def fig_exploration_curves(data):
+    """Generate exploration curves: averaged across all models + per model."""
+    benches = ["repo_explore_bench", "testgeneval"]
+
+    # All models averaged
+    _plot_exploration_curves(data, benches, list(MODELS.keys()),
+                            "all models", "fig1_exploration_curves")
+
+    # Per model
+    for model_key, (model_name, _) in MODELS.items():
+        _plot_exploration_curves(data, benches, [model_key],
+                                model_name, f"fig1_exploration_curves_{model_key}")
 
 
 # ---------------------------------------------------------------------------
