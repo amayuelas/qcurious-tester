@@ -434,17 +434,97 @@ def table_line_coverage(data):
 # Main
 # ---------------------------------------------------------------------------
 
+def table_per_repo(data):
+    """Generate per-repo LaTeX tables for each model (appendix)."""
+
+    for bench, bench_label, n in [
+        ("repo_explore_bench", "RepoExploreBench", 93),
+        ("testgeneval", "TestGenEval Lite", 140),
+    ]:
+        lines = []
+        lines.append(r"\begin{table}[t]")
+        lines.append(r"\centering")
+        lines.append(r"\caption{Per-repository branch coverage on " + bench_label +
+                     r" by model. CovQValue bolded.}")
+        lines.append(r"\label{tab:perrepo_" + bench.replace("_", "") + "}")
+        lines.append(r"\small")
+        lines.append(r"\setlength{\tabcolsep}{3pt}")
+        lines.append(r"\begin{tabular}{l cccc cccc cccc}")
+        lines.append(r"\toprule")
+        lines.append(r"& \multicolumn{4}{c}{Gemini Flash}"
+                     r"& \multicolumn{4}{c}{GPT-5.4 Mini}"
+                     r"& \multicolumn{4}{c}{Mistral Large} \\")
+        lines.append(r"\cmidrule(lr){2-5} \cmidrule(lr){6-9} \cmidrule(lr){10-13}")
+
+        short_strats = {"random": "Rnd", "greedy": "Gdy", "cov_greedy": "CG", "cov_qvalue": "CQ"}
+        header = "Repo"
+        for _ in range(3):
+            for s in STRATEGIES:
+                header += f" & {short_strats[s]}"
+        lines.append(header + r" \\")
+        lines.append(r"\midrule")
+
+        # Get repos for this benchmark
+        all_results = []
+        for mk in MODELS:
+            if mk in data[bench]:
+                all_results.extend(data[bench][mk]["results"])
+        repos = sorted(set(r.get("repo", r.get("module", "?").split(".")[0]) for r in all_results))
+
+        # Shorten repo names
+        def short_repo(r):
+            if "/" in r:
+                return r.split("/")[-1]
+            parts = r.split(".")
+            return parts[0] if len(parts) > 1 else r
+
+        for repo in repos:
+            row = [short_repo(repo)]
+            for model_key in ["gemini", "gpt54mini", "mistral"]:
+                if model_key not in data[bench]:
+                    row.extend(["--"] * 4)
+                    continue
+                results = data[bench][model_key]["results"]
+                repo_results = [r for r in results
+                               if r.get("repo", r.get("module", "").split(".")[0]) == repo]
+                for s in STRATEGIES:
+                    vals = [r["strategies"][s]["final"] for r in repo_results
+                            if s in r["strategies"]]
+                    if vals:
+                        mean = np.mean(vals)
+                        if s == "cov_qvalue":
+                            row.append(f"\\textbf{{{mean:.0f}}}")
+                        else:
+                            row.append(f"{mean:.0f}")
+                    else:
+                        row.append("--")
+            lines.append(" & ".join(row) + r" \\")
+
+        lines.append(r"\bottomrule")
+        lines.append(r"\end{tabular}")
+        lines.append(r"\end{table}")
+
+        table = "\n".join(lines)
+        fname = f"table_perrepo_{bench.replace('repo_explore_bench', 'reb').replace('testgeneval', 'tge')}.tex"
+        with open(PLOTS_DIR / fname, "w") as f:
+            f.write(table)
+        print(f"Saved {fname}")
+        print(table)
+        print()
+
+
 def main():
     data = load_all()
     print(f"Loaded: {', '.join(f'{b}: {list(d.keys())}' for b, d in data.items())}\n")
 
     fig_exploration_curves(data)
-    fig_model_comparison(data)
     fig_per_repo(data)
     fig_pass_rate_vs_coverage(data)
     table_main_results(data)
     print()
     table_line_coverage(data)
+    print()
+    table_per_repo(data)
 
 
 if __name__ == "__main__":
