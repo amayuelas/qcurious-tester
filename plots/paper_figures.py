@@ -124,12 +124,13 @@ def _plot_exploration_curves(data, bench_keys, model_keys, title_suffix, filenam
             ax.fill_between(steps, mean - se, mean + se,
                            color=STRATEGY_COLORS[s], alpha=0.15, zorder=2)
 
+        panel_label = chr(ord('a') + list(bench_keys).index(bench))
         title = bench_labels[bench]
         if title_suffix:
             title += f" ({title_suffix})"
         ax.set_xlabel("Execution Step")
         ax.set_ylabel("Cumulative Branch Coverage")
-        ax.set_title(title)
+        ax.set_title(f"({panel_label}) {title}")
         ax.legend(loc="upper left")
         ax.grid(True, alpha=0.3)
         ax.set_xlim(1, max_len)
