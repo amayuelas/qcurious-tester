@@ -234,15 +234,16 @@ def _plot_per_repo(data, bench, model_keys, title_suffix, filename):
 
 
 def fig_per_repo(data):
-    """Generate per-repo charts: all models averaged + per model."""
-    # All models averaged
-    _plot_per_repo(data, "testgeneval", list(MODELS.keys()),
-                   "all models", "fig3_per_repo")
+    """Generate per-repo charts: both benchmarks, all models + per model."""
+    for bench, bench_short in [("repo_explore_bench", "reb"), ("testgeneval", "tge")]:
+        # All models averaged
+        _plot_per_repo(data, bench, list(MODELS.keys()),
+                       "all models", f"fig3_per_repo_{bench_short}")
 
-    # Per model
-    for model_key, (model_name, _) in MODELS.items():
-        _plot_per_repo(data, "testgeneval", [model_key],
-                       model_name, f"fig3_per_repo_{model_key}")
+        # Per model
+        for model_key, (model_name, _) in MODELS.items():
+            _plot_per_repo(data, bench, [model_key],
+                           model_name, f"fig3_per_repo_{bench_short}_{model_key}")
 
 
 # ---------------------------------------------------------------------------
