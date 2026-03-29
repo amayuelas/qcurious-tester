@@ -251,60 +251,60 @@ def fig_per_repo(data):
 # ---------------------------------------------------------------------------
 
 def fig_pass_rate_vs_coverage(data):
-    """Branches per passing test + pass rate: shows CovQValue is more efficient."""
-    fig, axes = plt.subplots(1, 2, figsize=(11, 4.5))
+    """Relative change from Random: coverage gain vs pass rate cost."""
+    fig, ax = plt.subplots(figsize=(7, 5))
 
-    bench_labels = {
-        "repo_explore_bench": "RepoExploreBench",
-        "testgeneval": "TestGenEval Lite",
-    }
+    # Compute relative changes for each (strategy, model, benchmark)
+    other_strats = [s for s in STRATEGIES if s != "random"]
 
-    for ax, bench in zip(axes, ["repo_explore_bench", "testgeneval"]):
-        all_results = []
-        for mk in MODELS:
-            if mk in data[bench]:
-                all_results.extend(data[bench][mk]["results"])
+    for bench_key, marker in [("repo_explore_bench", "o"), ("testgeneval", "s")]:
+        for model_key, (model_name, _) in MODELS.items():
+            if model_key not in data[bench_key]:
+                continue
+            results = data[bench_key][model_key]["results"]
 
-        means_eff = []
-        means_pr = []
-        for s in STRATEGIES:
-            # Compute branches per passing test for each run
-            effs = []
-            prs = []
-            for r in all_results:
-                if s not in r["strategies"]:
+            # Get random baseline
+            random_br = np.mean([r["strategies"]["random"]["final"]
+                                for r in results if "random" in r["strategies"]])
+            random_pr = np.mean([r["strategies"]["random"].get("pass_rate", 0)
+                                for r in results if "random" in r["strategies"]]) * 100
+
+            for s in other_strats:
+                vals_br = [r["strategies"][s]["final"] for r in results
+                          if s in r["strategies"]]
+                vals_pr = [r["strategies"][s].get("pass_rate", 0) for r in results
+                          if s in r["strategies"]]
+                if not vals_br:
                     continue
-                final = r["strategies"][s]["final"]
-                pr = r["strategies"][s].get("pass_rate", 0)
-                pc = r["strategies"][s].get("pass_count", 0)
-                prs.append(pr)
-                if pc > 0:
-                    effs.append(final / pc)
-                else:
-                    effs.append(0)
-            means_eff.append(np.mean(effs))
-            means_pr.append(np.mean(prs) * 100)
 
-        x = np.arange(len(STRATEGIES))
-        colors = [STRATEGY_COLORS[s] for s in STRATEGIES]
-        labels = [STRATEGY_LABELS[s] for s in STRATEGIES]
+                mean_br = np.mean(vals_br)
+                mean_pr = np.mean(vals_pr) * 100
 
-        # Bars for branches per passing test
-        ax.bar(x, means_eff, 0.6, color=colors, alpha=0.85)
-        ax.set_ylabel("Branches per Passing Test")
-        ax.set_xticks(x)
-        ax.set_xticklabels(labels)
-        ax.set_title(bench_labels[bench])
+                pct_br = ((mean_br - random_br) / random_br) * 100
+                pct_pr = mean_pr - random_pr  # absolute change in pass rate
 
-        # Line for pass rate
-        ax2 = ax.twinx()
-        ax2.plot(x, means_pr, "k--o", markersize=7, linewidth=1.5,
-                 label="Pass Rate", zorder=5)
-        ax2.set_ylabel("Pass Rate (%)")
-        ax2.set_ylim(0, 100)
-        ax2.legend(loc="upper right", fontsize=9)
+                ax.scatter(pct_pr, pct_br, color=STRATEGY_COLORS[s],
+                          marker=marker, s=120, alpha=0.8,
+                          edgecolors="black", linewidths=0.5, zorder=3)
 
-        ax.grid(True, alpha=0.2, axis="y")
+    # Add reference lines
+    ax.axhline(0, color="gray", linewidth=0.8, linestyle="-", alpha=0.5)
+    ax.axvline(0, color="gray", linewidth=0.8, linestyle="-", alpha=0.5)
+
+    # Legend
+    for s in other_strats:
+        ax.scatter([], [], color=STRATEGY_COLORS[s], label=STRATEGY_LABELS[s],
+                  s=100, edgecolors="black", linewidths=0.5)
+    ax.scatter([], [], marker="o", color="gray", label="REB", s=80,
+              edgecolors="black", linewidths=0.5)
+    ax.scatter([], [], marker="s", color="gray", label="TGE", s=80,
+              edgecolors="black", linewidths=0.5)
+
+    ax.set_xlabel("Pass Rate Change (pp vs Random)")
+    ax.set_ylabel("Branch Coverage Change (% vs Random)")
+    ax.set_title("Coverage Gain vs. Pass Rate Cost")
+    ax.legend(loc="upper left", fontsize=9)
+    ax.grid(True, alpha=0.2)
 
     plt.tight_layout()
     plt.savefig(PLOTS_DIR / "fig4_pass_rate_vs_coverage.pdf")
