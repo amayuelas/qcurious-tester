@@ -322,7 +322,7 @@ def table_main_results(data):
     lines.append(r"\begin{table*}[t]")
     lines.append(r"\centering")
     lines.append(r"\caption{Mean branch coverage across 3 models and 2 benchmarks. "
-                 r"All CovQValue vs.\ Random comparisons: $p < 0.0001$ (paired $t$-test). "
+                 r"All CovQValue vs.\ Greedy comparisons: $p < 0.0001$ (paired $t$-test). "
                  r"$d$: Cohen's $d$ effect size.}")
     lines.append(r"\label{tab:main}")
     lines.append(r"\begin{tabular}{l ccc ccc}")
@@ -351,40 +351,40 @@ def table_main_results(data):
 
     lines.append(r"\midrule")
 
-    # Delta row
-    row = [r"$\Delta$ vs Random"]
+    # Delta row (vs Greedy — standard practice)
+    row = [r"$\Delta$ vs Greedy"]
     for bench in ["repo_explore_bench", "testgeneval"]:
         for model_key in ["gemini", "gpt54mini", "mistral"]:
             results = data[bench][model_key]["results"]
-            deltas = [r["strategies"]["cov_qvalue"]["final"] - r["strategies"]["random"]["final"]
+            deltas = [r["strategies"]["cov_qvalue"]["final"] - r["strategies"]["greedy"]["final"]
                       for r in results
-                      if "random" in r["strategies"] and "cov_qvalue" in r["strategies"]]
+                      if "greedy" in r["strategies"] and "cov_qvalue" in r["strategies"]]
             mean_d = np.mean(deltas)
             row.append(f"+{mean_d:.1f}")
     lines.append(" & ".join(row) + r" \\")
 
-    # Cohen's d row
+    # Cohen's d row (vs Greedy)
     row = [r"Cohen's $d$"]
     for bench in ["repo_explore_bench", "testgeneval"]:
         for model_key in ["gemini", "gpt54mini", "mistral"]:
             results = data[bench][model_key]["results"]
-            deltas = [r["strategies"]["cov_qvalue"]["final"] - r["strategies"]["random"]["final"]
+            deltas = [r["strategies"]["cov_qvalue"]["final"] - r["strategies"]["greedy"]["final"]
                       for r in results
-                      if "random" in r["strategies"] and "cov_qvalue" in r["strategies"]]
+                      if "greedy" in r["strategies"] and "cov_qvalue" in r["strategies"]]
             d_cohen = np.mean(deltas) / np.std(deltas)
             row.append(f"{d_cohen:.2f}")
     lines.append(" & ".join(row) + r" \\")
 
-    # Win rate row
+    # Win rate row (vs Greedy)
     row = ["Win rate"]
     for bench in ["repo_explore_bench", "testgeneval"]:
         for model_key in ["gemini", "gpt54mini", "mistral"]:
             results = data[bench][model_key]["results"]
             wins = sum(1 for r in results
-                      if "random" in r["strategies"] and "cov_qvalue" in r["strategies"]
-                      and r["strategies"]["cov_qvalue"]["final"] > r["strategies"]["random"]["final"])
+                      if "greedy" in r["strategies"] and "cov_qvalue" in r["strategies"]
+                      and r["strategies"]["cov_qvalue"]["final"] > r["strategies"]["greedy"]["final"])
             total = sum(1 for r in results
-                       if "random" in r["strategies"] and "cov_qvalue" in r["strategies"])
+                       if "greedy" in r["strategies"] and "cov_qvalue" in r["strategies"])
             pct = 100 * wins / total
             row.append(f"{pct:.0f}\\%")
     lines.append(" & ".join(row) + r" \\")
