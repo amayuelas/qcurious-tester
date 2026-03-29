@@ -255,68 +255,65 @@ def fig_pass_rate_vs_coverage(data):
 # ---------------------------------------------------------------------------
 
 def table_main_results(data):
-    """Generate main results LaTeX table."""
+    """Generate main results LaTeX table (vertical layout, fits single column)."""
+    from scipy import stats
+
     lines = []
     lines.append(r"\begin{table}[t]")
     lines.append(r"\centering")
     lines.append(r"\caption{Branch coverage (mean $\pm$ SE) across 3 models and 2 benchmarks. "
-                 r"All CovQValue results are significant at $p < 0.0001$ (paired $t$-test).}")
+                 r"$\Delta$: CovQValue $-$ Random. All $p < 0.0001$ (paired $t$-test).}")
     lines.append(r"\label{tab:main}")
     lines.append(r"\small")
-    lines.append(r"\begin{tabular}{l|ccc|ccc}")
+    lines.append(r"\begin{tabular}{llcccc}")
     lines.append(r"\toprule")
-    lines.append(r" & \multicolumn{3}{c|}{\textbf{RepoExploreBench} (93 targets)} "
-                 r"& \multicolumn{3}{c}{\textbf{TestGenEval Lite} (140 targets)} \\")
-    lines.append(r"\textbf{Strategy} & Gemini & GPT-5.4m & Mistral & Gemini & GPT-5.4m & Mistral \\")
+    lines.append(r"\textbf{Model} & \textbf{Strategy} & \textbf{Branches} & "
+                 r"\textbf{$\Delta$} & \textbf{$d$} & \textbf{Win} \\")
     lines.append(r"\midrule")
 
-    for s in STRATEGIES:
-        row = [STRATEGY_LABELS[s]]
-        for bench in ["repo_explore_bench", "testgeneval"]:
-            for model_key in ["gemini", "gpt54mini", "mistral"]:
-                results = data[bench][model_key]["results"]
-                vals = [r["strategies"][s]["final"] for r in results
-                        if s in r["strategies"]]
+    for bench, bench_label, n in [
+        ("repo_explore_bench", r"\textsc{RepoExploreBench}", 93),
+        ("testgeneval", r"\textsc{TestGenEval Lite}", 140),
+    ]:
+        lines.append(f"\\multicolumn{{6}}{{l}}{{{bench_label} ({n} targets)}} \\\\")
+
+        for model_key, (model_name, _) in MODELS.items():
+            results = data[bench][model_key]["results"]
+
+            # Compute delta and stats for cov_qvalue vs random
+            deltas = [r["strategies"]["cov_qvalue"]["final"] - r["strategies"]["random"]["final"]
+                      for r in results
+                      if "random" in r["strategies"] and "cov_qvalue" in r["strategies"]]
+            mean_d = np.mean(deltas)
+            d_cohen = mean_d / np.std(deltas)
+            wins = sum(1 for d in deltas if d > 0)
+
+            for i, s in enumerate(STRATEGIES):
+                vals = [r["strategies"][s]["final"] for r in results if s in r["strategies"]]
                 mean = np.mean(vals)
                 se = np.std(vals) / np.sqrt(len(vals))
+
+                # First column: model name (only on first strategy row)
+                model_col = model_name if i == 0 else ""
+
                 if s == "cov_qvalue":
-                    row.append(f"\\textbf{{{mean:.1f}}} $\\pm$ {se:.1f}")
+                    branch_str = f"\\textbf{{{mean:.1f}}} $\\pm$ {se:.1f}"
+                    delta_str = f"+{mean_d:.1f}"
+                    d_str = f"{d_cohen:.2f}"
+                    win_str = f"{wins}/{len(deltas)}"
                 else:
-                    row.append(f"{mean:.1f} $\\pm$ {se:.1f}")
-        lines.append(" & ".join(row) + r" \\")
+                    branch_str = f"{mean:.1f} $\\pm$ {se:.1f}"
+                    delta_str = ""
+                    d_str = ""
+                    win_str = ""
 
-    lines.append(r"\midrule")
+                lines.append(f"  {model_col} & {STRATEGY_LABELS[s]} & {branch_str} & "
+                           f"{delta_str} & {d_str} & {win_str} \\\\")
 
-    # Add delta and significance row
-    row = [r"$\Delta$ vs Random"]
-    for bench in ["repo_explore_bench", "testgeneval"]:
-        for model_key in ["gemini", "gpt54mini", "mistral"]:
-            results = data[bench][model_key]["results"]
-            deltas = []
-            for r in results:
-                if "random" in r["strategies"] and "cov_qvalue" in r["strategies"]:
-                    d = r["strategies"]["cov_qvalue"]["final"] - r["strategies"]["random"]["final"]
-                    deltas.append(d)
-            mean_d = np.mean(deltas)
-            from scipy import stats
-            _, p = stats.ttest_1samp(deltas, 0)
-            d_cohen = mean_d / np.std(deltas)
-            sig = "***" if p < 0.001 else "**" if p < 0.01 else "*" if p < 0.05 else ""
-            row.append(f"+{mean_d:.1f} ($d$={d_cohen:.2f}){sig}")
-    lines.append(" & ".join(row) + r" \\")
+            lines.append(r"  \addlinespace")
 
-    # Win rate row
-    row = ["Win rate"]
-    for bench in ["repo_explore_bench", "testgeneval"]:
-        for model_key in ["gemini", "gpt54mini", "mistral"]:
-            results = data[bench][model_key]["results"]
-            wins = sum(1 for r in results
-                      if "random" in r["strategies"] and "cov_qvalue" in r["strategies"]
-                      and r["strategies"]["cov_qvalue"]["final"] > r["strategies"]["random"]["final"])
-            total = sum(1 for r in results
-                       if "random" in r["strategies"] and "cov_qvalue" in r["strategies"])
-            row.append(f"{wins}/{total}")
-    lines.append(" & ".join(row) + r" \\")
+        if bench == "repo_explore_bench":
+            lines.append(r"\midrule")
 
     lines.append(r"\bottomrule")
     lines.append(r"\end{tabular}")
