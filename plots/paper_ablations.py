@@ -1,4 +1,4 @@
-"""Generate ablation study figures and LaTeX table.
+"""Generate ablation study figures and LaTeX tables.
 
 Usage:
     python plots/paper_ablations.py
@@ -37,97 +37,75 @@ RESULTS_DIR = Path("results/ablations")
 PLOTS_DIR = Path("plots/paper")
 PLOTS_DIR.mkdir(parents=True, exist_ok=True)
 
-ABLATION_FILES = {
-    "gamma": "ablation_gamma.json",
-    "K": "ablation_K_plans.json",
-    "S": "ablation_S_plan_length.json",
-    "budget": "ablation_exec_budget.json",
-}
-
-ABLATION_LABELS = {
-    "gamma": r"$\gamma$ (discount factor)",
-    "K": "$K$ (candidate plans)",
-    "S": "$S$ (scripts per plan)",
-    "budget": "Execution budget $N$",
-}
-
-ABLATION_PARAM_KEYS = {
-    "gamma": "gamma",
-    "K": "K",
-    "S": "plan_length",
-    "budget": "exec_budget",
-}
+COV_QVALUE_COLOR = "#C44E52"
+RANDOM_COLOR = "#7F7F7F"
 
 
-def load_ablation(name):
-    path = RESULTS_DIR / ABLATION_FILES[name]
-    with open(path) as f:
-        return json.load(f)
+# ---------------------------------------------------------------------------
+# Figure: Budget + S matched (2 panels)
+# ---------------------------------------------------------------------------
 
+def fig_ablation_budget_and_s():
+    """Two-panel figure: (a) coverage vs budget, (b) coverage vs S."""
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
 
-def get_values_and_means(data, param_key):
-    """Extract parameter values and mean coverage for random + cov_qvalue."""
+    # --- Panel (a): Budget ---
+    data = json.load(open(RESULTS_DIR / "ablation_exec_budget.json"))
     results = data["results"]
-    values = sorted(set(r[param_key] for r in results))
+    budgets = sorted(set(r["exec_budget"] for r in results))
 
-    random_means = []
-    qvalue_means = []
-    qvalue_ses = []
-    deltas = []
-    wins_list = []
+    qv_means, qv_ses, rand_means = [], [], []
+    for b in budgets:
+        b_results = [r for r in results if r["exec_budget"] == b]
+        qv = [r["cov_qvalue"]["final"] for r in b_results]
+        rn = [r["random"]["final"] for r in b_results]
+        qv_means.append(np.mean(qv))
+        qv_ses.append(np.std(qv) / np.sqrt(len(qv)))
+        rand_means.append(np.mean(rn))
 
-    for v in values:
-        v_results = [r for r in results if r[param_key] == v]
-        rand = [r["random"]["final"] for r in v_results]
-        qv = [r["cov_qvalue"]["final"] for r in v_results]
-        d = [q - r for q, r in zip(qv, rand)]
+    ax1.plot(budgets, qv_means, "o-", color=COV_QVALUE_COLOR, linewidth=2.5,
+             markersize=10, label="CovQValue", zorder=3)
+    ax1.fill_between(budgets,
+                      [m - s for m, s in zip(qv_means, qv_ses)],
+                      [m + s for m, s in zip(qv_means, qv_ses)],
+                      color=COV_QVALUE_COLOR, alpha=0.15)
+    ax1.plot(budgets, rand_means, "s--", color=RANDOM_COLOR, linewidth=2,
+             markersize=8, label="Random", zorder=3)
 
-        random_means.append(np.mean(rand))
-        qvalue_means.append(np.mean(qv))
-        qvalue_ses.append(np.std(qv) / np.sqrt(len(qv)))
-        deltas.append(np.mean(d))
-        wins_list.append(sum(1 for x in d if x > 0))
+    ax1.set_xlabel("Execution Budget $N$")
+    ax1.set_ylabel("Mean Branch Coverage")
+    ax1.set_title("(a) Budget Scaling")
+    ax1.legend(loc="lower right")
+    ax1.grid(True, alpha=0.3)
+    ax1.set_xticks(budgets)
 
-    return values, random_means, qvalue_means, qvalue_ses, deltas, wins_list
+    # --- Panel (b): S matched rounds ---
+    data_s = json.load(open(RESULTS_DIR / "ablation_S_matched.json"))
+    results_s = data_s["results"]
+    s_values = [1, 3, 5]
 
+    s_means, s_ses = [], []
+    for s in s_values:
+        vals = [r[f"S={s}"]["final"] for r in results_s]
+        s_means.append(np.mean(vals))
+        s_ses.append(np.std(vals) / np.sqrt(len(vals)))
 
-# ---------------------------------------------------------------------------
-# Figure: 2×2 ablation grid
-# ---------------------------------------------------------------------------
+    x = np.arange(len(s_values))
+    bars = ax2.bar(x, s_means, 0.5, yerr=s_ses, color=COV_QVALUE_COLOR,
+                    alpha=0.88, capsize=6, edgecolor="white", linewidth=0.5)
 
-def fig_ablation_grid():
-    """2×2 grid showing all ablations: bars for CovQValue, dashed line for Random."""
-    fig, axes = plt.subplots(2, 2, figsize=(10, 8))
+    # Budget labels on bars
+    for i, (s, m, se) in enumerate(zip(s_values, s_means, s_ses)):
+        budget = 8 * s
+        ax2.annotate(f"$N$={budget}", (i, m + se + 1.5),
+                    ha="center", fontsize=11, color="#555555")
 
-    for ax, (name, file) in zip(axes.flat, ABLATION_FILES.items()):
-        data = load_ablation(name)
-        param_key = ABLATION_PARAM_KEYS[name]
-        values, rand_means, qv_means, qv_ses, deltas, wins = \
-            get_values_and_means(data, param_key)
-
-        x = np.arange(len(values))
-        x_labels = [str(v) for v in values]
-
-        # CovQValue bars
-        bars = ax.bar(x, qv_means, 0.5, yerr=qv_ses, color="#C44E52",
-                      alpha=0.88, capsize=5, label="CovQValue",
-                      edgecolor="white", linewidth=0.5)
-
-        # Random dashed line
-        ax.plot(x, rand_means, "k--o", markersize=7, linewidth=2,
-                label="Random", zorder=5)
-
-        # Delta annotations on bars
-        for i, (qv, d) in enumerate(zip(qv_means, deltas)):
-            ax.annotate(f"+{d:.0f}", (i, qv + qv_ses[i] + 1.5),
-                       ha="center", fontsize=12, color="#8B2020", fontweight="bold")
-
-        ax.set_xticks(x)
-        ax.set_xticklabels(x_labels)
-        ax.set_xlabel(ABLATION_LABELS[name])
-        ax.set_ylabel("Mean Branch Coverage")
-        ax.legend(loc="lower right", fontsize=9)
-        ax.grid(True, alpha=0.2, axis="y")
+    ax2.set_xlabel("Plan Length $S$")
+    ax2.set_ylabel("Mean Branch Coverage")
+    ax2.set_title("(b) Plan Length (8 rounds each)")
+    ax2.set_xticks(x)
+    ax2.set_xticklabels([str(s) for s in s_values])
+    ax2.grid(True, alpha=0.3, axis="y")
 
     plt.tight_layout()
     plt.savefig(PLOTS_DIR / "fig_ablations.pdf")
@@ -137,46 +115,69 @@ def fig_ablation_grid():
 
 
 # ---------------------------------------------------------------------------
-# LaTeX table
+# LaTeX table: γ, K, diversity decomposition
 # ---------------------------------------------------------------------------
 
 def table_ablations():
-    """Generate ablation LaTeX table."""
+    """Compact ablation table for γ, K, and diversity decomposition."""
     lines = []
     lines.append(r"\begin{table}[t]")
     lines.append(r"\centering")
     lines.append(r"\caption{Ablation studies on RepoExploreBench (93 targets, Gemini Flash). "
-                 r"Default values: $\gamma{=}0.5$, $K{=}3$, $S{=}3$, $N{=}24$. "
-                 r"Bold indicates the default setting.}")
+                 r"Top: hyperparameter sensitivity. Bottom: contribution of each component. "
+                 r"Default values in bold.}")
     lines.append(r"\label{tab:ablations}")
     lines.append(r"\small")
-    lines.append(r"\begin{tabular}{llcccc}")
+    lines.append(r"\begin{tabular}{llc}")
     lines.append(r"\toprule")
-    lines.append(r"\textbf{Ablation} & \textbf{Value} & \textbf{Random} & "
-                 r"\textbf{CovQValue} & \textbf{$\Delta$} & \textbf{Wins} \\")
+    lines.append(r"\textbf{Ablation} & \textbf{Setting} & \textbf{Coverage} \\")
     lines.append(r"\midrule")
 
-    defaults = {"gamma": 0.5, "K": 3, "S": 3, "budget": 24}
-    default_param = {"gamma": "gamma", "K": "K", "S": "plan_length", "budget": "exec_budget"}
+    # γ ablation
+    data_g = json.load(open(RESULTS_DIR / "ablation_gamma.json"))
+    gamma_vals = {0.0: [], 0.5: [], 1.0: []}
+    for r in data_g["results"]:
+        gamma_vals[r["gamma"]].append(r["cov_qvalue"]["final"])
 
-    for name, label_short in [("gamma", r"$\gamma$"), ("K", "$K$"),
-                                ("S", "$S$"), ("budget", "$N$")]:
-        data = load_ablation(name)
-        param_key = ABLATION_PARAM_KEYS[name]
-        values, rand_means, qv_means, _, deltas, wins = \
-            get_values_and_means(data, param_key)
+    lines.append(r"$\gamma$ (discount) & 0.0 & " +
+                 f"{np.mean(gamma_vals[0.0]):.1f}" + r" \\")
+    lines.append(r" & \textbf{0.5} & \textbf{" +
+                 f"{np.mean(gamma_vals[0.5]):.1f}" + r"} \\")
+    lines.append(r" & 1.0 & " +
+                 f"{np.mean(gamma_vals[1.0]):.1f}" + r" \\")
+    lines.append(r"\addlinespace")
 
-        for i, v in enumerate(values):
-            is_default = (v == defaults[name])
-            name_col = label_short if i == 0 else ""
-            v_str = f"\\textbf{{{v}}}" if is_default else str(v)
-            qv_str = f"\\textbf{{{qv_means[i]:.1f}}}" if is_default else f"{qv_means[i]:.1f}"
+    # K ablation
+    data_k = json.load(open(RESULTS_DIR / "ablation_K_plans.json"))
+    k_vals = {1: [], 3: [], 5: []}
+    for r in data_k["results"]:
+        k_vals[r["K"]].append(r["cov_qvalue"]["final"])
 
-            lines.append(f"  {name_col} & {v_str} & {rand_means[i]:.1f} & "
-                        f"{qv_str} & +{deltas[i]:.1f} & {wins[i]}/93 \\\\")
+    lines.append(r"$K$ (candidates) & 1 & " +
+                 f"{np.mean(k_vals[1]):.1f}" + r" \\")
+    lines.append(r" & \textbf{3} & \textbf{" +
+                 f"{np.mean(k_vals[3]):.1f}" + r"} \\")
+    lines.append(r" & 5 & " +
+                 f"{np.mean(k_vals[5]):.1f}" + r" \\")
 
-        if name != "budget":
-            lines.append(r"  \addlinespace")
+    lines.append(r"\midrule")
+
+    # Diversity decomposition
+    data_d = json.load(open(RESULTS_DIR / "ablation_diversity.json"))
+    strats = {"cov_greedy": [], "cov_diverse": [],
+              "cov_nodiversity": [], "cov_qvalue": []}
+    for r in data_d["results"]:
+        for s in strats:
+            strats[s].append(r[s]["final"])
+
+    lines.append(r"Component & Coverage map only & " +
+                 f"{np.mean(strats['cov_greedy']):.1f}" + r" \\")
+    lines.append(r" & + Diversity hints & " +
+                 f"{np.mean(strats['cov_diverse']):.1f}" + r" \\")
+    lines.append(r" & + Q-value scoring & " +
+                 f"{np.mean(strats['cov_nodiversity']):.1f}" + r" \\")
+    lines.append(r" & + Both (CovQValue) & \textbf{" +
+                 f"{np.mean(strats['cov_qvalue']):.1f}" + r"} \\")
 
     lines.append(r"\bottomrule")
     lines.append(r"\end{tabular}")
@@ -190,7 +191,7 @@ def table_ablations():
 
 
 def main():
-    fig_ablation_grid()
+    fig_ablation_budget_and_s()
     print()
     table_ablations()
 
