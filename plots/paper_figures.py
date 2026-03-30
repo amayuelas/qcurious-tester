@@ -180,7 +180,7 @@ def fig_model_comparison(data):
         ax.set_ylabel("Mean Branch Coverage")
         ax.set_title(bench_labels[bench])
         ax.legend(loc="upper left", fontsize=9)
-        ax.grid(True, alpha=0.3, axis="y")
+        ax.grid(True, alpha=0.4, axis="y", linewidth=1.0)
 
     plt.tight_layout()
     plt.savefig(PLOTS_DIR / "fig2_model_comparison.pdf")
@@ -222,7 +222,7 @@ def _plot_per_repo(data, bench, model_keys, title_suffix, filename):
     ax.set_xticklabels([short[r] for r in repos], rotation=45, ha="right")
     ax.set_ylabel("Mean Branch Coverage")
     ax.legend()
-    ax.grid(True, alpha=0.3, axis="y")
+    ax.grid(True, alpha=0.4, axis="y", linewidth=1.0)
 
     plt.tight_layout()
     plt.savefig(PLOTS_DIR / f"{filename}.pdf")
