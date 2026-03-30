@@ -50,9 +50,9 @@ def fig_ablation_budget_and_s():
 
     # --- Budget scaling ---
     fig, ax = plt.subplots(figsize=(6, 5))
-    ax.tick_params(labelsize=16)
-    ax.xaxis.label.set_size(18)
-    ax.yaxis.label.set_size(18)
+    ax.tick_params(labelsize=22)
+    ax.xaxis.label.set_size(24)
+    ax.yaxis.label.set_size(24)
 
     data = json.load(open(RESULTS_DIR / "ablation_exec_budget.json"))
     results = data["results"]
@@ -67,19 +67,19 @@ def fig_ablation_budget_and_s():
         qv_ses.append(np.std(qv) / np.sqrt(len(qv)))
         rand_means.append(np.mean(rn))
 
-    ax.plot(budgets, qv_means, "o-", color=COV_QVALUE_COLOR, linewidth=3,
-            markersize=12, label="CovQValue", zorder=3)
+    ax.plot(budgets, qv_means, "o-", color=COV_QVALUE_COLOR, linewidth=4.5,
+            markersize=14, label="CovQValue", zorder=3)
     ax.fill_between(budgets,
                      [m - s for m, s in zip(qv_means, qv_ses)],
                      [m + s for m, s in zip(qv_means, qv_ses)],
                      color=COV_QVALUE_COLOR, alpha=0.15)
-    ax.plot(budgets, rand_means, "s--", color=RANDOM_COLOR, linewidth=2.5,
-            markersize=10, label="Random", zorder=3)
+    ax.plot(budgets, rand_means, "s--", color=RANDOM_COLOR, linewidth=4,
+            markersize=12, label="Random", zorder=3)
 
     ax.set_xlabel("Execution Budget $N$")
     ax.set_ylabel("Mean Branch Coverage")
-    ax.legend(loc="upper left", fontsize=14)
-    ax.grid(True, alpha=0.3)
+    ax.legend(loc="upper left", fontsize=20)
+    ax.grid(True, alpha=0.5, linewidth=1.5)
     ax.set_xticks(budgets)
 
     plt.tight_layout()
@@ -90,9 +90,9 @@ def fig_ablation_budget_and_s():
 
     # --- S matched rounds ---
     fig, ax = plt.subplots(figsize=(6, 5))
-    ax.tick_params(labelsize=16)
-    ax.xaxis.label.set_size(18)
-    ax.yaxis.label.set_size(18)
+    ax.tick_params(labelsize=22)
+    ax.xaxis.label.set_size(24)
+    ax.yaxis.label.set_size(24)
 
     data_s = json.load(open(RESULTS_DIR / "ablation_S_matched.json"))
     results_s = data_s["results"]
@@ -106,18 +106,22 @@ def fig_ablation_budget_and_s():
 
     x = np.arange(len(s_values))
     ax.bar(x, s_means, 0.5, yerr=s_ses, color=COV_QVALUE_COLOR,
-           alpha=0.88, capsize=6, edgecolor="white", linewidth=0.5)
+           alpha=0.88, capsize=8, edgecolor="white", linewidth=0.5,
+           error_kw={"linewidth": 2.5, "capthick": 2.5})
 
     for i, (s, m, se) in enumerate(zip(s_values, s_means, s_ses)):
         budget = 8 * s
         ax.annotate(f"$N$={budget}", (i, m + se + 1.5),
-                   ha="center", fontsize=14, color="#555555")
+                   ha="center", fontsize=20, color="#555555")
+
+    # Add headroom so top annotation doesn't clip
+    ax.set_ylim(0, max(m + se for m, se in zip(s_means, s_ses)) + 12)
 
     ax.set_xlabel("Plan Length $S$")
     ax.set_ylabel("Mean Branch Coverage")
     ax.set_xticks(x)
-    ax.set_xticklabels([str(s) for s in s_values], fontsize=16)
-    ax.grid(True, alpha=0.3, axis="y")
+    ax.set_xticklabels([str(s) for s in s_values], fontsize=22)
+    ax.grid(True, alpha=0.5, axis="y", linewidth=1.5)
 
     plt.tight_layout()
     plt.savefig(PLOTS_DIR / "fig_ablation_s_matched.pdf")
