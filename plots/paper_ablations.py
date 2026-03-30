@@ -78,7 +78,7 @@ def fig_ablation_budget_and_s():
 
     ax.set_xlabel("Execution Budget $N$")
     ax.set_ylabel("Mean Branch Coverage")
-    ax.legend(loc="lower right", fontsize=14)
+    ax.legend(loc="upper left", fontsize=14)
     ax.grid(True, alpha=0.3)
     ax.set_xticks(budgets)
 
