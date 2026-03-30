@@ -46,10 +46,11 @@ RANDOM_COLOR = "#7F7F7F"
 # ---------------------------------------------------------------------------
 
 def fig_ablation_budget_and_s():
-    """Two-panel figure: (a) coverage vs budget, (b) coverage vs S."""
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+    """Separate figures: budget scaling + S matched."""
 
-    # --- Panel (a): Budget ---
+    # --- Budget scaling ---
+    fig, ax = plt.subplots(figsize=(6, 4.5))
+
     data = json.load(open(RESULTS_DIR / "ablation_exec_budget.json"))
     results = data["results"]
     budgets = sorted(set(r["exec_budget"] for r in results))
@@ -63,23 +64,30 @@ def fig_ablation_budget_and_s():
         qv_ses.append(np.std(qv) / np.sqrt(len(qv)))
         rand_means.append(np.mean(rn))
 
-    ax1.plot(budgets, qv_means, "o-", color=COV_QVALUE_COLOR, linewidth=2.5,
-             markersize=10, label="CovQValue", zorder=3)
-    ax1.fill_between(budgets,
-                      [m - s for m, s in zip(qv_means, qv_ses)],
-                      [m + s for m, s in zip(qv_means, qv_ses)],
-                      color=COV_QVALUE_COLOR, alpha=0.15)
-    ax1.plot(budgets, rand_means, "s--", color=RANDOM_COLOR, linewidth=2,
-             markersize=8, label="Random", zorder=3)
+    ax.plot(budgets, qv_means, "o-", color=COV_QVALUE_COLOR, linewidth=2.5,
+            markersize=10, label="CovQValue", zorder=3)
+    ax.fill_between(budgets,
+                     [m - s for m, s in zip(qv_means, qv_ses)],
+                     [m + s for m, s in zip(qv_means, qv_ses)],
+                     color=COV_QVALUE_COLOR, alpha=0.15)
+    ax.plot(budgets, rand_means, "s--", color=RANDOM_COLOR, linewidth=2,
+            markersize=8, label="Random", zorder=3)
 
-    ax1.set_xlabel("Execution Budget $N$")
-    ax1.set_ylabel("Mean Branch Coverage")
-    ax1.set_title("(a) Budget Scaling")
-    ax1.legend(loc="lower right")
-    ax1.grid(True, alpha=0.3)
-    ax1.set_xticks(budgets)
+    ax.set_xlabel("Execution Budget $N$")
+    ax.set_ylabel("Mean Branch Coverage")
+    ax.legend(loc="lower right")
+    ax.grid(True, alpha=0.3)
+    ax.set_xticks(budgets)
 
-    # --- Panel (b): S matched rounds ---
+    plt.tight_layout()
+    plt.savefig(PLOTS_DIR / "fig_ablation_budget.pdf")
+    plt.savefig(PLOTS_DIR / "fig_ablation_budget.png")
+    plt.close()
+    print("Saved fig_ablation_budget")
+
+    # --- S matched rounds ---
+    fig, ax = plt.subplots(figsize=(6, 4.5))
+
     data_s = json.load(open(RESULTS_DIR / "ablation_S_matched.json"))
     results_s = data_s["results"]
     s_values = [1, 3, 5]
@@ -91,27 +99,25 @@ def fig_ablation_budget_and_s():
         s_ses.append(np.std(vals) / np.sqrt(len(vals)))
 
     x = np.arange(len(s_values))
-    bars = ax2.bar(x, s_means, 0.5, yerr=s_ses, color=COV_QVALUE_COLOR,
-                    alpha=0.88, capsize=6, edgecolor="white", linewidth=0.5)
+    ax.bar(x, s_means, 0.5, yerr=s_ses, color=COV_QVALUE_COLOR,
+           alpha=0.88, capsize=6, edgecolor="white", linewidth=0.5)
 
-    # Budget labels on bars
     for i, (s, m, se) in enumerate(zip(s_values, s_means, s_ses)):
         budget = 8 * s
-        ax2.annotate(f"$N$={budget}", (i, m + se + 1.5),
-                    ha="center", fontsize=11, color="#555555")
+        ax.annotate(f"$N$={budget}", (i, m + se + 1.5),
+                   ha="center", fontsize=12, color="#555555")
 
-    ax2.set_xlabel("Plan Length $S$")
-    ax2.set_ylabel("Mean Branch Coverage")
-    ax2.set_title("(b) Plan Length (8 rounds each)")
-    ax2.set_xticks(x)
-    ax2.set_xticklabels([str(s) for s in s_values])
-    ax2.grid(True, alpha=0.3, axis="y")
+    ax.set_xlabel("Plan Length $S$")
+    ax.set_ylabel("Mean Branch Coverage")
+    ax.set_xticks(x)
+    ax.set_xticklabels([str(s) for s in s_values])
+    ax.grid(True, alpha=0.3, axis="y")
 
     plt.tight_layout()
-    plt.savefig(PLOTS_DIR / "fig_ablations.pdf")
-    plt.savefig(PLOTS_DIR / "fig_ablations.png")
+    plt.savefig(PLOTS_DIR / "fig_ablation_s_matched.pdf")
+    plt.savefig(PLOTS_DIR / "fig_ablation_s_matched.png")
     plt.close()
-    print("Saved fig_ablations")
+    print("Saved fig_ablation_s_matched")
 
 
 # ---------------------------------------------------------------------------
