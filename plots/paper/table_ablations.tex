@@ -1,24 +1,21 @@
 \begin{table}[t]
 \centering
-\caption{Ablation studies on RepoExploreBench (93 targets, Gemini Flash). Top: hyperparameter sensitivity. Bottom: contribution of each component. Default values in bold.}
+\caption{Ablation studies on RepoExploreBench (93 targets, Gemini Flash). Top: hyperparameter sensitivity (default in bold). Bottom: component contributions.}
 \label{tab:ablations}
 \small
-\begin{tabular}{llc}
+\begin{tabular}{lcc}
 \toprule
-\textbf{Ablation} & \textbf{Setting} & \textbf{Coverage} \\
+\textbf{Ablation} & \textbf{Values} & \textbf{Coverage} \\
 \midrule
-$\gamma$ (discount) & 0.0 & 68.6 \\
- & \textbf{0.5} & \textbf{71.1} \\
- & 1.0 & 70.0 \\
-\addlinespace
-$K$ (candidates) & 1 & 70.5 \\
- & \textbf{3} & \textbf{70.0} \\
- & 5 & 72.8 \\
+$\gamma$ (discount) & 0.0 / \textbf{0.5} / 1.0 & 68.6 / \textbf{71.1} / 70.0 \\
+$K$ (candidates) & 1 / \textbf{3} / 5 & 70.5 / \textbf{70.0} / 72.8 \\
 \midrule
-Component & Coverage map only & 49.3 \\
- & + Diversity hints & 67.9 \\
- & + Q-value scoring & 69.8 \\
- & + Both (CovQValue) & \textbf{68.6} \\
+\textbf{Component} & & \textbf{Coverage} \\
+\midrule
+Coverage map only & & 49.3 \\
+\quad + Diversity hints & & 67.9 \\
+\quad + Q-value scoring & & 69.8 \\
+\quad + Both (CovQValue) & & \textbf{68.6} \\
 \bottomrule
 \end{tabular}
 \end{table}
