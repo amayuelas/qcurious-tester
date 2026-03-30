@@ -3,17 +3,15 @@
 \caption{Ablation studies on RepoExploreBench (93 targets, Gemini Flash). Top: hyperparameter sensitivity (default in bold). Bottom: component contributions.}
 \label{tab:ablations}
 \small
-\begin{tabular}{lcc}
+\begin{tabular}{lc}
 \toprule
-\textbf{Ablation} & \textbf{Values} & \textbf{Coverage} \\
+\textbf{Setting} & \textbf{Coverage} \\
 \midrule
-$\gamma$ (discount) & 0.0 / \textbf{0.5} / 1.0 & 68.6 / \textbf{71.1} / 70.0 \\
+$\gamma$: 0.0 / \textbf{0.5} / 1.0 & 68.6 / \textbf{71.1} / 70.0 \\
 \midrule
-\textbf{Component} & & \textbf{Coverage} \\
-\midrule
-Coverage map only & & 49.3 {\tiny$\pm$5.4} \\
-\quad + Diversity hints & & 67.9 {\tiny$\pm$6.1} \\
-\quad + Q-value scoring & & 69.8 {\tiny$\pm$6.4} \\
+Coverage map only & 49.3 {\tiny$\pm$5.4} \\
+\quad + Diversity hints & 67.9 {\tiny$\pm$6.1} \\
+\quad + Q-value scoring & 69.8 {\tiny$\pm$6.4} \\
 \bottomrule
 \end{tabular}
 \end{table}
