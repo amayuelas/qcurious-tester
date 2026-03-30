@@ -171,15 +171,11 @@ def table_ablations():
     lines.append(r"\midrule")
     for label, key in [("Coverage map only", "cov_greedy"),
                         (r"\quad + Diversity hints", "cov_diverse"),
-                        (r"\quad + Q-value scoring", "cov_nodiversity"),
-                        (r"\quad + Both (CovQValue)", "cov_qvalue")]:
+                        (r"\quad + Q-value scoring", "cov_nodiversity")]:
         vals = strats[key]
         m = np.mean(vals)
         se = np.std(vals) / np.sqrt(len(vals))
-        if key == "cov_qvalue":
-            lines.append(f"{label} & & \\textbf{{{m:.1f}}} {{\\tiny$\\pm${se:.1f}}} \\\\")
-        else:
-            lines.append(f"{label} & & {m:.1f} {{\\tiny$\\pm${se:.1f}}} \\\\")
+        lines.append(f"{label} & & {m:.1f} {{\\tiny$\\pm${se:.1f}}} \\\\")
     lines.append(r"\bottomrule")
     lines.append(r"\end{tabular}")
     lines.append(r"\end{table}")
