@@ -59,7 +59,8 @@ COMPACT_RC = {
     "xtick.major.size": 6,
     "ytick.major.size": 6,
     "lines.linewidth": 4.0,
-    "grid.linewidth": 1.2,
+    "grid.linewidth": 2.2,
+    "grid.alpha": 0.65,
 }
 
 MODULES = [
@@ -89,7 +90,7 @@ def main():
                         label=LABELS[strat],
                         **COMPACT_STYLES[strat])
             ax.set_title(title)
-            ax.grid(True, alpha=0.3)
+            ax.grid(True)
             ax.set_xlim(1, 24)
             ax.set_xticks([1, 12, 24])
             ax.set_xlabel("Step")
