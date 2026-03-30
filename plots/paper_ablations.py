@@ -49,7 +49,10 @@ def fig_ablation_budget_and_s():
     """Separate figures: budget scaling + S matched."""
 
     # --- Budget scaling ---
-    fig, ax = plt.subplots(figsize=(6, 4.5))
+    fig, ax = plt.subplots(figsize=(6, 5))
+    ax.tick_params(labelsize=16)
+    ax.xaxis.label.set_size(18)
+    ax.yaxis.label.set_size(18)
 
     data = json.load(open(RESULTS_DIR / "ablation_exec_budget.json"))
     results = data["results"]
@@ -64,18 +67,18 @@ def fig_ablation_budget_and_s():
         qv_ses.append(np.std(qv) / np.sqrt(len(qv)))
         rand_means.append(np.mean(rn))
 
-    ax.plot(budgets, qv_means, "o-", color=COV_QVALUE_COLOR, linewidth=2.5,
-            markersize=10, label="CovQValue", zorder=3)
+    ax.plot(budgets, qv_means, "o-", color=COV_QVALUE_COLOR, linewidth=3,
+            markersize=12, label="CovQValue", zorder=3)
     ax.fill_between(budgets,
                      [m - s for m, s in zip(qv_means, qv_ses)],
                      [m + s for m, s in zip(qv_means, qv_ses)],
                      color=COV_QVALUE_COLOR, alpha=0.15)
-    ax.plot(budgets, rand_means, "s--", color=RANDOM_COLOR, linewidth=2,
-            markersize=8, label="Random", zorder=3)
+    ax.plot(budgets, rand_means, "s--", color=RANDOM_COLOR, linewidth=2.5,
+            markersize=10, label="Random", zorder=3)
 
     ax.set_xlabel("Execution Budget $N$")
     ax.set_ylabel("Mean Branch Coverage")
-    ax.legend(loc="lower right")
+    ax.legend(loc="lower right", fontsize=14)
     ax.grid(True, alpha=0.3)
     ax.set_xticks(budgets)
 
@@ -86,7 +89,10 @@ def fig_ablation_budget_and_s():
     print("Saved fig_ablation_budget")
 
     # --- S matched rounds ---
-    fig, ax = plt.subplots(figsize=(6, 4.5))
+    fig, ax = plt.subplots(figsize=(6, 5))
+    ax.tick_params(labelsize=16)
+    ax.xaxis.label.set_size(18)
+    ax.yaxis.label.set_size(18)
 
     data_s = json.load(open(RESULTS_DIR / "ablation_S_matched.json"))
     results_s = data_s["results"]
@@ -105,12 +111,12 @@ def fig_ablation_budget_and_s():
     for i, (s, m, se) in enumerate(zip(s_values, s_means, s_ses)):
         budget = 8 * s
         ax.annotate(f"$N$={budget}", (i, m + se + 1.5),
-                   ha="center", fontsize=12, color="#555555")
+                   ha="center", fontsize=14, color="#555555")
 
     ax.set_xlabel("Plan Length $S$")
     ax.set_ylabel("Mean Branch Coverage")
     ax.set_xticks(x)
-    ax.set_xticklabels([str(s) for s in s_values])
+    ax.set_xticklabels([str(s) for s in s_values], fontsize=16)
     ax.grid(True, alpha=0.3, axis="y")
 
     plt.tight_layout()
