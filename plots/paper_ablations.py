@@ -166,18 +166,20 @@ def table_ablations():
     lines.append(r"\textbf{Ablation} & \textbf{Values} & \textbf{Coverage} \\")
     lines.append(r"\midrule")
     lines.append(r"$\gamma$ (discount) & 0.0 / \textbf{0.5} / 1.0 & " + g_str + r" \\")
-    lines.append(r"$K$ (candidates) & 1 / \textbf{3} / 5 & " + k_str + r" \\")
     lines.append(r"\midrule")
     lines.append(r"\textbf{Component} & & \textbf{Coverage} \\")
     lines.append(r"\midrule")
-    lines.append(r"Coverage map only & & " +
-                 f"{np.mean(strats['cov_greedy']):.1f}" + r" \\")
-    lines.append(r"\quad + Diversity hints & & " +
-                 f"{np.mean(strats['cov_diverse']):.1f}" + r" \\")
-    lines.append(r"\quad + Q-value scoring & & " +
-                 f"{np.mean(strats['cov_nodiversity']):.1f}" + r" \\")
-    lines.append(r"\quad + Both (CovQValue) & & \textbf{" +
-                 f"{np.mean(strats['cov_qvalue']):.1f}" + r"} \\")
+    for label, key in [("Coverage map only", "cov_greedy"),
+                        (r"\quad + Diversity hints", "cov_diverse"),
+                        (r"\quad + Q-value scoring", "cov_nodiversity"),
+                        (r"\quad + Both (CovQValue)", "cov_qvalue")]:
+        vals = strats[key]
+        m = np.mean(vals)
+        se = np.std(vals) / np.sqrt(len(vals))
+        if key == "cov_qvalue":
+            lines.append(f"{label} & & \\textbf{{{m:.1f}}} {{\\tiny$\\pm${se:.1f}}} \\\\")
+        else:
+            lines.append(f"{label} & & {m:.1f} {{\\tiny$\\pm${se:.1f}}} \\\\")
     lines.append(r"\bottomrule")
     lines.append(r"\end{tabular}")
     lines.append(r"\end{table}")
