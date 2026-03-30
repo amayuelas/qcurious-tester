@@ -126,49 +126,18 @@ def fig_ablation_budget_and_s():
 
 def table_ablations():
     """Compact ablation table for γ, K, and diversity decomposition."""
-    lines = []
-    lines.append(r"\begin{table}[t]")
-    lines.append(r"\centering")
-    lines.append(r"\caption{Ablation studies on RepoExploreBench (93 targets, Gemini Flash). "
-                 r"Top: hyperparameter sensitivity. Bottom: contribution of each component. "
-                 r"Default values in bold.}")
-    lines.append(r"\label{tab:ablations}")
-    lines.append(r"\small")
-    lines.append(r"\begin{tabular}{llc}")
-    lines.append(r"\toprule")
-    lines.append(r"\textbf{Ablation} & \textbf{Setting} & \textbf{Coverage} \\")
-    lines.append(r"\midrule")
 
-    # γ ablation
+    # Load data
     data_g = json.load(open(RESULTS_DIR / "ablation_gamma.json"))
     gamma_vals = {0.0: [], 0.5: [], 1.0: []}
     for r in data_g["results"]:
         gamma_vals[r["gamma"]].append(r["cov_qvalue"]["final"])
 
-    lines.append(r"$\gamma$ (discount) & 0.0 & " +
-                 f"{np.mean(gamma_vals[0.0]):.1f}" + r" \\")
-    lines.append(r" & \textbf{0.5} & \textbf{" +
-                 f"{np.mean(gamma_vals[0.5]):.1f}" + r"} \\")
-    lines.append(r" & 1.0 & " +
-                 f"{np.mean(gamma_vals[1.0]):.1f}" + r" \\")
-    lines.append(r"\addlinespace")
-
-    # K ablation
     data_k = json.load(open(RESULTS_DIR / "ablation_K_plans.json"))
     k_vals = {1: [], 3: [], 5: []}
     for r in data_k["results"]:
         k_vals[r["K"]].append(r["cov_qvalue"]["final"])
 
-    lines.append(r"$K$ (candidates) & 1 & " +
-                 f"{np.mean(k_vals[1]):.1f}" + r" \\")
-    lines.append(r" & \textbf{3} & \textbf{" +
-                 f"{np.mean(k_vals[3]):.1f}" + r"} \\")
-    lines.append(r" & 5 & " +
-                 f"{np.mean(k_vals[5]):.1f}" + r" \\")
-
-    lines.append(r"\midrule")
-
-    # Diversity decomposition
     data_d = json.load(open(RESULTS_DIR / "ablation_diversity.json"))
     strats = {"cov_greedy": [], "cov_diverse": [],
               "cov_nodiversity": [], "cov_qvalue": []}
@@ -176,15 +145,39 @@ def table_ablations():
         for s in strats:
             strats[s].append(r[s]["final"])
 
-    lines.append(r"Component & Coverage map only & " +
-                 f"{np.mean(strats['cov_greedy']):.1f}" + r" \\")
-    lines.append(r" & + Diversity hints & " +
-                 f"{np.mean(strats['cov_diverse']):.1f}" + r" \\")
-    lines.append(r" & + Q-value scoring & " +
-                 f"{np.mean(strats['cov_nodiversity']):.1f}" + r" \\")
-    lines.append(r" & + Both (CovQValue) & \textbf{" +
-                 f"{np.mean(strats['cov_qvalue']):.1f}" + r"} \\")
+    # Format inline values (bold the default)
+    g_str = (f"{np.mean(gamma_vals[0.0]):.1f} / "
+             f"\\textbf{{{np.mean(gamma_vals[0.5]):.1f}}} / "
+             f"{np.mean(gamma_vals[1.0]):.1f}")
+    k_str = (f"{np.mean(k_vals[1]):.1f} / "
+             f"\\textbf{{{np.mean(k_vals[3]):.1f}}} / "
+             f"{np.mean(k_vals[5]):.1f}")
 
+    lines = []
+    lines.append(r"\begin{table}[t]")
+    lines.append(r"\centering")
+    lines.append(r"\caption{Ablation studies on RepoExploreBench (93 targets, Gemini Flash). "
+                 r"Top: hyperparameter sensitivity (default in bold). "
+                 r"Bottom: component contributions.}")
+    lines.append(r"\label{tab:ablations}")
+    lines.append(r"\small")
+    lines.append(r"\begin{tabular}{lcc}")
+    lines.append(r"\toprule")
+    lines.append(r"\textbf{Ablation} & \textbf{Values} & \textbf{Coverage} \\")
+    lines.append(r"\midrule")
+    lines.append(r"$\gamma$ (discount) & 0.0 / \textbf{0.5} / 1.0 & " + g_str + r" \\")
+    lines.append(r"$K$ (candidates) & 1 / \textbf{3} / 5 & " + k_str + r" \\")
+    lines.append(r"\midrule")
+    lines.append(r"\textbf{Component} & & \textbf{Coverage} \\")
+    lines.append(r"\midrule")
+    lines.append(r"Coverage map only & & " +
+                 f"{np.mean(strats['cov_greedy']):.1f}" + r" \\")
+    lines.append(r"\quad + Diversity hints & & " +
+                 f"{np.mean(strats['cov_diverse']):.1f}" + r" \\")
+    lines.append(r"\quad + Q-value scoring & & " +
+                 f"{np.mean(strats['cov_nodiversity']):.1f}" + r" \\")
+    lines.append(r"\quad + Both (CovQValue) & & \textbf{" +
+                 f"{np.mean(strats['cov_qvalue']):.1f}" + r"} \\")
     lines.append(r"\bottomrule")
     lines.append(r"\end{tabular}")
     lines.append(r"\end{table}")
