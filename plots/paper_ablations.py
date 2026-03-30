@@ -161,13 +161,11 @@ def table_ablations():
                  r"Bottom: component contributions.}")
     lines.append(r"\label{tab:ablations}")
     lines.append(r"\small")
-    lines.append(r"\begin{tabular}{lcc}")
+    lines.append(r"\begin{tabular}{lc}")
     lines.append(r"\toprule")
-    lines.append(r"\textbf{Ablation} & \textbf{Values} & \textbf{Coverage} \\")
+    lines.append(r"\textbf{Setting} & \textbf{Coverage} \\")
     lines.append(r"\midrule")
-    lines.append(r"$\gamma$ (discount) & 0.0 / \textbf{0.5} / 1.0 & " + g_str + r" \\")
-    lines.append(r"\midrule")
-    lines.append(r"\textbf{Component} & & \textbf{Coverage} \\")
+    lines.append(r"$\gamma$: 0.0 / \textbf{0.5} / 1.0 & " + g_str + r" \\")
     lines.append(r"\midrule")
     for label, key in [("Coverage map only", "cov_greedy"),
                         (r"\quad + Diversity hints", "cov_diverse"),
@@ -175,7 +173,7 @@ def table_ablations():
         vals = strats[key]
         m = np.mean(vals)
         se = np.std(vals) / np.sqrt(len(vals))
-        lines.append(f"{label} & & {m:.1f} {{\\tiny$\\pm${se:.1f}}} \\\\")
+        lines.append(f"{label} & {m:.1f} {{\\tiny$\\pm${se:.1f}}} \\\\")
     lines.append(r"\bottomrule")
     lines.append(r"\end{tabular}")
     lines.append(r"\end{table}")
