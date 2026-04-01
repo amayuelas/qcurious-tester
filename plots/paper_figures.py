@@ -94,9 +94,17 @@ def load_all():
 # Figure 1: Exploration curves (2 panels, one model)
 # ---------------------------------------------------------------------------
 
-def _plot_exploration_curves_single(data, bench, model_keys, filename):
+def _plot_exploration_curves_single(data, bench, model_keys, filename,
+                                     figsize=(6, 4.5), title=None,
+                                     show_legend=True):
     """Plot exploration curves for a single benchmark."""
-    fig, ax = plt.subplots(figsize=(6, 4.5))
+    fig, ax = plt.subplots(figsize=figsize)
+
+    # Scale fonts for smaller figures
+    if figsize[0] < 5:
+        ax.tick_params(labelsize=14)
+        ax.xaxis.label.set_size(16)
+        ax.yaxis.label.set_size(16)
 
     curves_by_strat = defaultdict(list)
     for model_key in model_keys:
@@ -125,14 +133,19 @@ def _plot_exploration_curves_single(data, bench, model_keys, filename):
         se = arr.std(axis=0) / np.sqrt(len(arr))
         steps = np.arange(1, max_len + 1)
 
-        ax.plot(steps, mean, color=STRATEGY_COLORS[s], linewidth=2.5,
+        lw = 3.0 if figsize[0] < 5 else 2.5
+        ax.plot(steps, mean, color=STRATEGY_COLORS[s], linewidth=lw,
                 label=STRATEGY_LABELS[s], zorder=3)
         ax.fill_between(steps, mean - se, mean + se,
                        color=STRATEGY_COLORS[s], alpha=0.15, zorder=2)
 
     ax.set_xlabel("Execution Step")
     ax.set_ylabel("Cumulative Branch Coverage")
-    ax.legend(loc="upper left")
+    if title:
+        ax.set_title(title, fontsize=16 if figsize[0] < 5 else 17)
+    if show_legend:
+        legend_size = 11 if figsize[0] < 5 else 12
+        ax.legend(loc="upper left", fontsize=legend_size)
     ax.grid(True, alpha=0.3)
     ax.set_xlim(1, max_len)
 
@@ -145,16 +158,21 @@ def _plot_exploration_curves_single(data, bench, model_keys, filename):
 
 def fig_exploration_curves(data):
     """Generate exploration curves: separate images per benchmark."""
-    # All models averaged — separate per benchmark
+    # All models averaged — separate per benchmark (50% textwidth)
     for bench, short in [("repo_explore_bench", "reb"), ("testgeneval", "tge")]:
         _plot_exploration_curves_single(data, bench, list(MODELS.keys()),
                                         f"fig1_exploration_curves_{short}")
 
-    # Per model — separate per benchmark
+    # Per model — separate per benchmark (33% textwidth for 3-column layout)
     for model_key, (model_name, _) in MODELS.items():
         for bench, short in [("repo_explore_bench", "reb"), ("testgeneval", "tge")]:
-            _plot_exploration_curves_single(data, bench, [model_key],
-                                            f"fig1_exploration_curves_{short}_{model_key}")
+            _plot_exploration_curves_single(
+                data, bench, [model_key],
+                f"fig1_exploration_curves_{short}_{model_key}",
+                figsize=(4.5, 4),
+                title=model_name,
+                show_legend=(model_key == "gemini"),  # legend only on first
+            )
 
 
 # ---------------------------------------------------------------------------

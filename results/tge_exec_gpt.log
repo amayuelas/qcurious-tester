@@ -1,0 +1,395 @@
+======================================================================
+TestGenEval Lite
+  Examples: 160 across 11 repos
+    astropy/astropy: 3
+    django/django: 66
+    matplotlib/matplotlib: 7
+    mwaskom/seaborn: 2
+    pallets/flask: 1
+    pydata/xarray: 3
+    pylint-dev/pylint: 2
+    pytest-dev/pytest: 12
+    scikit-learn/scikit-learn: 20
+    sphinx-doc/sphinx: 2
+    sympy/sympy: 42
+  Strategies: ['cov_qvalue_exec']
+  Seeds: [42]
+  Exec budget: 24
+  Total runs: 160
+======================================================================
+  Connectivity: OK
+
+Running 160 targets with 4 workers...
+  [1/160] sphinx/util/typing.py (sphinx-doc/sphinx v3.5): {'cov_qvalue_exec': 2}
+  [2/160] astropy/wcs/wcs.py (astropy/astropy v1.3): {'cov_qvalue_exec': 8}
+  [3/160] sympy/physics/units/util.py (sympy/sympy v1.8): {'cov_qvalue_exec': 13}
+  [4/160] lib/mpl_toolkits/axes_grid1/axes_grid.py (matplotlib/matplotlib v3.7): {'cov_qvalue_exec': 23}
+  [5/160] sympy/geometry/util.py (sympy/sympy v1.4): {'cov_qvalue_exec': 27}
+  [6/160] sympy/printing/pretty/pretty.py (sympy/sympy v1.11): {'cov_qvalue_exec': 59}
+  [7/160] sympy/printing/pretty/pretty.py (sympy/sympy v1.8): {'cov_qvalue_exec': 77}
+  [8/160] sympy/utilities/iterables.py (sympy/sympy v1.6): {'cov_qvalue_exec': 31}
+  [9/160] django/views/debug.py (django/django v3.1): {'cov_qvalue_exec': 52}
+  [10/160] sympy/utilities/iterables.py (sympy/sympy v1.7): {'cov_qvalue_exec': 31}
+  [11/160] django/views/debug.py (django/django v3.0): {'cov_qvalue_exec': 65}
+  [12/160] django/forms/models.py (django/django v4.0): {'cov_qvalue_exec': 67}
+  [13/160] xarray/core/formatting.py (pydata/xarray v0.12): {'cov_qvalue_exec': 14}
+  [14/160] lib/matplotlib/figure.py (matplotlib/matplotlib v3.7): {'cov_qvalue_exec': 114}
+  [15/160] sympy/core/function.py (sympy/sympy v1.9): {'cov_qvalue_exec': 22}
+  [16/160] sympy/printing/latex.py (sympy/sympy v1.8): {'cov_qvalue_exec': 92}
+  [17/160] sklearn/metrics/cluster/_supervised.py (scikit-learn/scikit-learn v0.22): {'cov_qvalue_exec': 0}
+  [18/160] sympy/printing/latex.py (sympy/sympy v1.1): {'cov_qvalue_exec': 73}
+  [19/160] sympy/printing/latex.py (sympy/sympy v1.1): {'cov_qvalue_exec': 77}
+  [20/160] django/forms/models.py (django/django v4.1): {'cov_qvalue_exec': 57}
+  [21/160] src/flask/cli.py (pallets/flask v2.3): {'cov_qvalue_exec': 16}
+  [22/160] django/contrib/admin/utils.py (django/django v3.1): {'cov_qvalue_exec': 71}
+  [23/160] django/db/backends/base/creation.py (django/django v3.2): {'cov_qvalue_exec': 33}
+  [24/160] sympy/functions/elementary/hyperbolic.py (sympy/sympy v1.1): {'cov_qvalue_exec': 76}
+  [25/160] django/utils/text.py (django/django v3.2): {'cov_qvalue_exec': 90}
+  [26/160] sklearn/feature_selection/mutual_info_.py (scikit-learn/scikit-learn v0.21): {'cov_qvalue_exec': 0}
+  [27/160] django/core/cache/backends/filebased.py (django/django v4.2): {'cov_qvalue_exec': 7}
+  [28/160] sympy/physics/quantum/tensorproduct.py (sympy/sympy v1.12): {'cov_qvalue_exec': 32}
+  [29/160] sympy/printing/str.py (sympy/sympy v1.9): {'cov_qvalue_exec': 23}
+  [30/160] django/db/backends/base/creation.py (django/django v3.1): {'cov_qvalue_exec': 33}
+  [31/160] django/utils/autoreload.py (django/django v3.0): {'cov_qvalue_exec': 81}
+  [32/160] django/utils/autoreload.py (django/django v3.0): {'cov_qvalue_exec': 79}
+  [33/160] django/utils/http.py (django/django v3.1): {'cov_qvalue_exec': 56}
+  [34/160] sympy/assumptions/refine.py (sympy/sympy v1.8): {'cov_qvalue_exec': 24}
+  [35/160] xarray/core/groupby.py (pydata/xarray v0.12): {'cov_qvalue_exec': 15}
+  [36/160] django/db/models/query.py (django/django v5.0): {'cov_qvalue_exec': 211}
+  [37/160] src/_pytest/_code/source.py (pytest-dev/pytest v7.0): {'cov_qvalue_exec': 14}
+  [38/160] sympy/core/numbers.py (sympy/sympy v1.1): {'cov_qvalue_exec': 129}
+  [39/160] sympy/core/numbers.py (sympy/sympy v1.1): {'cov_qvalue_exec': 125}
+  [40/160] django/utils/html.py (django/django v4.2): {'cov_qvalue_exec': 7}
+  [41/160] sympy/core/numbers.py (sympy/sympy v1.1): {'cov_qvalue_exec': 127}
+2026-03-31 16:59:41,153 INFO: Retrying request to /chat/completions in 0.496874 seconds
+  [42/160] sympy/utilities/codegen.py (sympy/sympy v1.5): {'cov_qvalue_exec': 100}
+  [43/160] django/db/models/query.py (django/django v3.2): {'cov_qvalue_exec': 181}
+  [44/160] sympy/core/basic.py (sympy/sympy v1.6): {'cov_qvalue_exec': 11}
+  [45/160] sympy/functions/elementary/complexes.py (sympy/sympy v1.9): {'cov_qvalue_exec': 44}
+  [46/160] django/forms/formsets.py (django/django v4.0): {'cov_qvalue_exec': 2}
+  [47/160] django/template/defaultfilters.py (django/django v5.0): {'cov_qvalue_exec': 0}
+  [48/160] django/core/management/commands/shell.py (django/django v3.2): {'cov_qvalue_exec': 15}
+  [49/160] django/db/migrations/serializer.py (django/django v3.1): {'cov_qvalue_exec': 117}
+  [50/160] astropy/modeling/separable.py (astropy/astropy v4.3): {'cov_qvalue_exec': 22}
+  [51/160] django/db/migrations/serializer.py (django/django v3.1): {'cov_qvalue_exec': 108}
+  [52/160] sklearn/pipeline.py (scikit-learn/scikit-learn v0.21): {'cov_qvalue_exec': 0}
+  [53/160] django/http/response.py (django/django v3.0): {'cov_qvalue_exec': 164}
+  [54/160] django/db/migrations/executor.py (django/django v4.1): {'cov_qvalue_exec': 21}
+  [55/160] django/db/migrations/serializer.py (django/django v4.2): {'cov_qvalue_exec': 14}
+  [56/160] django/db/migrations/serializer.py (django/django v5.0): {'cov_qvalue_exec': 0}
+  [57/160] django/db/migrations/serializer.py (django/django v4.0): {'cov_qvalue_exec': 16}
+  [58/160] django/db/models/base.py (django/django v3.2): {'cov_qvalue_exec': 119}
+  [59/160] django/db/models/base.py (django/django v4.0): {'cov_qvalue_exec': 3}
+  [60/160] django/db/migrations/operations/models.py (django/django v4.1): {'cov_qvalue_exec': 19}
+  [61/160] django/forms/widgets.py (django/django v3.0): {'cov_qvalue_exec': 277}
+  [62/160] src/_pytest/mark/evaluate.py (pytest-dev/pytest v5.4): {'cov_qvalue_exec': 0}
+  [63/160] django/contrib/admin/checks.py (django/django v5.0): {'cov_qvalue_exec': 0}
+  [64/160] sklearn/linear_model/logistic.py (scikit-learn/scikit-learn v0.22): {'cov_qvalue_exec': 0}
+  [65/160] src/_pytest/python.py (pytest-dev/pytest v4.4): {'cov_qvalue_exec': 0}
+  [66/160] django/contrib/auth/tokens.py (django/django v3.2): {'cov_qvalue_exec': 40}
+  [67/160] django/urls/resolvers.py (django/django v4.0): {'cov_qvalue_exec': 10}
+  [68/160] lib/matplotlib/offsetbox.py (matplotlib/matplotlib v3.7): {'cov_qvalue_exec': 63}
+  [69/160] django/db/migrations/operations/models.py (django/django v4.1): {'cov_qvalue_exec': 15}
+  [70/160] sklearn/utils/validation.py (scikit-learn/scikit-learn v0.20): {'cov_qvalue_exec': 0}
+  [71/160] src/_pytest/_io/saferepr.py (pytest-dev/pytest v5.4): {'cov_qvalue_exec': 2}
+  [72/160] sympy/polys/monomials.py (sympy/sympy v1.9): {'cov_qvalue_exec': 38}
+  [73/160] sklearn/neighbors/base.py (scikit-learn/scikit-learn v0.20): {'cov_qvalue_exec': 0}
+  [74/160] django/utils/decorators.py (django/django v4.1): {'cov_qvalue_exec': 9}
+  [75/160] sympy/matrices/expressions/blockmatrix.py (sympy/sympy v1.6): {'cov_qvalue_exec': 30}
+  [76/160] sklearn/svm/base.py (scikit-learn/scikit-learn v0.22): {'cov_qvalue_exec': 0}
+  [77/160] seaborn/_core/scales.py (mwaskom/seaborn v0.12): {'cov_qvalue_exec': 13}
+  [78/160] sympy/functions/elementary/complexes.py (sympy/sympy v1.7): {'cov_qvalue_exec': 96}
+  [79/160] sympy/tensor/array/ndim_array.py (sympy/sympy v1.11): {'cov_qvalue_exec': 21}
+  [80/160] sympy/printing/ccode.py (sympy/sympy v1.0): {'cov_qvalue_exec': 20}
+  [81/160] django/db/models/query_utils.py (django/django v4.0): {'cov_qvalue_exec': 10}
+  [82/160] src/_pytest/skipping.py (pytest-dev/pytest v5.4): {'cov_qvalue_exec': 51}
+  [83/160] src/_pytest/skipping.py (pytest-dev/pytest v6.0): {'cov_qvalue_exec': 52}
+  [84/160] django/db/models/fields/json.py (django/django v3.2): {'cov_qvalue_exec': 149}
+  [85/160] sympy/physics/units/unitsystem.py (sympy/sympy v1.12): {'cov_qvalue_exec': 13}
+  [86/160] sympy/physics/units/unitsystem.py (sympy/sympy v1.12): {'cov_qvalue_exec': 11}
+  [87/160] django/db/models/query_utils.py (django/django v4.0): {'cov_qvalue_exec': 11}
+  [88/160] django/db/migrations/autodetector.py (django/django v3.2): {'cov_qvalue_exec': 60}
+  [89/160] src/_pytest/python.py (pytest-dev/pytest v7.0): {'cov_qvalue_exec': 0}
+  [90/160] django/db/migrations/autodetector.py (django/django v3.1): {'cov_qvalue_exec': 177}
+  [91/160] sympy/utilities/lambdify.py (sympy/sympy v1.2): {'cov_qvalue_exec': 77}
+  [92/160] sympy/utilities/lambdify.py (sympy/sympy v1.11): {'cov_qvalue_exec': 61}
+  [93/160] sklearn/utils/_pprint.py (scikit-learn/scikit-learn v0.21): {'cov_qvalue_exec': 0}
+  [94/160] django/contrib/admin/options.py (django/django v4.0): {'cov_qvalue_exec': 228}
+  [95/160] django/contrib/auth/forms.py (django/django v4.0): {'cov_qvalue_exec': 5}
+  [96/160] django/contrib/auth/forms.py (django/django v4.2): {'cov_qvalue_exec': 5}
+  [97/160] sklearn/preprocessing/_encoders.py (scikit-learn/scikit-learn v0.21): {'cov_qvalue_exec': 0}
+  [98/160] sympy/matrices/expressions/blockmatrix.py (sympy/sympy v1.6): {'cov_qvalue_exec': 113}
+  [99/160] lib/matplotlib/artist.py (matplotlib/matplotlib v3.5): {'cov_qvalue_exec': 71}
+  [100/160] lib/matplotlib/colorbar.py (matplotlib/matplotlib v3.7): {'cov_qvalue_exec': 24}
+  [101/160] sympy/matrices/expressions/matexpr.py (sympy/sympy v1.0): {'cov_qvalue_exec': 4}
+  [102/160] sklearn/preprocessing/label.py (scikit-learn/scikit-learn v0.20): {'cov_qvalue_exec': 0}
+  [103/160] sympy/printing/mathematica.py (sympy/sympy v1.4): {'cov_qvalue_exec': 52}
+  [104/160] sklearn/linear_model/ridge.py (scikit-learn/scikit-learn v0.20): {'cov_qvalue_exec': 0}
+  [105/160] django/db/models/sql/query.py (django/django v3.2): {'cov_qvalue_exec': 159}
+  [106/160] django/views/static.py (django/django v4.1): {'cov_qvalue_exec': 11}
+  [107/160] sympy/printing/mathematica.py (sympy/sympy v1.0): {'cov_qvalue_exec': 8}
+  [108/160] django/contrib/admin/templatetags/admin_modify.py (django/django v5.0): {'cov_qvalue_exec': 0}
+  [109/160] sklearn/ensemble/voting.py (scikit-learn/scikit-learn v0.22): {'cov_qvalue_exec': 0}
+  [110/160] pylint/reporters/text.py (pylint-dev/pylint v2.15): {'cov_qvalue_exec': 18}
+  [111/160] sympy/physics/vector/point.py (sympy/sympy v1.7): {'cov_qvalue_exec': 35}
+  [112/160] sklearn/utils/_set_output.py (scikit-learn/scikit-learn v1.3): {'cov_qvalue_exec': 0}
+  [113/160] django/core/management/base.py (django/django v4.2): {'cov_qvalue_exec': 80}
+  [114/160] pylint/checkers/misc.py (pylint-dev/pylint v2.13): {'cov_qvalue_exec': 1}
+  [115/160] django/db/backends/ddl_references.py (django/django v4.1): {'cov_qvalue_exec': 79}
+  [116/160] django/db/models/fields/related.py (django/django v3.1): {'cov_qvalue_exec': 178}
+  [117/160] django/db/migrations/autodetector.py (django/django v4.2): {'cov_qvalue_exec': 81}
+  [118/160] django/contrib/admin/sites.py (django/django v4.0): {'cov_qvalue_exec': 82}
+  [119/160] django/db/models/lookups.py (django/django v3.1): {'cov_qvalue_exec': 205}
+  [120/160] sympy/polys/polyoptions.py (sympy/sympy v1.1): {'cov_qvalue_exec': 43}
+  [121/160] src/_pytest/main.py (pytest-dev/pytest v5.2): {'cov_qvalue_exec': 73}
+  [122/160] src/_pytest/logging.py (pytest-dev/pytest v4.4): {'cov_qvalue_exec': 5}
+  [123/160] sklearn/compose/_column_transformer.py (scikit-learn/scikit-learn v1.3): {'cov_qvalue_exec': 0}
+  [124/160] sympy/printing/pycode.py (sympy/sympy v1.5): {'cov_qvalue_exec': 0}
+  [125/160] lib/matplotlib/legend.py (matplotlib/matplotlib v3.6): {'cov_qvalue_exec': 91}
+  [126/160] sklearn/utils/multiclass.py (scikit-learn/scikit-learn v1.3): {'cov_qvalue_exec': 0}
+  [127/160] src/_pytest/nodes.py (pytest-dev/pytest v5.4): {'cov_qvalue_exec': 4}
+  [128/160] sklearn/model_selection/_split.py (scikit-learn/scikit-learn v0.22): {'cov_qvalue_exec': 0}
+  [129/160] sklearn/neighbors/nca.py (scikit-learn/scikit-learn v0.22): {'cov_qvalue_exec': 0}
+  [130/160] sympy/parsing/mathematica.py (sympy/sympy v1.12): {'cov_qvalue_exec': 114}
+  [131/160] astropy/io/ascii/qdp.py (astropy/astropy v5.1): {'cov_qvalue_exec': 10}
+  [132/160] sympy/solvers/polysys.py (sympy/sympy v1.9): {'cov_qvalue_exec': 33}
+  [133/160] django/forms/boundfield.py (django/django v4.0): {'cov_qvalue_exec': 17}
+  [134/160] django/db/models/deletion.py (django/django v3.1): {'cov_qvalue_exec': 40}
+  [135/160] django/forms/formsets.py (django/django v4.2): {'cov_qvalue_exec': 107}
+  [136/160] django/forms/formsets.py (django/django v4.2): {'cov_qvalue_exec': 40}
+  [137/160] sphinx/environment/adapters/indexentries.py (sphinx-doc/sphinx v3.2): {'cov_qvalue_exec': 17}
+  [138/160] src/_pytest/junitxml.py (pytest-dev/pytest v5.0): {'cov_qvalue_exec': 6}
+  [139/160] sympy/combinatorics/permutations.py (sympy/sympy v1.0): {'cov_qvalue_exec': 80}
+  [140/160] lib/matplotlib/style/core.py (matplotlib/matplotlib v3.6): {'cov_qvalue_exec': 16}
+  [141/160] django/db/models/deletion.py (django/django v3.0): {'cov_qvalue_exec': 33}
+  [142/160] django/core/exceptions.py (django/django v3.2): {'cov_qvalue_exec': 109}
+  [143/160] django/template/autoreload.py (django/django v4.1): {'cov_qvalue_exec': 4}
+  [144/160] django/contrib/admin/views/autocomplete.py (django/django v4.0): {'cov_qvalue_exec': 15}
+  [145/160] django/dispatch/dispatcher.py (django/django v3.2): {'cov_qvalue_exec': 72}
+  [146/160] django/db/backends/postgresql/client.py (django/django v4.2): {'cov_qvalue_exec': 21}
+  [147/160] django/utils/numberformat.py (django/django v4.2): {'cov_qvalue_exec': 26}
+  [148/160] sklearn/isotonic.py (scikit-learn/scikit-learn v1.3): {'cov_qvalue_exec': 0}
+  [149/160] sympy/geometry/point.py (sympy/sympy v1.10): {'cov_qvalue_exec': 24}
+  [150/160] sympy/matrices/sparse.py (sympy/sympy v1.1): {'cov_qvalue_exec': 40}
+  [151/160] django/contrib/messages/storage/cookie.py (django/django v4.1): {'cov_qvalue_exec': 11}
+  [152/160] xarray/core/concat.py (pydata/xarray v0.12): {'cov_qvalue_exec': 94}
+  [153/160] django/core/checks/templates.py (django/django v4.2): {'cov_qvalue_exec': 7}
+  [154/160] django/core/checks/translation.py (django/django v3.1): {'cov_qvalue_exec': 20}
+  [155/160] sklearn/cluster/_affinity_propagation.py (scikit-learn/scikit-learn v0.22): {'cov_qvalue_exec': 0}
+  [156/160] src/_pytest/tmpdir.py (pytest-dev/pytest v6.3): {'cov_qvalue_exec': 65}
+  [157/160] sklearn/ensemble/iforest.py (scikit-learn/scikit-learn v0.21): {'cov_qvalue_exec': 0}
+  [158/160] sympy/physics/units/prefixes.py (sympy/sympy v1.13): {'cov_qvalue_exec': 5}
+  [159/160] seaborn/_stats/regression.py (mwaskom/seaborn v0.12): {'cov_qvalue_exec': 5}
+  [160/160] django/contrib/auth/validators.py (django/django v3.0): {'cov_qvalue_exec': 14}
+
+======================================================================
+RESULTS
+======================================================================
+
+Module                                   repo            seed  cov_qvalue_
+-------------------------------------------------------------------------
+sphinx.util.typing                       sphinx-doc/sph    42            2
+astropy.wcs.wcs                          astropy/astrop    42            8
+sympy.physics.units.util                 sympy/sympy       42           13
+mpl_toolkits.axes_grid1.axes_grid        matplotlib/mat    42           23
+sympy.geometry.util                      sympy/sympy       42           27
+sympy.printing.pretty.pretty             sympy/sympy       42           59
+sympy.printing.pretty.pretty             sympy/sympy       42           77
+sympy.utilities.iterables                sympy/sympy       42           31
+django.views.debug                       django/django     42           52
+sympy.utilities.iterables                sympy/sympy       42           31
+django.views.debug                       django/django     42           65
+django.forms.models                      django/django     42           67
+xarray.core.formatting                   pydata/xarray     42           14
+matplotlib.figure                        matplotlib/mat    42          114
+sympy.core.function                      sympy/sympy       42           22
+sympy.printing.latex                     sympy/sympy       42           92
+sklearn.metrics.cluster._supervised      scikit-learn/s    42            0
+sympy.printing.latex                     sympy/sympy       42           73
+sympy.printing.latex                     sympy/sympy       42           77
+django.forms.models                      django/django     42           57
+flask.cli                                pallets/flask     42           16
+django.contrib.admin.utils               django/django     42           71
+django.db.backends.base.creation         django/django     42           33
+sympy.functions.elementary.hyperbolic    sympy/sympy       42           76
+django.utils.text                        django/django     42           90
+sklearn.feature_selection.mutual_info_   scikit-learn/s    42            0
+django.core.cache.backends.filebased     django/django     42            7
+sympy.physics.quantum.tensorproduct      sympy/sympy       42           32
+sympy.printing.str                       sympy/sympy       42           23
+django.db.backends.base.creation         django/django     42           33
+django.utils.autoreload                  django/django     42           81
+django.utils.autoreload                  django/django     42           79
+django.utils.http                        django/django     42           56
+sympy.assumptions.refine                 sympy/sympy       42           24
+xarray.core.groupby                      pydata/xarray     42           15
+django.db.models.query                   django/django     42          211
+_pytest._code.source                     pytest-dev/pyt    42           14
+sympy.core.numbers                       sympy/sympy       42          129
+sympy.core.numbers                       sympy/sympy       42          125
+django.utils.html                        django/django     42            7
+sympy.core.numbers                       sympy/sympy       42          127
+sympy.utilities.codegen                  sympy/sympy       42          100
+django.db.models.query                   django/django     42          181
+sympy.core.basic                         sympy/sympy       42           11
+sympy.functions.elementary.complexes     sympy/sympy       42           44
+django.forms.formsets                    django/django     42            2
+django.template.defaultfilters           django/django     42            0
+django.core.management.commands.shell    django/django     42           15
+django.db.migrations.serializer          django/django     42          117
+astropy.modeling.separable               astropy/astrop    42           22
+django.db.migrations.serializer          django/django     42          108
+sklearn.pipeline                         scikit-learn/s    42            0
+django.http.response                     django/django     42          164
+django.db.migrations.executor            django/django     42           21
+django.db.migrations.serializer          django/django     42           14
+django.db.migrations.serializer          django/django     42            0
+django.db.migrations.serializer          django/django     42           16
+django.db.models.base                    django/django     42          119
+django.db.models.base                    django/django     42            3
+django.db.migrations.operations.models   django/django     42           19
+django.forms.widgets                     django/django     42          277
+_pytest.mark.evaluate                    pytest-dev/pyt    42            0
+django.contrib.admin.checks              django/django     42            0
+sklearn.linear_model.logistic            scikit-learn/s    42            0
+_pytestthon                              pytest-dev/pyt    42            0
+django.contrib.auth.tokens               django/django     42           40
+django.urls.resolvers                    django/django     42           10
+matplotlib.offsetbox                     matplotlib/mat    42           63
+django.db.migrations.operations.models   django/django     42           15
+sklearn.utils.validation                 scikit-learn/s    42            0
+_pytest._io.saferepr                     pytest-dev/pyt    42            2
+sympy.polys.monomials                    sympy/sympy       42           38
+sklearn.neighbors.base                   scikit-learn/s    42            0
+django.utils.decorators                  django/django     42            9
+sympy.matrices.expressions.blockmatrix   sympy/sympy       42           30
+sklearn.svm.base                         scikit-learn/s    42            0
+seaborn._core.scales                     mwaskom/seabor    42           13
+sympy.functions.elementary.complexes     sympy/sympy       42           96
+sympy.tensor.array.ndim_array            sympy/sympy       42           21
+sympy.printing.ccode                     sympy/sympy       42           20
+django.db.models.query_utils             django/django     42           10
+_pytest.skipping                         pytest-dev/pyt    42           51
+_pytest.skipping                         pytest-dev/pyt    42           52
+django.db.models.fields.json             django/django     42          149
+sympy.physics.units.unitsystem           sympy/sympy       42           13
+sympy.physics.units.unitsystem           sympy/sympy       42           11
+django.db.models.query_utils             django/django     42           11
+django.db.migrations.autodetector        django/django     42           60
+_pytestthon                              pytest-dev/pyt    42            0
+django.db.migrations.autodetector        django/django     42          177
+sympy.utilities.lambdify                 sympy/sympy       42           77
+sympy.utilities.lambdify                 sympy/sympy       42           61
+sklearn.utils._pprint                    scikit-learn/s    42            0
+django.contrib.admin.options             django/django     42          228
+django.contrib.auth.forms                django/django     42            5
+django.contrib.auth.forms                django/django     42            5
+sklearn.preprocessing._encoders          scikit-learn/s    42            0
+sympy.matrices.expressions.blockmatrix   sympy/sympy       42          113
+matplotlib.artist                        matplotlib/mat    42           71
+matplotlib.colorbar                      matplotlib/mat    42           24
+sympy.matrices.expressions.matexpr       sympy/sympy       42            4
+sklearn.preprocessing.label              scikit-learn/s    42            0
+sympy.printing.mathematica               sympy/sympy       42           52
+sklearn.linear_model.ridge               scikit-learn/s    42            0
+django.db.models.sql.query               django/django     42          159
+django.views.static                      django/django     42           11
+sympy.printing.mathematica               sympy/sympy       42            8
+django.contrib.admin.templatetags.admin  django/django     42            0
+sklearn.ensemble.voting                  scikit-learn/s    42            0
+pylint.reporters.text                    pylint-dev/pyl    42           18
+sympy.physics.vector.point               sympy/sympy       42           35
+sklearn.utils._set_output                scikit-learn/s    42            0
+django.core.management.base              django/django     42           80
+pylint.checkers.misc                     pylint-dev/pyl    42            1
+django.db.backends.ddl_references        django/django     42           79
+django.db.models.fields.related          django/django     42          178
+django.db.migrations.autodetector        django/django     42           81
+django.contrib.admin.sites               django/django     42           82
+django.db.models.lookups                 django/django     42          205
+sympy.polys.polyoptions                  sympy/sympy       42           43
+_pytest.main                             pytest-dev/pyt    42           73
+_pytest.logging                          pytest-dev/pyt    42            5
+sklearn.compose._column_transformer      scikit-learn/s    42            0
+sympy.printingcode                       sympy/sympy       42            0
+matplotlib.legend                        matplotlib/mat    42           91
+sklearn.utils.multiclass                 scikit-learn/s    42            0
+_pytest.nodes                            pytest-dev/pyt    42            4
+sklearn.model_selection._split           scikit-learn/s    42            0
+sklearn.neighbors.nca                    scikit-learn/s    42            0
+sympy.parsing.mathematica                sympy/sympy       42          114
+astropy.io.ascii.qdp                     astropy/astrop    42           10
+sympy.solvers.polysys                    sympy/sympy       42           33
+django.forms.boundfield                  django/django     42           17
+django.db.models.deletion                django/django     42           40
+django.forms.formsets                    django/django     42          107
+django.forms.formsets                    django/django     42           40
+sphinx.environment.adapters.indexentrie  sphinx-doc/sph    42           17
+_pytest.junitxml                         pytest-dev/pyt    42            6
+sympy.combinatorics.permutations         sympy/sympy       42           80
+matplotlib.style.core                    matplotlib/mat    42           16
+django.db.models.deletion                django/django     42           33
+django.core.exceptions                   django/django     42          109
+django.template.autoreload               django/django     42            4
+django.contrib.admin.views.autocomplete  django/django     42           15
+django.dispatch.dispatcher               django/django     42           72
+django.db.backends.postgresql.client     django/django     42           21
+django.utils.numberformat                django/django     42           26
+sklearn.isotonic                         scikit-learn/s    42            0
+sympy.geometry.point                     sympy/sympy       42           24
+sympy.matrices.sparse                    sympy/sympy       42           40
+django.contrib.messages.storage.cookie   django/django     42           11
+xarray.core.concat                       pydata/xarray     42           94
+django.core.checks.templates             django/django     42            7
+django.core.checks.translation           django/django     42           20
+sklearn.cluster._affinity_propagation    scikit-learn/s    42            0
+_pytest.tmpdir                           pytest-dev/pyt    42           65
+sklearn.ensemble.iforest                 scikit-learn/s    42            0
+sympy.physics.units.prefixes             sympy/sympy       42            5
+seaborn._stats.regression                mwaskom/seabor    42            5
+django.contrib.auth.validators           django/django     42           14
+
+======================================================================
+STATISTICS
+======================================================================
+
+Per-strategy means (n=160):
+  cov_qvalue_exec      branches=  44.5 ± 4.2  lines=118.5  pass_rate=72%
+
+Per-repo means:
+
+  astropy/astropy (3 runs):
+    cov_qvalue_exec      mean=13.3
+
+  django/django (66 runs):
+    cov_qvalue_exec      mean=62.0
+
+  matplotlib/matplotlib (7 runs):
+    cov_qvalue_exec      mean=57.4
+
+  mwaskom/seaborn (2 runs):
+    cov_qvalue_exec      mean=9.0
+
+  pallets/flask (1 runs):
+    cov_qvalue_exec      mean=16.0
+
+  pydata/xarray (3 runs):
+    cov_qvalue_exec      mean=41.0
+
+  pylint-dev/pylint (2 runs):
+    cov_qvalue_exec      mean=9.5
+
+  pytest-dev/pytest (12 runs):
+    cov_qvalue_exec      mean=22.7
+
+  scikit-learn/scikit-learn (20 runs):
+    cov_qvalue_exec      mean=0.0
+
+  sphinx-doc/sphinx (2 runs):
+    cov_qvalue_exec      mean=9.5
+
+  sympy/sympy (42 runs):
+    cov_qvalue_exec      mean=50.3
+
+Cost: $11.6663 | Time: 17826s (297.1m)
+Saved to /share/edc/home/aamayuelasfernandez/inference-curiosity/results/testgeneval/exec_selection_gpt54mini.json
