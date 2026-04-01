@@ -1,0 +1,154 @@
+\section{Prompts and Coverage Map}
+\label{app:prompts}
+
+We present the prompts used in CovQValue and show how the coverage map evolves during exploration. All prompts receive the module source code (truncated to 2500 characters), the coverage map, and recent test history.
+
+% ---------------------------------------------------------------------------
+\subsection{Coverage Map (Posterior)}
+\label{app:coverage_map}
+
+The coverage map is fed to the LLM as structured text. Below we show its evolution for \texttt{werkzeug.http} at three points during a CovQValue run.
+
+\begin{tcolorbox}[colback=gray!5!white, colframe=gray!60!black, title=Coverage Map --- Step 1 (initial state), fonttitle=\bfseries\small]
+\begin{small}
+\begin{verbatim}
+COVERAGE MAP (Bayesian posterior):
+  Branches discovered: 0
+\end{verbatim}
+\end{small}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=gray!5!white, colframe=gray!60!black, title=Coverage Map --- After Step 3 (54 branches), fonttitle=\bfseries\small]
+\begin{small}
+\begin{verbatim}
+COVERAGE MAP (Bayesian posterior):
+  Branches discovered: 54
+  Last step discovered: 19 new branches
+  Average per step: 18.0 branches
+  Most informative tests:
+    from werkzeug.http import HTTP_STATUS -> 31 branches
+    from werkzeug.http import parse_etags -> 19 branches
+    from werkzeug.http import parse_date, -> 4 branches
+\end{verbatim}
+\end{small}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=red!3!white, colframe=gray!60!black, title=Coverage Map --- After Step 12 (102 branches -- stagnation), fonttitle=\bfseries\small]
+\begin{small}
+\begin{verbatim}
+COVERAGE MAP (Bayesian posterior):
+  Branches discovered: 102
+  Last step discovered: 0 new branches
+  Average per step: 8.5 branches
+  WARNING: Coverage has stagnated for 3 steps
+  You may need a fundamentally different approach
+  Most informative tests:
+    from werkzeug.http import parse_option -> 36 branches
+    from werkzeug.http import HTTP_STATUS -> 31 branches
+    from werkzeug.http import parse_range_ -> 21 branches
+\end{verbatim}
+\end{small}
+\end{tcolorbox}
+
+The stagnation warning triggers the LLM to try fundamentally different approaches, leading to the discovery of 21 additional branches in steps 20--24.
+
+% ---------------------------------------------------------------------------
+\subsection{Plan Generation Prompt}
+\label{app:plan_prompt}
+
+Each of the $K{=}3$ plans receives a different diversity hint. Below is the prompt for plan 1 (main functionality). The other two plans receive: ``\textit{Focus on ERROR HANDLING}'' and ``\textit{Focus on INTERACTIONS}.''
+
+\begin{tcolorbox}[colback=blue!3!white, colframe=blue!40!black, title=Plan Generation Prompt (with diversity hint), fonttitle=\bfseries\small]
+\begin{small}
+\begin{verbatim}
+Module: {module_name}
+{source code (truncated to 2500 chars)}
+
+{coverage map}
+
+Previous tests:
+  {test_1} -> {output} (new branches: 31)
+  {test_2} -> {output} (new branches: 4)
+  {test_3} -> {output} (new branches: 19)
+
+PLAN a sequence of 3 test scripts that TOGETHER will
+reach UNCOVERED code paths. Focus on the MAIN
+functionality -- constructors, primary methods.
+
+Think about what setup is needed:
+Step 1: What basic setup/import is needed to reach
+        deeper code?
+Step 2: Building on step 1's result, what exercises
+        the next layer?
+Step 3: Now target the deepest uncovered branches.
+
+For each step, write a separate test script (5-10
+lines each). Import from the module and print results.
+
+Format your response as:
+### TEST 1
+```python
+[code]
+```
+### TEST 2
+```python
+[code]
+```
+### TEST 3
+```python
+[code]
+```
+\end{verbatim}
+\end{small}
+\end{tcolorbox}
+
+% ---------------------------------------------------------------------------
+\subsection{Q-Value Scoring Prompt}
+\label{app:qvalue_prompt}
+
+After generating $K$ plans, each is scored by the following prompt. The LLM estimates immediate gain $\hat{g}$ and future reachability $\hat{v}$, which are combined as $Q = \hat{g} + \gamma \cdot \hat{v}$.
+
+\begin{tcolorbox}[colback=green!3!white, colframe=green!30!black, title=Q-Value Scoring Prompt, fonttitle=\bfseries\small]
+\begin{small}
+\begin{verbatim}
+Module: {module_name}
+{source code (truncated to 2000 chars)}
+
+{coverage map}
+
+Consider this TEST PLAN (a sequence of 3 scripts to
+execute in order):
+
+Step 1:
+```python
+{script_1}
+```
+Step 2:
+```python
+{script_2}
+```
+Step 3:
+```python
+{script_3}
+```
+
+Evaluate this plan by answering TWO questions with
+just numbers:
+
+1. IMMEDIATE GAIN: How many total NEW branches (not
+   yet covered) will this sequence of tests likely
+   discover? Consider that later steps build on
+   earlier ones. (0-50)
+
+2. FUTURE VALUE: After executing this plan, how many
+   ADDITIONAL branches become reachable by future
+   tests that weren't reachable before? Consider what
+   state/objects/setup the plan leaves behind. (0-50)
+
+Format: immediate, future
+Example: 15, 25
+\end{verbatim}
+\end{small}
+\end{tcolorbox}
+
+\noindent The LLM responds with two numbers (e.g., ``12, 20''), yielding $Q = 12 + 0.5 \times 20 = 22$. The plan with the highest $Q$ is selected for execution.

@@ -48,23 +48,25 @@ MODELS = {
     "mistral": ("Mistral Large", "#4CE88A"),
 }
 
-STRATEGIES = ["random", "greedy", "cov_greedy", "cov_qvalue"]
+STRATEGIES = ["greedy", "cov_greedy", "cov_qvalue_exec", "cov_qvalue"]
 STRATEGY_LABELS = {
     "random": "Random",
     "greedy": "Greedy",
     "cov_greedy": "CovGreedy",
+    "cov_qvalue_exec": "CovBestExec",
     "cov_qvalue": "CovQValue",
 }
 STRATEGY_COLORS = {
     "random": "#7F7F7F",
     "greedy": "#D4A03E",
     "cov_greedy": "#3A7EBF",
+    "cov_qvalue_exec": "#8E6BBF",
     "cov_qvalue": "#C44E52",
 }
 
 
 def load_all():
-    """Load all 6 result files."""
+    """Load all result files, merging exec selection results."""
     data = {}
     for bench in ["repo_explore_bench", "testgeneval"]:
         data[bench] = {}
@@ -73,6 +75,18 @@ def load_all():
             if path.exists():
                 with open(path) as f:
                     data[bench][model_key] = json.load(f)
+
+            # Merge exec selection results if available
+            exec_path = RESULTS_DIR / bench / f"exec_selection_{model_key}.json"
+            if exec_path.exists() and model_key in data[bench]:
+                with open(exec_path) as f:
+                    exec_data = json.load(f)
+                # Build module->exec_result lookup
+                exec_by_module = {r["module"]: r for r in exec_data["results"]}
+                for r in data[bench][model_key]["results"]:
+                    exec_r = exec_by_module.get(r["module"])
+                    if exec_r and "cov_qvalue_exec" in exec_r["strategies"]:
+                        r["strategies"]["cov_qvalue_exec"] = exec_r["strategies"]["cov_qvalue_exec"]
     return data
 
 
@@ -466,8 +480,9 @@ def table_per_repo(data):
         lines = []
         lines.append(r"\begin{table}[t]")
         lines.append(r"\centering")
-        lines.append(r"\caption{Per-repository branch coverage on " + bench_label +
-                     r" by model. CovQValue bolded.}")
+        lines.append(r"\caption{Per-repository mean branch coverage on " + bench_label +
+                     r" by model. Each cell averages across modules in that repo. " +
+                     r"Mean row shows the per-module average (matching Table~\ref{tab:main}). Best per group in bold.}")
         lines.append(r"\label{tab:perrepo_" + bench.replace("_", "") + "}")
         lines.append(r"\small")
         lines.append(r"\setlength{\tabcolsep}{3pt}")
@@ -521,6 +536,27 @@ def table_per_repo(data):
                     else:
                         row.append("--")
             lines.append(" & ".join(row) + r" \\")
+
+        # Add Mean row (per-module average, matching main table)
+        lines.append(r"\midrule")
+        mean_row = ["Mean"]
+        for model_key in ["gemini", "gpt54mini", "mistral"]:
+            if model_key not in data[bench]:
+                mean_row.extend(["--"] * 4)
+                continue
+            results = data[bench][model_key]["results"]
+            for s in STRATEGIES:
+                vals = [r["strategies"][s]["final"] for r in results
+                        if s in r["strategies"]]
+                if vals:
+                    mean = np.mean(vals)
+                    if s == "cov_qvalue":
+                        mean_row.append(f"\\textbf{{{mean:.1f}}}")
+                    else:
+                        mean_row.append(f"{mean:.1f}")
+                else:
+                    mean_row.append("--")
+        lines.append(" & ".join(mean_row) + r" \\")
 
         lines.append(r"\bottomrule")
         lines.append(r"\end{tabular}")
