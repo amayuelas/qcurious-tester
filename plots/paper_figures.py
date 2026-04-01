@@ -48,19 +48,17 @@ MODELS = {
     "mistral": ("Mistral Large", "#4CE88A"),
 }
 
-STRATEGIES = ["greedy", "cov_greedy", "cov_qvalue_exec", "cov_qvalue"]
+STRATEGIES = ["random", "greedy", "cov_greedy", "cov_qvalue"]
 STRATEGY_LABELS = {
     "random": "Random",
     "greedy": "Greedy",
     "cov_greedy": "CovGreedy",
-    "cov_qvalue_exec": "CovBestExec",
     "cov_qvalue": "CovQValue",
 }
 STRATEGY_COLORS = {
     "random": "#7F7F7F",
     "greedy": "#D4A03E",
     "cov_greedy": "#3A7EBF",
-    "cov_qvalue_exec": "#8E6BBF",
     "cov_qvalue": "#C44E52",
 }
 
