@@ -1,0 +1,27 @@
+\section{Execution-Based Plan Selection}
+\label{app:bestexec}
+
+We evaluate an alternative plan selection mechanism, \textbf{CovBestExec}, which replaces LLM-estimated Q-values with actual execution outcomes. Instead of asking the LLM to score plans, CovBestExec executes step~1 of each candidate plan, observes the actual branch coverage, selects the plan whose first step discovered the most branches, and then executes the remaining steps of the winning plan. This is a 1-step lookahead with real observation rather than LLM prediction.
+
+\paragraph{Setup.} CovBestExec uses the same generation as CovQValue ($K{=}3$ diverse plans, $S{=}3$ scripts per plan, coverage map feedback). The only difference is selection: execution-based vs.\ Q-value-based. With $K{=}3$, each round spends 3 executions evaluating step~1 of each plan plus 2 executing the remaining steps of the winner, totaling 5 executions per round. At budget $N{=}24$, this yields $\sim$5 rounds compared to 8 for CovQValue.
+
+\paragraph{Results.} Table~\ref{tab:bestexec} shows results on RepoExploreBench. CovBestExec consistently lands between CovGreedy and CovQValue across all three models, confirming that (1) plan selection matters, and (2) Q-value scoring achieves better selection than execution-based selection \textit{without spending any execution budget}---the LLM-estimated Q-value is ``free'' compared to the 3 Docker executions CovBestExec requires per round.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{lccc}
+\toprule
+\textbf{Strategy} & \textbf{Gemini} & \textbf{GPT-5.4m} & \textbf{Mistral} \\
+\midrule
+Greedy & 41.8 & 28.6 & 42.3 \\
+CovGreedy & 51.7 & 36.5 & 40.0 \\
+CovBestExec & 65.1 & 47.6 & 55.8 \\
+CovQValue & \textbf{72.4} & \textbf{49.8} & \textbf{59.1} \\
+\bottomrule
+\end{tabular}
+\caption{Mean branch coverage on RepoExploreBench (93 targets). CovBestExec uses execution-based selection; CovQValue uses LLM-estimated Q-values. CovQValue outperforms despite using no execution budget for selection.}
+\label{tab:bestexec}
+\end{table}
+
+On TestGenEval Lite, CovBestExec performs below CovGreedy (e.g., 65.0 vs.\ 77.6 for Gemini) because the heavier Docker containers amplify the cost of spending 3 executions on evaluation per round, leaving too few rounds for iterative discovery. This further supports Q-value scoring as the preferred selection mechanism: it provides useful signal at zero execution cost.
