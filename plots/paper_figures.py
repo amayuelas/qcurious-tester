@@ -168,8 +168,8 @@ def fig_exploration_curves(data):
                 data, bench, [model_key],
                 f"fig1_exploration_curves_{short}_{model_key}",
                 figsize=(4.5, 4),
-                title=model_name,
-                show_legend=(model_key == "gemini"),  # legend only on first
+                title=None,
+                show_legend=(model_key == "gemini"),
             )
 
 
