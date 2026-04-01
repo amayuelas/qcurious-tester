@@ -355,7 +355,7 @@ def table_main_results(data):
     lines = []
     lines.append(r"\begin{table*}[t]")
     lines.append(r"\centering")
-    lines.append(r"\caption{Mean branch coverage across 3 models and 2 benchmarks. "
+    lines.append(r"\caption{Mean per-module branch coverage ($\pm$ standard error) across 3 models and 2 benchmarks. "
                  r"All CovQValue vs.\ Greedy comparisons: $p < 0.0001$ (paired $t$-test). "
                  r"$d$: Cohen's $d$ effect size.}")
     lines.append(r"\label{tab:main}")
