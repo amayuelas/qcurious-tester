@@ -1,0 +1,57 @@
+\section{Case Study: Generated Test Scripts}
+\label{app:case_study_scripts}
+
+We examine the test scripts generated for \texttt{werkzeug.http} (Gemini Flash) to illustrate how coverage feedback and Q-value scoring navigate corridor structure. The corresponding branch coverage curves are shown in Figure~\ref{fig:case_studies} (second panel): Greedy remains at 23 branches for all 24 steps, while CovQValue reaches 127.
+
+\paragraph{Module structure.} \texttt{werkzeug.http} implements over 40 functions for parsing and generating HTTP headers. Surface-level functions (\texttt{parse\_date}, \texttt{quote\_header\_value}) are standalone, but the deeper parsers (\texttt{parse\_options\_header}, \texttt{parse\_cookie}) depend on internal tokenizers and quoting logic that gate most of the module's branch complexity.
+
+\paragraph{Greedy (stuck at 23 branches).} Greedy calls three surface-level functions on step 1 and discovers 23 branches. For the remaining 23 steps, it generates minor variations of the same test, discovering zero new branches each time:
+
+\begin{small}
+\begin{verbatim}
+from werkzeug.http import (HTTP_STATUS_CODES,
+    quote_header_value, parse_date)
+
+print(f"Status 200: {HTTP_STATUS_CODES.get(200)}")
+print(f"Status 404: {HTTP_STATUS_CODES.get(404)}")
+header = quote_header_value("foo bar")
+dt = parse_date("Mon, 21 Oct 2023 20:12:00 GMT")
+\end{verbatim}
+\end{small}
+
+Without coverage feedback, Greedy has no signal that the deeper parsing layer exists. The LLM selects the candidate it considers ``most likely to cover new code paths,'' but without knowing which paths have already been covered, it keeps choosing the same familiar functions.
+
+\paragraph{CovQValue step 3 (+19 branches).} After the initial steps cover basic utilities, the coverage map shows that structured header parsing is entirely unexplored. CovQValue targets the ETag and dictionary header parsers, which require inputs with specific quoting patterns:
+
+\begin{small}
+\begin{verbatim}
+from werkzeug.http import (parse_etags,
+    parse_list_header, parse_dict_header)
+
+etags = parse_etags('W/"weak", "strong"')
+print(f"Strong: {etags.contains('strong')}")
+print(f"Weak: {etags.contains_weak('weak')}")
+list_h = parse_list_header(
+    'token1, "quoted token", token2')
+dict_h = parse_dict_header('a=1, b="2", c')
+\end{verbatim}
+\end{small}
+
+These functions exercise the internal tokenizer with weak ETags (\texttt{W/} prefix), quoted strings, and key-value pairs --- input patterns that the surface-level tests never needed. This opens the first corridor gate into the structured parsing layer.
+
+\paragraph{CovQValue step 5 (+36 branches).} The largest single-step discovery targets the cookie and content-type option machinery, which sits behind the tokenizer layer just opened:
+
+\begin{small}
+\begin{verbatim}
+from werkzeug.http import (parse_options_header,
+    dump_options_header, parse_cookie, dump_cookie)
+
+header = 'text/html; charset=utf-8; boundary="x"'
+mimetype, params = parse_options_header(header)
+cookie = dump_cookie("session", "a b c",
+    max_age=3600, httponly=True, samesite="Lax")
+parsed = parse_cookie('session="a b c"; other=val')
+\end{verbatim}
+\end{small}
+
+\texttt{parse\_options\_header} requires a semicolon-delimited header with quoted parameter values, and \texttt{dump\_cookie} exercises security attribute serialization (\texttt{httponly}, \texttt{samesite}). These functions share internal quoting and escaping logic with the parsers from step 3, so the earlier corridor traversal was a prerequisite --- without it, the inputs would not have reached the branches behind the quoting state machine. The Q-value scorer selected this plan because it recognized the high future reachability of the options and cookie subsystems.

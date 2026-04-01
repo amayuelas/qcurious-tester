@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # API settings
-GEMINI_API_BASE = os.environ.get("API_BASE", "http://dipsy.edc.iee.ucsb.edu:4000")
+GEMINI_API_BASE = os.environ.get("API_BASE", "https://generativelanguage.googleapis.com/v1beta/openai")
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
 MISTRAL_API_BASE = "https://api.mistral.ai/v1"
 MISTRAL_API_KEY = os.environ.get("MISTRAL_API_KEY", "")

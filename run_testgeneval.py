@@ -325,7 +325,7 @@ def main():
     print(f"  Total runs: {total_runs}", flush=True)
     print("=" * 70, flush=True)
 
-    t = generate_with_model(config.MODEL, "Say ok", 0.3, 10)
+    t = generate_with_model(config.MODEL, "Say ok", 0.3, 100)
     print(f"  Connectivity: {'OK' if t else 'FAILED'}", flush=True)
     if not t:
         return
