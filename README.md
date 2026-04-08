@@ -92,7 +92,6 @@ results/                      # Experiment outputs (JSON)
 @article{amayuelas2026planning,
   title={Planning to Explore: Curiosity-Driven Planning for LLM Test Generation},
   author={Alfonso Amayuelas and Firas Laakom and Piotr Piękos and Wenyi Wang and Yifan Xu and Yuhui Wang and Jürgen Schmidhuber and William Wang},
-  booktitle={Conference on Language Modeling (COLM)},
   year={2026},
   journal={arXiv preprint arXiv:2604.05159},
 }
