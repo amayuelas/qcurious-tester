@@ -91,8 +91,8 @@ results/                      # Experiment outputs (JSON)
 ```bibtex
 @article{amayuelas2026planning,
   title={Planning to Explore: Curiosity-Driven Planning for LLM Test Generation},
-  author={Alfonso Amayuelas and Firas Laakom and Piotr Piękos and Wenyi Wang and Yifan Xu and Yuhui Wang and Jürgen Schmidhuber and William Wang},
-  year={2026},
+  author={Amayuelas, Alfonso and Laakom, Firas and Pi{\k{e}}kos, Piotr and Wang, Wenyi and Xu, Yifan and Wang, Yuhui and Schmidhuber, J{\"u}rgen and Wang, William},
   journal={arXiv preprint arXiv:2604.05159},
+  year={2026}
 }
 ```
