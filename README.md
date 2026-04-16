@@ -1,6 +1,6 @@
 # Curiosity-Driven Planning for LLM Test Generation
 
-Code and benchmarks for the paper *"Curiosity-Driven Planning for LLM Test Generation"* (COLM 2026).
+Code and benchmarks for the paper *"Curiosity-Driven Planning for LLM Test Generation"*.
 
 We formalize LLM-based test generation as Bayesian exploration of an unknown environment, where the coverage map serves as the posterior and an LLM-estimated Q-value selects among diverse candidate plans. Our method, **CovQValue**, achieves 40--77% more branch coverage than greedy baselines across 233 targets, 19 repositories, and 3 LLMs.
 
