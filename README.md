@@ -39,9 +39,20 @@ python run_ablations.py              # gamma, K, S sweeps
 python run_ablation_diversity.py     # diversity decomposition
 python run_ablation_s_matched.py     # S with matched rounds
 
+# External baselines (pynguin, coverup) on the same targets
+#   requires the curiositybench-baselines:latest image (Dockerfile.baselines)
+python run_external_baselines.py --baseline pynguin --repos click flask
+
+# Synthetic corridor study (depth-d corridor modules)
+python run_synth_corridor.py --build                 # build the image first
+python run_synth_corridor.py --depths 2 4 6 8 --seeds 42 123 456
+
 # Quick smoke test
 python run_repo_explore_bench.py --max-targets 1 --exec-budget 6
 ```
+
+Additional rebuttal experiments (calibration, decomposition, implicit posterior,
+exemplar ablation, etc.) live under `scripts/active/`.
 
 ## Generating Figures
 
@@ -60,6 +71,7 @@ curiosity_explorer/
   explorer/
     coverage_exploration.py   # Core: CoverageMap, strategies, plan generation
     q_values.py               # Q-value scoring (immediate gain + future reachability)
+    covbayes.py               # CovBayes: closed-form Bayesian plan selection
     diverse_gen.py            # Diverse candidate generation
     entropy_utils.py          # Entropy computation utilities
   runner/
@@ -72,6 +84,10 @@ curiosity_explorer/
 run_repo_explore_bench.py     # RepoExploreBench experiment runner
 run_testgeneval.py            # TestGenEval experiment runner
 run_ablations.py              # Ablation studies runner
+run_external_baselines.py     # External baselines (pynguin, coverup)
+run_synth_corridor.py         # Synthetic corridor study
+scripts/active/               # Rebuttal experiment scripts
+Dockerfile.baselines          # Image for external baselines / synth corridor
 config.py                     # API keys, model config, experiment parameters
 plots/                        # Figure generation scripts
 results/                      # Experiment outputs (JSON)
@@ -85,6 +101,7 @@ results/                      # Experiment outputs (JSON)
 | Greedy | No | LLM picks "best" | No |
 | CovGreedy | Yes | Random from K | No |
 | **CovQValue** | Yes | Q-value scoring | Yes |
+| CovBayes | Yes | Closed-form Bayesian IG | Yes |
 
 ## Citation
 
