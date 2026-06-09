@@ -1,0 +1,108 @@
+2026-05-27 16:24:29,113 INFO: RepoExploreBench: 93 targets across 9 repos
+======================================================================
+RepoExploreBench v2.0
+  Targets: 93 files across 9 repos
+  Strategies: ['cov_greedy', 'cov_greedy_multistep']
+  Seeds: [42]
+  Exec budget: 24 per run
+  Total runs: 186
+======================================================================
+  Connectivity: OK
+
+  Fetching source code...
+    click.core: 114085 chars
+    click.types: 36390 chars
+    click.termui: 28323 chars
+    click.utils: 20295 chars
+    click.shell_completion: 18459 chars
+    click.decorators: 18718 chars
+    click.parser: 19066 chars
+    click.testing: 16083 chars
+    click.formatting: 9705 chars
+    click.exceptions: 9272 chars
+    requests.utils: 33447 chars
+    requests.models: 35222 chars
+    requests.sessions: 30372 chars
+    requests.cookies: 18559 chars
+    requests.adapters: 19552 chars
+    requests.auth: 10186 chars
+    flask.app: 59200 chars
+    flask.cli: 33820 chars
+    flask.helpers: 22991 chars
+    flask.ctx: 14840 chars
+    flask.sessions: 14168 chars
+    flask.config: 12855 chars
+    flask.json.tag: 8870 chars
+    flask.testing: 10016 chars
+    flask.templating: 7537 chars
+    flask.json.provider: 7639 chars
+    rich.console: 99096 chars
+    rich.progress: 59691 chars
+    rich.text: 47302 chars
+    rich.table: 39643 chars
+    rich.pretty: 35811 chars
+    rich.syntax: 35364 chars
+    rich.markdown: 26159 chars
+    rich.style: 27072 chars
+    rich.traceback: 29466 chars
+    rich.segment: 24209 chars
+    rich.color: 18220 chars
+    rich.layout: 13939 chars
+    jinja2.compiler: 72198 chars
+    jinja2.filters: 53861 chars
+    jinja2.environment: 61252 chars
+    jinja2.nodes: 34549 chars
+    jinja2.runtime: 33405 chars
+    jinja2.parser: 39735 chars
+    jinja2.ext: 31843 chars
+    jinja2.lexer: 29725 chars
+    jinja2.utils: 23932 chars
+    jinja2.loaders: 23084 chars
+    jinja2.sandbox: 14583 chars
+    jinja2.bccache: 14060 chars
+    httpx._client: 67489 chars
+    httpx._models: 42302 chars
+    httpx._urls: 21747 chars
+    httpx._main: 15634 chars
+    httpx._urlparse: 17719 chars
+    httpx._api: 12927 chars
+    httpx._utils: 13857 chars
+    httpx._transports.default: 13289 chars
+    httpx._config: 12203 chars
+    httpx._auth: 11829 chars
+    pydantic.types: 89470 chars
+    pydantic.json_schema: 102806 chars
+    pydantic.main: 65891 chars
+    pydantic.fields: 45929 chars
+    pydantic.config: 29138 chars
+    pydantic.networks: 21214 chars
+    pydantic.functional_validators: 23599 chars
+    pydantic.color: 21492 chars
+    pydantic.type_adapter: 18033 chars
+    pydantic.functional_serializers: 14619 chars
+    werkzeug.http: 43362 chars
+    werkzeug.serving: 39331 chars
+    werkzeug.datastructures.structures: 31760 chars
+    werkzeug.routing.map: 36349 chars
+    werkzeug.routing.rules: 31894 chars
+    werkzeug.exceptions: 26061 chars
+    werkzeug.wrappers.response: 32586 chars
+    werkzeug.sansio.response: 27646 chars
+    werkzeug.utils: 24653 chars
+    werkzeug.wrappers.request: 24619 chars
+    werkzeug.local: 22002 chars
+    werkzeug.wsgi: 20893 chars
+    starlette.routing: 35752 chars
+    starlette.testclient: 29843 chars
+    starlette.datastructures: 23348 chars
+    starlette.responses: 12650 chars
+    starlette.requests: 11196 chars
+    starlette.formparsers: 10433 chars
+    starlette.applications: 10922 chars
+    starlette.middleware.errors: 7937 chars
+    starlette.staticfiles: 8723 chars
+    starlette.templating: 8984 chars
+    starlette.middleware.base: 8794 chars
+  Fetched 93/93 modules
+
+Running 93 targets with 4 workers...

@@ -1,0 +1,413 @@
+2026-05-28 15:02:56,665 INFO: RepoExploreBench: 10 targets across 1 repos
+======================================================================
+RepoExploreBench v2.0
+  Targets: 10 files across 1 repos
+  Strategies: ['random', 'greedy', 'cov_greedy', 'cov_greedy_multistep', 'divhints_random', 'cov_qvalue']
+  Seeds: [42]
+  Exec budget: 24 per run
+  Total runs: 60
+======================================================================
+  Connectivity: OK
+
+  Fetching source code...
+    click.core: 114085 chars
+    click.types: 36390 chars
+    click.termui: 28323 chars
+    click.utils: 20295 chars
+    click.shell_completion: 18459 chars
+    click.decorators: 18718 chars
+    click.parser: 19066 chars
+    click.testing: 16083 chars
+    click.formatting: 9705 chars
+    click.exceptions: 9272 chars
+  Fetched 10/10 modules
+
+Running 10 targets with 1 workers...
+2026-05-28 15:13:12,854 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-05-28 15:13:12,888 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-05-28 15:13:12,889 INFO: Plan 2: ḡ=2, γE[v]=5.0, Q=7.0
+2026-05-28 15:13:12,889 INFO: Selected plan 0 with Q=7.0
+2026-05-28 15:13:29,679 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-05-28 15:13:29,712 INFO: Plan 2: ḡ=5, γE[v]=7.5, Q=12.5
+2026-05-28 15:13:29,713 INFO: Plan 1: ḡ=5, γE[v]=5.0, Q=10.0
+2026-05-28 15:13:29,714 INFO: Selected plan 2 with Q=12.5
+2026-05-28 15:13:48,921 INFO: Plan 1: ḡ=10, γE[v]=7.5, Q=17.5
+2026-05-28 15:13:48,937 INFO: Plan 2: ḡ=6, γE[v]=7.5, Q=13.5
+2026-05-28 15:13:48,938 INFO: Plan 0: ḡ=4, γE[v]=5.0, Q=9.0
+2026-05-28 15:13:48,939 INFO: Selected plan 1 with Q=17.5
+2026-05-28 15:14:07,675 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-05-28 15:14:07,692 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0
+2026-05-28 15:14:07,709 INFO: Plan 2: ḡ=5, γE[v]=7.5, Q=12.5
+2026-05-28 15:14:07,709 INFO: Selected plan 2 with Q=12.5
+2026-05-28 15:14:25,595 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-05-28 15:14:25,629 INFO: Plan 2: ḡ=5, γE[v]=7.5, Q=12.5
+2026-05-28 15:14:25,630 INFO: Plan 1: ḡ=5, γE[v]=7.5, Q=12.5
+2026-05-28 15:14:25,630 INFO: Selected plan 1 with Q=12.5
+2026-05-28 15:14:41,864 INFO: Plan 1: ḡ=5, γE[v]=5.0, Q=10.0
+2026-05-28 15:14:41,864 INFO: Plan 0: ḡ=5, γE[v]=7.5, Q=12.5
+2026-05-28 15:14:41,880 INFO: Plan 2: ḡ=10, γE[v]=10.0, Q=20.0
+2026-05-28 15:14:41,880 INFO: Selected plan 2 with Q=20.0
+2026-05-28 15:14:59,256 INFO: Plan 0: ḡ=5, γE[v]=5.0, Q=10.0
+2026-05-28 15:14:59,290 INFO: Plan 2: ḡ=4, γE[v]=5.0, Q=9.0
+2026-05-28 15:14:59,291 INFO: Plan 1: ḡ=5, γE[v]=5.0, Q=10.0
+2026-05-28 15:14:59,291 INFO: Selected plan 0 with Q=10.0
+2026-05-28 15:15:16,645 INFO: Plan 0: ḡ=5, γE[v]=7.5, Q=12.5
+2026-05-28 15:15:16,646 INFO: Plan 1: ḡ=6, γE[v]=7.5, Q=13.5
+2026-05-28 15:15:16,677 INFO: Plan 2: ḡ=5, γE[v]=7.5, Q=12.5
+2026-05-28 15:15:16,678 INFO: Selected plan 1 with Q=13.5
+  [1/10] click.core seed=42: {'random': 54, 'greedy': 54, 'cov_greedy': 66, 'cov_greedy_multistep': 89, 'divhints_random': 87, 'cov_qvalue': 88}
+2026-05-28 15:24:20,094 INFO: Plan 2: ḡ=0, γE[v]=0.0, Q=0.0
+2026-05-28 15:24:20,128 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-05-28 15:24:20,129 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0
+2026-05-28 15:24:20,129 INFO: Selected plan 0 with Q=0.0
+2026-05-28 15:24:33,919 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-05-28 15:24:33,953 INFO: Plan 2: ḡ=0, γE[v]=0.0, Q=0.0
+2026-05-28 15:24:33,953 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0
+2026-05-28 15:24:33,954 INFO: Selected plan 0 with Q=0.0
+2026-05-28 15:24:48,946 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0
+2026-05-28 15:24:48,963 INFO: Plan 2: ḡ=0, γE[v]=0.0, Q=0.0
+2026-05-28 15:24:48,979 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-05-28 15:24:48,980 INFO: Selected plan 0 with Q=0.0
+2026-05-28 15:25:02,700 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-05-28 15:25:02,717 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0
+2026-05-28 15:25:02,733 INFO: Plan 2: ḡ=0, γE[v]=0.0, Q=0.0
+2026-05-28 15:25:02,734 INFO: Selected plan 0 with Q=0.0
+2026-05-28 15:25:16,174 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0
+2026-05-28 15:25:16,226 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-05-28 15:25:16,226 INFO: Plan 2: ḡ=2, γE[v]=5.0, Q=7.0
+2026-05-28 15:25:16,227 INFO: Selected plan 0 with Q=7.0
+2026-05-28 15:25:32,937 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-05-28 15:25:32,971 INFO: Plan 2: ḡ=0, γE[v]=0.0, Q=0.0
+2026-05-28 15:25:32,972 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0
+2026-05-28 15:25:32,972 INFO: Selected plan 0 with Q=0.0
+2026-05-28 15:25:50,488 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-05-28 15:25:50,522 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0
+2026-05-28 15:25:50,539 INFO: Plan 2: ḡ=2, γE[v]=5.0, Q=7.0
+2026-05-28 15:25:50,539 INFO: Selected plan 2 with Q=7.0
+2026-05-28 15:26:05,896 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0
+2026-05-28 15:26:05,897 INFO: Plan 2: ḡ=0, γE[v]=0.0, Q=0.0
+2026-05-28 15:26:05,929 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-05-28 15:26:05,929 INFO: Selected plan 0 with Q=0.0
+  [2/10] click.types seed=42: {'random': 8, 'greedy': 8, 'cov_greedy': 9, 'cov_greedy_multistep': 9, 'divhints_random': 11, 'cov_qvalue': 9}
+2026-05-28 15:36:27,182 INFO: Plan 1: ḡ=12, γE[v]=7.5, Q=19.5
+2026-05-28 15:36:27,216 INFO: Plan 2: ḡ=10, γE[v]=15.0, Q=25.0
+2026-05-28 15:36:27,217 INFO: Plan 0: ḡ=12, γE[v]=7.5, Q=19.5
+2026-05-28 15:36:27,218 INFO: Selected plan 2 with Q=25.0
+2026-05-28 15:36:43,244 INFO: Plan 0: ḡ=12, γE[v]=10.0, Q=22.0
+2026-05-28 15:36:43,245 INFO: Plan 1: ḡ=12, γE[v]=10.0, Q=22.0
+2026-05-28 15:36:43,277 INFO: Plan 2: ḡ=12, γE[v]=12.5, Q=24.5
+2026-05-28 15:36:43,278 INFO: Selected plan 2 with Q=24.5
+2026-05-28 15:36:59,007 INFO: Plan 1: ḡ=12, γE[v]=10.0, Q=22.0
+2026-05-28 15:36:59,008 INFO: Plan 0: ḡ=12, γE[v]=10.0, Q=22.0
+2026-05-28 15:36:59,009 INFO: Plan 2: ḡ=12, γE[v]=10.0, Q=22.0
+2026-05-28 15:36:59,009 INFO: Selected plan 0 with Q=22.0
+2026-05-28 15:37:15,816 INFO: Plan 0: ḡ=12, γE[v]=7.5, Q=19.5
+2026-05-28 15:37:15,816 INFO: Plan 1: ḡ=12, γE[v]=10.0, Q=22.0
+2026-05-28 15:37:15,817 INFO: Plan 2: ḡ=12, γE[v]=7.5, Q=19.5
+2026-05-28 15:37:15,818 INFO: Selected plan 1 with Q=22.0
+2026-05-28 15:37:32,255 INFO: Plan 2: ḡ=12, γE[v]=10.0, Q=22.0
+2026-05-28 15:37:32,256 INFO: Plan 0: ḡ=12, γE[v]=7.5, Q=19.5
+2026-05-28 15:37:32,257 INFO: Plan 1: ḡ=12, γE[v]=7.5, Q=19.5
+2026-05-28 15:37:32,257 INFO: Selected plan 2 with Q=22.0
+2026-05-28 15:37:49,799 INFO: Plan 1: ḡ=12, γE[v]=7.5, Q=19.5
+2026-05-28 15:37:49,800 INFO: Plan 0: ḡ=12, γE[v]=12.5, Q=24.5
+2026-05-28 15:37:49,801 INFO: Plan 2: ḡ=12, γE[v]=7.5, Q=19.5
+2026-05-28 15:37:49,801 INFO: Selected plan 0 with Q=24.5
+2026-05-28 15:38:06,366 INFO: Plan 2: ḡ=12, γE[v]=7.5, Q=19.5
+2026-05-28 15:38:06,399 INFO: Plan 0: ḡ=12, γE[v]=7.5, Q=19.5
+2026-05-28 15:38:06,400 INFO: Plan 1: ḡ=12, γE[v]=7.5, Q=19.5
+2026-05-28 15:38:06,401 INFO: Selected plan 0 with Q=19.5
+2026-05-28 15:38:21,910 INFO: Plan 1: ḡ=12, γE[v]=10.0, Q=22.0
+2026-05-28 15:38:21,927 INFO: Plan 2: ḡ=12, γE[v]=10.0, Q=22.0
+2026-05-28 15:38:21,944 INFO: Plan 0: ḡ=12, γE[v]=10.0, Q=22.0
+2026-05-28 15:38:21,944 INFO: Selected plan 0 with Q=22.0
+  [3/10] click.termui seed=42: {'random': 8, 'greedy': 9, 'cov_greedy': 0, 'cov_greedy_multistep': 13, 'divhints_random': 15, 'cov_qvalue': 17}
+2026-05-28 15:49:45,847 INFO: Plan 0: ḡ=10, γE[v]=7.5, Q=17.5
+2026-05-28 15:49:45,882 INFO: Plan 2: ḡ=12, γE[v]=7.5, Q=19.5
+2026-05-28 15:49:45,882 INFO: Plan 1: ḡ=10, γE[v]=7.5, Q=17.5
+2026-05-28 15:49:45,890 INFO: Selected plan 2 with Q=19.5
+2026-05-28 15:49:59,765 INFO: Plan 0: ḡ=12, γE[v]=5.0, Q=17.0
+2026-05-28 15:49:59,782 INFO: Plan 1: ḡ=8, γE[v]=6.0, Q=14.0
+2026-05-28 15:49:59,783 INFO: Plan 2: ḡ=12, γE[v]=7.5, Q=19.5
+2026-05-28 15:49:59,783 INFO: Selected plan 2 with Q=19.5
+2026-05-28 15:50:14,444 INFO: Plan 0: ḡ=12, γE[v]=7.5, Q=19.5
+2026-05-28 15:50:14,478 INFO: Plan 1: ḡ=12, γE[v]=7.5, Q=19.5
+2026-05-28 15:50:14,479 INFO: Plan 2: ḡ=10, γE[v]=7.5, Q=17.5
+2026-05-28 15:50:14,479 INFO: Selected plan 0 with Q=19.5
+2026-05-28 15:50:29,518 INFO: Plan 0: ḡ=12, γE[v]=5.0, Q=17.0
+2026-05-28 15:50:29,552 INFO: Plan 1: ḡ=10, γE[v]=7.5, Q=17.5
+2026-05-28 15:50:29,553 INFO: Plan 2: ḡ=12, γE[v]=7.5, Q=19.5
+2026-05-28 15:50:29,553 INFO: Selected plan 2 with Q=19.5
+2026-05-28 15:50:43,501 INFO: Plan 0: ḡ=12, γE[v]=7.5, Q=19.5
+2026-05-28 15:50:43,517 INFO: Plan 1: ḡ=6, γE[v]=5.0, Q=11.0
+2026-05-28 15:50:43,534 INFO: Plan 2: ḡ=12, γE[v]=7.5, Q=19.5
+2026-05-28 15:50:43,535 INFO: Selected plan 0 with Q=19.5
+2026-05-28 15:50:57,367 INFO: Plan 1: ḡ=12, γE[v]=2.5, Q=14.5
+2026-05-28 15:50:57,384 INFO: Plan 0: ḡ=12, γE[v]=7.5, Q=19.5
+2026-05-28 15:50:57,417 INFO: Plan 2: ḡ=12, γE[v]=7.5, Q=19.5
+2026-05-28 15:50:57,418 INFO: Selected plan 0 with Q=19.5
+2026-05-28 15:51:11,878 INFO: Plan 1: ḡ=12, γE[v]=5.0, Q=17.0
+2026-05-28 15:51:11,894 INFO: Plan 0: ḡ=12, γE[v]=7.5, Q=19.5
+2026-05-28 15:51:11,911 INFO: Plan 2: ḡ=12, γE[v]=7.5, Q=19.5
+2026-05-28 15:51:11,911 INFO: Selected plan 0 with Q=19.5
+2026-05-28 15:51:25,863 INFO: Plan 1: ḡ=12, γE[v]=5.0, Q=17.0
+2026-05-28 15:51:25,897 INFO: Plan 0: ḡ=12, γE[v]=7.5, Q=19.5
+2026-05-28 15:51:25,898 INFO: Plan 2: ḡ=12, γE[v]=7.5, Q=19.5
+2026-05-28 15:51:25,898 INFO: Selected plan 0 with Q=19.5
+  [4/10] click.utils seed=42: {'random': 16, 'greedy': 15, 'cov_greedy': 20, 'cov_greedy_multistep': 21, 'divhints_random': 19, 'cov_qvalue': 18}
+2026-05-28 16:02:06,087 INFO: Plan 1: ḡ=6, γE[v]=5.0, Q=11.0
+2026-05-28 16:02:06,104 INFO: Plan 0: ḡ=1, γE[v]=5.0, Q=6.0
+2026-05-28 16:02:06,120 INFO: Plan 2: ḡ=6, γE[v]=5.0, Q=11.0
+2026-05-28 16:02:06,121 INFO: Selected plan 1 with Q=11.0
+2026-05-28 16:02:24,812 INFO: Plan 0: ḡ=10, γE[v]=10.0, Q=20.0
+2026-05-28 16:02:24,829 INFO: Plan 2: ḡ=6, γE[v]=5.0, Q=11.0
+2026-05-28 16:02:24,829 INFO: Plan 1: ḡ=10, γE[v]=15.0, Q=25.0
+2026-05-28 16:02:24,830 INFO: Selected plan 1 with Q=25.0
+2026-05-28 16:02:44,834 INFO: Plan 0: ḡ=10, γE[v]=10.0, Q=20.0
+2026-05-28 16:02:44,868 INFO: Plan 1: ḡ=10, γE[v]=10.0, Q=20.0
+2026-05-28 16:02:44,869 INFO: Plan 2: ḡ=10, γE[v]=7.5, Q=17.5
+2026-05-28 16:02:44,869 INFO: Selected plan 0 with Q=20.0
+2026-05-28 16:03:03,381 INFO: Plan 0: ḡ=10, γE[v]=10.0, Q=20.0
+2026-05-28 16:03:03,398 INFO: Plan 1: ḡ=6, γE[v]=5.0, Q=11.0
+2026-05-28 16:03:03,414 INFO: Plan 2: ḡ=10, γE[v]=7.5, Q=17.5
+2026-05-28 16:03:03,415 INFO: Selected plan 0 with Q=20.0
+2026-05-28 16:03:21,898 INFO: Plan 0: ḡ=10, γE[v]=15.0, Q=25.0
+2026-05-28 16:03:21,914 INFO: Plan 1: ḡ=10, γE[v]=5.0, Q=15.0
+2026-05-28 16:03:21,931 INFO: Plan 2: ḡ=10, γE[v]=5.0, Q=15.0
+2026-05-28 16:03:21,931 INFO: Selected plan 0 with Q=25.0
+2026-05-28 16:03:40,333 INFO: Plan 0: ḡ=10, γE[v]=7.5, Q=17.5
+2026-05-28 16:03:40,350 INFO: Plan 1: ḡ=12, γE[v]=7.5, Q=19.5
+2026-05-28 16:03:40,366 INFO: Plan 2: ḡ=10, γE[v]=10.0, Q=20.0
+2026-05-28 16:03:40,367 INFO: Selected plan 2 with Q=20.0
+2026-05-28 16:04:00,779 INFO: Plan 0: ḡ=10, γE[v]=7.5, Q=17.5
+2026-05-28 16:04:00,814 INFO: Plan 2: ḡ=10, γE[v]=10.0, Q=20.0
+2026-05-28 16:04:00,815 INFO: Plan 1: ḡ=10, γE[v]=7.5, Q=17.5
+2026-05-28 16:04:00,815 INFO: Selected plan 2 with Q=20.0
+2026-05-28 16:04:21,088 INFO: Plan 0: ḡ=10, γE[v]=10.0, Q=20.0
+2026-05-28 16:04:21,089 INFO: Plan 1: ḡ=6, γE[v]=5.0, Q=11.0
+2026-05-28 16:04:21,120 INFO: Plan 2: ḡ=10, γE[v]=7.5, Q=17.5
+2026-05-28 16:04:21,121 INFO: Selected plan 0 with Q=20.0
+  [5/10] click.shell_completion seed=42: {'random': 4, 'greedy': 4, 'cov_greedy': 4, 'cov_greedy_multistep': 10, 'divhints_random': 10, 'cov_qvalue': 10}
+2026-05-28 16:12:24,478 INFO: Retrying request to /chat/completions in 0.469389 seconds
+2026-05-28 16:15:55,891 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-05-28 16:15:55,908 INFO: Plan 2: ḡ=0, γE[v]=0.0, Q=0.0
+2026-05-28 16:15:55,924 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0
+2026-05-28 16:15:55,971 INFO: Selected plan 0 with Q=0.0
+2026-05-28 16:16:13,144 INFO: Plan 0: ḡ=2, γE[v]=1.0, Q=3.0
+2026-05-28 16:16:13,161 INFO: Plan 1: ḡ=2, γE[v]=1.0, Q=3.0
+2026-05-28 16:16:13,178 INFO: Plan 2: ḡ=4, γE[v]=1.0, Q=5.0
+2026-05-28 16:16:13,178 INFO: Selected plan 2 with Q=5.0
+2026-05-28 16:16:31,447 INFO: Plan 0: ḡ=4, γE[v]=1.0, Q=5.0
+2026-05-28 16:16:31,464 INFO: Plan 2: ḡ=4, γE[v]=1.0, Q=5.0
+2026-05-28 16:16:31,481 INFO: Plan 1: ḡ=4, γE[v]=1.0, Q=5.0
+2026-05-28 16:16:31,482 INFO: Selected plan 0 with Q=5.0
+2026-05-28 16:16:47,791 INFO: Plan 2: ḡ=4, γE[v]=1.0, Q=5.0
+2026-05-28 16:16:47,792 INFO: Plan 0: ḡ=10, γE[v]=5.0, Q=15.0
+2026-05-28 16:16:47,807 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-05-28 16:16:47,808 INFO: Selected plan 0 with Q=15.0
+2026-05-28 16:17:05,273 INFO: Plan 0: ḡ=4, γE[v]=1.0, Q=5.0
+2026-05-28 16:17:05,307 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-05-28 16:17:05,308 INFO: Plan 2: ḡ=4, γE[v]=1.0, Q=5.0
+2026-05-28 16:17:05,308 INFO: Selected plan 1 with Q=7.0
+2026-05-28 16:17:23,414 INFO: Plan 0: ḡ=2, γE[v]=1.0, Q=3.0
+2026-05-28 16:17:23,431 INFO: Plan 1: ḡ=6, γE[v]=1.0, Q=7.0
+2026-05-28 16:17:23,447 INFO: Plan 2: ḡ=2, γE[v]=1.0, Q=3.0
+2026-05-28 16:17:23,448 INFO: Selected plan 1 with Q=7.0
+2026-05-28 16:17:41,103 INFO: Plan 1: ḡ=4, γE[v]=1.0, Q=5.0
+2026-05-28 16:17:41,137 INFO: Plan 2: ḡ=2, γE[v]=1.0, Q=3.0
+2026-05-28 16:17:41,138 INFO: Plan 0: ḡ=6, γE[v]=1.0, Q=7.0
+2026-05-28 16:17:41,139 INFO: Selected plan 0 with Q=7.0
+2026-05-28 16:17:58,850 INFO: Plan 0: ḡ=2, γE[v]=0.5, Q=2.5
+2026-05-28 16:17:58,884 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0
+2026-05-28 16:17:58,885 INFO: Plan 2: ḡ=6, γE[v]=1.0, Q=7.0
+2026-05-28 16:17:58,885 INFO: Selected plan 2 with Q=7.0
+  [6/10] click.decorators seed=42: {'random': 29, 'greedy': 32, 'cov_greedy': 31, 'cov_greedy_multistep': 23, 'divhints_random': 23, 'cov_qvalue': 23}
+2026-05-28 16:29:05,193 INFO: Plan 0: ḡ=4, γE[v]=1.0, Q=5.0
+2026-05-28 16:29:05,227 INFO: Plan 1: ḡ=4, γE[v]=1.0, Q=5.0
+2026-05-28 16:29:05,228 INFO: Plan 2: ḡ=4, γE[v]=5.0, Q=9.0
+2026-05-28 16:29:05,623 INFO: Selected plan 2 with Q=9.0
+2026-05-28 16:29:19,877 INFO: Plan 0: ḡ=4, γE[v]=6.0, Q=10.0
+2026-05-28 16:29:19,912 INFO: Plan 1: ḡ=5, γE[v]=7.5, Q=12.5
+2026-05-28 16:29:19,912 INFO: Plan 2: ḡ=5, γE[v]=5.0, Q=10.0
+2026-05-28 16:29:19,913 INFO: Selected plan 1 with Q=12.5
+2026-05-28 16:29:36,819 INFO: Plan 0: ḡ=5, γE[v]=5.0, Q=10.0
+2026-05-28 16:29:36,853 INFO: Plan 1: ḡ=10, γE[v]=7.5, Q=17.5
+2026-05-28 16:29:36,869 INFO: Plan 2: ḡ=10, γE[v]=10.0, Q=20.0
+2026-05-28 16:29:36,870 INFO: Selected plan 2 with Q=20.0
+2026-05-28 16:29:52,867 INFO: Plan 1: ḡ=5, γE[v]=5.0, Q=10.0
+2026-05-28 16:29:52,900 INFO: Plan 2: ḡ=5, γE[v]=5.0, Q=10.0
+2026-05-28 16:29:52,917 INFO: Plan 0: ḡ=10, γE[v]=7.5, Q=17.5
+2026-05-28 16:29:52,917 INFO: Selected plan 0 with Q=17.5
+2026-05-28 16:30:10,556 INFO: Plan 1: ḡ=10, γE[v]=7.5, Q=17.5
+2026-05-28 16:30:10,590 INFO: Plan 0: ḡ=10, γE[v]=7.5, Q=17.5
+2026-05-28 16:30:10,591 INFO: Plan 2: ḡ=10, γE[v]=7.5, Q=17.5
+2026-05-28 16:30:10,591 INFO: Selected plan 0 with Q=17.5
+2026-05-28 16:30:27,169 INFO: Plan 0: ḡ=12, γE[v]=7.5, Q=19.5
+2026-05-28 16:30:27,186 INFO: Plan 2: ḡ=5, γE[v]=7.5, Q=12.5
+2026-05-28 16:30:27,187 INFO: Plan 1: ḡ=5, γE[v]=5.0, Q=10.0
+2026-05-28 16:30:27,187 INFO: Selected plan 0 with Q=19.5
+2026-05-28 16:30:45,479 INFO: Plan 0: ḡ=12, γE[v]=7.5, Q=19.5
+2026-05-28 16:30:45,514 INFO: Plan 2: ḡ=10, γE[v]=7.5, Q=17.5
+2026-05-28 16:30:45,515 INFO: Plan 1: ḡ=10, γE[v]=7.5, Q=17.5
+2026-05-28 16:30:45,515 INFO: Selected plan 0 with Q=19.5
+2026-05-28 16:31:02,432 INFO: Plan 0: ḡ=12, γE[v]=7.5, Q=19.5
+2026-05-28 16:31:02,449 INFO: Plan 2: ḡ=5, γE[v]=7.5, Q=12.5
+2026-05-28 16:31:02,465 INFO: Plan 1: ḡ=10, γE[v]=10.0, Q=20.0
+2026-05-28 16:31:02,466 INFO: Selected plan 1 with Q=20.0
+  [7/10] click.parser seed=42: {'random': 19, 'greedy': 19, 'cov_greedy': 21, 'cov_greedy_multistep': 21, 'divhints_random': 21, 'cov_qvalue': 22}
+2026-05-28 16:41:34,037 INFO: Plan 0: ḡ=12, γE[v]=7.5, Q=19.5
+2026-05-28 16:41:34,070 INFO: Plan 1: ḡ=12, γE[v]=7.5, Q=19.5
+2026-05-28 16:41:34,071 INFO: Plan 2: ḡ=12, γE[v]=7.5, Q=19.5
+2026-05-28 16:41:34,071 INFO: Selected plan 0 with Q=19.5
+2026-05-28 16:41:48,810 INFO: Plan 1: ḡ=12, γE[v]=7.5, Q=19.5
+2026-05-28 16:41:48,844 INFO: Plan 2: ḡ=12, γE[v]=5.0, Q=17.0
+2026-05-28 16:41:48,845 INFO: Plan 0: ḡ=12, γE[v]=5.0, Q=17.0
+2026-05-28 16:41:48,845 INFO: Selected plan 1 with Q=19.5
+2026-05-28 16:42:02,508 INFO: Plan 0: ḡ=12, γE[v]=5.0, Q=17.0
+2026-05-28 16:42:02,508 INFO: Plan 1: ḡ=10, γE[v]=5.0, Q=15.0
+2026-05-28 16:42:02,541 INFO: Plan 2: ḡ=12, γE[v]=5.0, Q=17.0
+2026-05-28 16:42:02,541 INFO: Selected plan 0 with Q=17.0
+2026-05-28 16:42:16,915 INFO: Plan 0: ḡ=12, γE[v]=7.5, Q=19.5
+2026-05-28 16:42:16,949 INFO: Plan 1: ḡ=10, γE[v]=7.5, Q=17.5
+2026-05-28 16:42:16,950 INFO: Plan 2: ḡ=12, γE[v]=7.5, Q=19.5
+2026-05-28 16:42:16,950 INFO: Selected plan 0 with Q=19.5
+2026-05-28 16:42:31,128 INFO: Plan 0: ḡ=10, γE[v]=10.0, Q=20.0
+2026-05-28 16:42:31,129 INFO: Plan 1: ḡ=10, γE[v]=7.5, Q=17.5
+2026-05-28 16:42:31,161 INFO: Plan 2: ḡ=12, γE[v]=7.5, Q=19.5
+2026-05-28 16:42:31,162 INFO: Selected plan 0 with Q=20.0
+2026-05-28 16:42:46,283 INFO: Plan 1: ḡ=12, γE[v]=7.5, Q=19.5
+2026-05-28 16:42:46,284 INFO: Plan 0: ḡ=12, γE[v]=7.5, Q=19.5
+2026-05-28 16:42:46,315 INFO: Plan 2: ḡ=12, γE[v]=5.0, Q=17.0
+2026-05-28 16:42:46,316 INFO: Selected plan 0 with Q=19.5
+2026-05-28 16:43:01,050 INFO: Plan 0: ḡ=12, γE[v]=7.5, Q=19.5
+2026-05-28 16:43:01,067 INFO: Plan 1: ḡ=10, γE[v]=7.5, Q=17.5
+2026-05-28 16:43:01,083 INFO: Plan 2: ḡ=10, γE[v]=7.5, Q=17.5
+2026-05-28 16:43:01,084 INFO: Selected plan 0 with Q=19.5
+2026-05-28 16:43:15,649 INFO: Plan 1: ḡ=10, γE[v]=7.5, Q=17.5
+2026-05-28 16:43:15,666 INFO: Plan 0: ḡ=12, γE[v]=7.5, Q=19.5
+2026-05-28 16:43:15,683 INFO: Plan 2: ḡ=12, γE[v]=7.5, Q=19.5
+2026-05-28 16:43:15,683 INFO: Selected plan 0 with Q=19.5
+  [8/10] click.testing seed=42: {'random': 27, 'greedy': 27, 'cov_greedy': 37, 'cov_greedy_multistep': 37, 'divhints_random': 37, 'cov_qvalue': 37}
+2026-05-28 16:53:03,770 INFO: Plan 0: ḡ=10, γE[v]=7.5, Q=17.5
+2026-05-28 16:53:03,787 INFO: Plan 2: ḡ=10, γE[v]=7.5, Q=17.5
+2026-05-28 16:53:03,804 INFO: Plan 1: ḡ=10, γE[v]=7.5, Q=17.5
+2026-05-28 16:53:03,804 INFO: Selected plan 0 with Q=17.5
+2026-05-28 16:53:17,856 INFO: Plan 1: ḡ=12, γE[v]=5.0, Q=17.0
+2026-05-28 16:53:17,873 INFO: Plan 2: ḡ=12, γE[v]=4.0, Q=16.0
+2026-05-28 16:53:17,874 INFO: Plan 0: ḡ=10, γE[v]=2.5, Q=12.5
+2026-05-28 16:53:17,874 INFO: Selected plan 1 with Q=17.0
+2026-05-28 16:53:33,510 INFO: Plan 0: ḡ=12, γE[v]=7.5, Q=19.5
+2026-05-28 16:53:33,526 INFO: Plan 1: ḡ=10, γE[v]=2.5, Q=12.5
+2026-05-28 16:53:33,543 INFO: Plan 2: ḡ=12, γE[v]=5.0, Q=17.0
+2026-05-28 16:53:33,543 INFO: Selected plan 0 with Q=19.5
+2026-05-28 16:53:48,056 INFO: Plan 0: ḡ=12, γE[v]=5.0, Q=17.0
+2026-05-28 16:53:48,073 INFO: Plan 1: ḡ=10, γE[v]=7.5, Q=17.5
+2026-05-28 16:53:48,089 INFO: Plan 2: ḡ=10, γE[v]=7.5, Q=17.5
+2026-05-28 16:53:48,089 INFO: Selected plan 1 with Q=17.5
+2026-05-28 16:54:04,063 INFO: Plan 0: ḡ=12, γE[v]=7.5, Q=19.5
+2026-05-28 16:54:04,080 INFO: Plan 1: ḡ=12, γE[v]=4.0, Q=16.0
+2026-05-28 16:54:04,081 INFO: Plan 2: ḡ=10, γE[v]=2.5, Q=12.5
+2026-05-28 16:54:04,081 INFO: Selected plan 0 with Q=19.5
+2026-05-28 16:54:20,391 INFO: Plan 0: ḡ=10, γE[v]=7.5, Q=17.5
+2026-05-28 16:54:20,425 INFO: Plan 1: ḡ=12, γE[v]=7.5, Q=19.5
+2026-05-28 16:54:20,425 INFO: Plan 2: ḡ=10, γE[v]=7.5, Q=17.5
+2026-05-28 16:54:20,426 INFO: Selected plan 1 with Q=19.5
+2026-05-28 16:54:34,001 INFO: Plan 0: ḡ=12, γE[v]=5.0, Q=17.0
+2026-05-28 16:54:34,017 INFO: Plan 1: ḡ=12, γE[v]=7.5, Q=19.5
+2026-05-28 16:54:34,018 INFO: Plan 2: ḡ=12, γE[v]=4.0, Q=16.0
+2026-05-28 16:54:34,018 INFO: Selected plan 1 with Q=19.5
+2026-05-28 16:54:49,818 INFO: Plan 0: ḡ=10, γE[v]=5.0, Q=15.0
+2026-05-28 16:54:49,835 INFO: Plan 1: ḡ=12, γE[v]=4.0, Q=16.0
+2026-05-28 16:54:49,852 INFO: Plan 2: ḡ=10, γE[v]=5.0, Q=15.0
+2026-05-28 16:54:49,853 INFO: Selected plan 1 with Q=16.0
+  [9/10] click.formatting seed=42: {'random': 25, 'greedy': 25, 'cov_greedy': 29, 'cov_greedy_multistep': 29, 'divhints_random': 29, 'cov_qvalue': 29}
+2026-05-28 17:04:44,222 INFO: Plan 0: ḡ=1, γE[v]=5.0, Q=6.0
+2026-05-28 17:04:44,255 INFO: Plan 1: ḡ=6, γE[v]=5.0, Q=11.0
+2026-05-28 17:04:44,271 INFO: Plan 2: ḡ=12, γE[v]=7.5, Q=19.5
+2026-05-28 17:04:44,272 INFO: Selected plan 2 with Q=19.5
+2026-05-28 17:04:57,534 INFO: Plan 0: ḡ=12, γE[v]=7.5, Q=19.5
+2026-05-28 17:04:57,568 INFO: Plan 1: ḡ=12, γE[v]=5.0, Q=17.0
+2026-05-28 17:04:57,569 INFO: Plan 2: ḡ=12, γE[v]=7.5, Q=19.5
+2026-05-28 17:04:57,569 INFO: Selected plan 0 with Q=19.5
+2026-05-28 17:05:15,841 INFO: Plan 0: ḡ=8, γE[v]=6.0, Q=14.0
+2026-05-28 17:05:15,892 INFO: Plan 2: ḡ=12, γE[v]=7.5, Q=19.5
+2026-05-28 17:05:15,892 INFO: Plan 1: ḡ=10, γE[v]=7.5, Q=17.5
+2026-05-28 17:05:15,893 INFO: Selected plan 2 with Q=19.5
+2026-05-28 17:05:33,083 INFO: Plan 0: ḡ=12, γE[v]=7.5, Q=19.5
+2026-05-28 17:05:33,100 INFO: Plan 2: ḡ=6, γE[v]=5.0, Q=11.0
+2026-05-28 17:05:33,117 INFO: Plan 1: ḡ=12, γE[v]=7.5, Q=19.5
+2026-05-28 17:05:33,117 INFO: Selected plan 0 with Q=19.5
+2026-05-28 17:05:46,833 INFO: Plan 0: ḡ=12, γE[v]=7.5, Q=19.5
+2026-05-28 17:05:46,850 INFO: Plan 2: ḡ=12, γE[v]=4.0, Q=16.0
+2026-05-28 17:05:46,867 INFO: Plan 1: ḡ=12, γE[v]=7.5, Q=19.5
+2026-05-28 17:05:46,867 INFO: Selected plan 0 with Q=19.5
+2026-05-28 17:06:02,733 INFO: Plan 0: ḡ=12, γE[v]=7.5, Q=19.5
+2026-05-28 17:06:02,750 INFO: Plan 2: ḡ=5, γE[v]=5.0, Q=10.0
+2026-05-28 17:06:02,766 INFO: Plan 1: ḡ=12, γE[v]=7.5, Q=19.5
+2026-05-28 17:06:02,767 INFO: Selected plan 0 with Q=19.5
+2026-05-28 17:06:18,302 INFO: Plan 1: ḡ=10, γE[v]=7.5, Q=17.5
+2026-05-28 17:06:18,336 INFO: Plan 0: ḡ=12, γE[v]=7.5, Q=19.5
+2026-05-28 17:06:18,337 INFO: Plan 2: ḡ=12, γE[v]=7.5, Q=19.5
+2026-05-28 17:06:18,337 INFO: Selected plan 0 with Q=19.5
+2026-05-28 17:06:34,636 INFO: Plan 1: ḡ=12, γE[v]=5.0, Q=17.0
+2026-05-28 17:06:34,670 INFO: Plan 0: ḡ=12, γE[v]=7.5, Q=19.5
+2026-05-28 17:06:34,670 INFO: Plan 2: ḡ=12, γE[v]=7.5, Q=19.5
+2026-05-28 17:06:34,671 INFO: Selected plan 0 with Q=19.5
+  [10/10] click.exceptions seed=42: {'random': 1, 'greedy': 1, 'cov_greedy': 13, 'cov_greedy_multistep': 13, 'divhints_random': 13, 'cov_qvalue': 15}
+
+======================================================================
+RESULTS
+======================================================================
+
+Module                              seed       random       greedy   cov_greedy  cov_greedy_  divhints_ra   cov_qvalue
+----------------------------------------------------------------------------------------------------------------------
+click.core                            42           54           54           66           89           87           88
+click.types                           42            8            8            9            9           11            9
+click.termui                          42            8            9            0           13           15           17
+click.utils                           42           16           15           20           21           19           18
+click.shell_completion                42            4            4            4           10           10           10
+click.decorators                      42           29           32           31           23           23           23
+click.parser                          42           19           19           21           21           21           22
+click.testing                         42           27           27           37           37           37           37
+click.formatting                      42           25           25           29           29           29           29
+click.exceptions                      42            1            1           13           13           13           15
+
+======================================================================
+STATISTICS
+======================================================================
+
+Per-strategy means (n=10):
+  random               branches=  19.1 ± 5.0  lines=91.9  pass_rate=82%
+  greedy               branches=  19.4 ± 5.0  lines=92.1  pass_rate=82%
+  cov_greedy           branches=  23.0 ± 6.1  lines=94.0  pass_rate=60%
+  cov_greedy_multistep branches=  26.5 ± 7.5  lines=105.5  pass_rate=76%
+  divhints_random      branches=  26.5 ± 7.2  lines=106.1  pass_rate=71%
+  cov_qvalue           branches=  26.8 ± 7.3  lines=105.1  pass_rate=79%
+
+Paired vs random:
+  greedy               Δ=  +0.3 ± 0.3  W=2 L=1 T=7  p=0.3938 d=0.28 
+  cov_greedy           Δ=  +3.9 ± 1.9  W=8 L=1 T=1  p=0.0761 d=0.63 
+  cov_greedy_multistep Δ=  +7.4 ± 3.4  W=9 L=1 T=0  p=0.0599 d=0.68 
+  divhints_random      Δ=  +7.4 ± 3.2  W=9 L=1 T=0  p=0.0482 d=0.72 *
+  cov_qvalue           Δ=  +7.7 ± 3.4  W=9 L=1 T=0  p=0.0499 d=0.72 *
+
+cov_qvalue vs cov_greedy: Δ=+3.8 ± 2.9  W=5 L=2 T=3  d=0.42  p=0.2171 
+
+cov_qvalue vs divhints_random (Exp 1): Δ=+0.3 ± 0.4  W=4 L=2 T=4  d=0.24  p=0.4679 
+
+divhints_random vs cov_greedy_multistep (+diversity, Exp 3): Δ=+0.0 ± 0.4  W=2 L=2 T=6  d=0.00  p=1.0000 
+
+cov_greedy_multistep vs cov_greedy (+multistep, Exp 3): Δ=+3.5 ± 2.7  W=4 L=1 T=5  d=0.40  p=0.2337 
+
+Per-repo means:
+
+  click (10 runs):
+    random               mean=19.1
+    greedy               mean=19.4
+    cov_greedy           mean=23.0
+    cov_greedy_multistep mean=26.5
+    divhints_random      mean=26.5
+    cov_qvalue           mean=26.8
+
+Cost: $0.0000 | Time: 7416s (123.6m)
+Saved to /share/edc/home/aamayuelasfernandez/qcurious-tester/results/repo_explore_bench/exp6_cost_gemma.json

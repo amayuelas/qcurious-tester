@@ -1,0 +1,10 @@
+Building curiositybench-synth-baselines:latest...
+  built.
+
+depth  ceil          pynguin          coverup
+    2    60      16/  27%      60/ 100%
+    4    68      17/  25%      68/ 100%
+    6    76      19/  25%      76/ 100%
+    8    84      21/  25%      84/ 100%
+
+Saved to /share/edc/home/aamayuelasfernandez/qcurious-tester/results/repo_explore_bench/exp10_synth_baselines.json

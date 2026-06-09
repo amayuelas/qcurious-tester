@@ -1,0 +1,2402 @@
+2026-06-01 15:39:40,420 INFO: RepoExploreBench: 93 targets across 9 repos
+======================================================================
+RepoExploreBench v2.0
+  Targets: 93 files across 9 repos
+  Strategies: ['divhints_random', 'divhints_oracle', 'cov_qvalue', 'cov_qvalue_calib']
+  Seeds: [42]
+  Exec budget: 24 per run
+  Total runs: 372
+======================================================================
+  Connectivity: OK
+
+  Fetching source code...
+    click.core: 114085 chars
+    click.types: 36390 chars
+    click.termui: 28323 chars
+    click.utils: 20295 chars
+    click.shell_completion: 18459 chars
+    click.decorators: 18718 chars
+    click.parser: 19066 chars
+    click.testing: 16083 chars
+    click.formatting: 9705 chars
+    click.exceptions: 9272 chars
+    requests.utils: 33447 chars
+    requests.models: 35222 chars
+    requests.sessions: 30372 chars
+    requests.cookies: 18559 chars
+    requests.adapters: 19552 chars
+    requests.auth: 10186 chars
+    flask.app: 59200 chars
+    flask.cli: 33820 chars
+    flask.helpers: 22991 chars
+    flask.ctx: 14840 chars
+    flask.sessions: 14168 chars
+    flask.config: 12855 chars
+    flask.json.tag: 8870 chars
+    flask.testing: 10016 chars
+    flask.templating: 7537 chars
+    flask.json.provider: 7639 chars
+    rich.console: 99096 chars
+    rich.progress: 59691 chars
+    rich.text: 47302 chars
+    rich.table: 39643 chars
+    rich.pretty: 35811 chars
+    rich.syntax: 35364 chars
+    rich.markdown: 26159 chars
+    rich.style: 27072 chars
+    rich.traceback: 29466 chars
+    rich.segment: 24209 chars
+    rich.color: 18220 chars
+    rich.layout: 13939 chars
+    jinja2.compiler: 72198 chars
+    jinja2.filters: 53861 chars
+    jinja2.environment: 61252 chars
+    jinja2.nodes: 34549 chars
+    jinja2.runtime: 33405 chars
+    jinja2.parser: 39735 chars
+    jinja2.ext: 31843 chars
+    jinja2.lexer: 29725 chars
+    jinja2.utils: 23932 chars
+    jinja2.loaders: 23084 chars
+    jinja2.sandbox: 14583 chars
+    jinja2.bccache: 14060 chars
+    httpx._client: 67489 chars
+    httpx._models: 42302 chars
+    httpx._urls: 21747 chars
+    httpx._main: 15634 chars
+    httpx._urlparse: 17719 chars
+    httpx._api: 12927 chars
+    httpx._utils: 13857 chars
+    httpx._transports.default: 13289 chars
+    httpx._config: 12203 chars
+    httpx._auth: 11829 chars
+    pydantic.types: 89470 chars
+    pydantic.json_schema: 102806 chars
+    pydantic.main: 65891 chars
+    pydantic.fields: 45929 chars
+    pydantic.config: 29138 chars
+    pydantic.networks: 21214 chars
+    pydantic.functional_validators: 23599 chars
+    pydantic.color: 21492 chars
+    pydantic.type_adapter: 18033 chars
+    pydantic.functional_serializers: 14619 chars
+    werkzeug.http: 43362 chars
+    werkzeug.serving: 39331 chars
+    werkzeug.datastructures.structures: 31760 chars
+    werkzeug.routing.map: 36349 chars
+    werkzeug.routing.rules: 31894 chars
+    werkzeug.exceptions: 26061 chars
+    werkzeug.wrappers.response: 32586 chars
+    werkzeug.sansio.response: 27646 chars
+    werkzeug.utils: 24653 chars
+    werkzeug.wrappers.request: 24619 chars
+    werkzeug.local: 22002 chars
+    werkzeug.wsgi: 20893 chars
+    starlette.routing: 35752 chars
+    starlette.testclient: 29843 chars
+    starlette.datastructures: 23348 chars
+    starlette.responses: 12650 chars
+    starlette.requests: 11196 chars
+    starlette.formparsers: 10433 chars
+    starlette.applications: 10922 chars
+    starlette.middleware.errors: 7937 chars
+    starlette.staticfiles: 8723 chars
+    starlette.templating: 8984 chars
+    starlette.middleware.base: 8794 chars
+  Fetched 93/93 modules
+
+Running 93 targets with 8 workers...
+2026-06-01 15:47:26,323 INFO: Plan 2: ḡ=10, γE[v]=7.5, Q=17.5
+2026-06-01 15:47:26,479 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 15:47:26,579 INFO: Plan 1: ḡ=1, γE[v]=5.0, Q=6.0
+2026-06-01 15:47:26,579 INFO: Selected plan 2 with Q=17.5
+2026-06-01 15:47:39,588 INFO: Plan 1: ḡ=2, γE[v]=2.0, Q=4.0
+2026-06-01 15:47:39,668 INFO: Plan 0: ḡ=2, γE[v]=2.0, Q=4.0
+2026-06-01 15:47:39,668 INFO: Selected plan 0 with Q=4.0
+2026-06-01 15:47:52,480 INFO: Plan 0: ḡ=8, γE[v]=7.5, Q=15.5
+2026-06-01 15:47:52,798 INFO: Plan 1: ḡ=5, γE[v]=7.5, Q=12.5
+2026-06-01 15:47:52,799 INFO: Selected plan 0 with Q=15.5
+2026-06-01 15:48:37,495 INFO: Plan 1: ḡ=10, γE[v]=10.0, Q=20.0
+2026-06-01 15:48:37,520 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 15:48:37,520 INFO: Selected plan 1 with Q=20.0
+2026-06-01 15:48:57,410 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 15:48:57,658 INFO: Plan 1: ḡ=2, γE[v]=4.0, Q=6.0
+2026-06-01 15:48:57,658 INFO: Selected plan 0 with Q=7.0
+2026-06-01 15:49:05,901 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 15:49:05,969 INFO: Plan 0: ḡ=1, γE[v]=5.0, Q=6.0
+2026-06-01 15:49:05,970 INFO: Selected plan 1 with Q=7.0
+2026-06-01 15:49:23,968 INFO: Plan 1: ḡ=0, γE[v]=2.5, Q=2.5
+2026-06-01 15:49:24,183 INFO: Plan 0: ḡ=5, γE[v]=7.5, Q=12.5
+2026-06-01 15:49:24,239 INFO: Plan 2: ḡ=1, γE[v]=2.5, Q=3.5
+2026-06-01 15:49:41,036 INFO: Plan 0: ḡ=1, γE[v]=25.0, Q=26.0
+2026-06-01 15:49:41,239 INFO: Plan 1: ḡ=0, γE[v]=10.0, Q=10.0
+2026-06-01 15:49:41,612 INFO: Plan 2: ḡ=0, γE[v]=25.0, Q=25.0
+2026-06-01 15:49:58,344 INFO: Plan 0: ḡ=2, γE[v]=2.0, Q=4.0
+2026-06-01 15:50:01,337 INFO: Plan 1: ḡ=2, γE[v]=4.0, Q=6.0
+2026-06-01 15:50:01,416 INFO: Plan 0: ḡ=10, γE[v]=15.0, Q=25.0
+2026-06-01 15:50:01,416 INFO: Selected plan 0 with Q=25.0
+2026-06-01 15:50:06,246 INFO: Plan 0: ḡ=6, γE[v]=10.0, Q=16.0
+2026-06-01 15:50:07,530 INFO: Plan 1: ḡ=1, γE[v]=7.5, Q=8.5
+2026-06-01 15:50:07,531 INFO: Selected plan 0 with Q=16.0
+2026-06-01 15:50:14,647 INFO: Plan 0: ḡ=1, γE[v]=2.5, Q=3.5
+2026-06-01 15:50:19,413 INFO: Plan 1: ḡ=3, γE[v]=0.0, Q=3.0
+2026-06-01 15:50:19,600 INFO: Plan 0: ḡ=4, γE[v]=7.5, Q=11.5
+2026-06-01 15:50:21,980 INFO: Plan 0: ḡ=12, γE[v]=19.0, Q=31.0
+2026-06-01 15:50:26,222 INFO: Plan 0: ḡ=4, γE[v]=10.0, Q=14.0
+2026-06-01 15:50:29,527 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 15:50:31,842 INFO: Plan 0: ḡ=5, γE[v]=22.5, Q=27.5
+2026-06-01 15:50:35,249 INFO: Plan 0: ḡ=1, γE[v]=7.5, Q=8.5
+2026-06-01 15:50:38,178 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 15:50:38,393 INFO: Plan 1: ḡ=4, γE[v]=6.0, Q=10.0
+2026-06-01 15:50:44,760 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 15:50:46,414 INFO: Plan 0: ḡ=1, γE[v]=1.0, Q=2.0
+2026-06-01 15:50:52,983 INFO: Plan 0: ḡ=1, γE[v]=7.5, Q=8.5
+2026-06-01 15:50:54,371 INFO: Plan 2: ḡ=6, γE[v]=6.0, Q=12.0
+2026-06-01 15:50:54,545 INFO: Plan 1: ḡ=10, γE[v]=10.0, Q=20.0
+2026-06-01 15:50:54,813 INFO: Plan 0: ḡ=3, γE[v]=6.0, Q=9.0
+2026-06-01 15:50:59,836 INFO: Plan 0: ḡ=10, γE[v]=20.0, Q=30.0
+2026-06-01 15:51:06,435 INFO: Plan 0: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 15:51:07,056 INFO: Plan 0: ḡ=0, γE[v]=2.5, Q=2.5
+2026-06-01 15:51:14,829 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 15:51:25,346 INFO: Plan 0: ḡ=3, γE[v]=7.5, Q=10.5
+2026-06-01 15:51:28,595 INFO: Plan 0: ḡ=10, γE[v]=15.0, Q=25.0
+2026-06-01 15:51:28,846 INFO: Plan 1: ḡ=1, γE[v]=0.0, Q=1.0
+2026-06-01 15:51:29,090 INFO: Plan 0: ḡ=2, γE[v]=2.5, Q=4.5
+2026-06-01 15:51:30,193 INFO: Plan 0: ḡ=1, γE[v]=5.0, Q=6.0
+2026-06-01 15:51:30,465 INFO: Plan 1: ḡ=1, γE[v]=5.0, Q=6.0
+2026-06-01 15:51:39,187 INFO: Plan 0: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 15:51:39,578 INFO: Plan 0: ḡ=10, γE[v]=10.0, Q=20.0
+2026-06-01 15:51:45,814 INFO: Plan 0: ḡ=1, γE[v]=25.0, Q=26.0
+2026-06-01 15:51:47,378 INFO: Plan 0: ḡ=4, γE[v]=6.0, Q=10.0
+2026-06-01 15:51:53,452 INFO: Plan 0: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 15:51:53,742 INFO: Plan 0: ḡ=0, γE[v]=7.5, Q=7.5
+2026-06-01 15:51:58,690 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 15:52:02,158 INFO: Plan 0: ḡ=0, γE[v]=25.0, Q=25.0
+2026-06-01 15:52:07,890 INFO: Plan 0: ḡ=5, γE[v]=7.5, Q=12.5
+2026-06-01 15:52:08,285 INFO: Plan 0: ḡ=1, γE[v]=1.5, Q=2.5
+2026-06-01 15:52:08,911 INFO: Plan 2: ḡ=5, γE[v]=7.5, Q=12.5
+2026-06-01 15:52:09,284 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 15:52:09,378 INFO: Plan 0: ḡ=12, γE[v]=12.5, Q=24.5
+2026-06-01 15:52:09,818 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 15:52:10,006 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 15:52:13,676 INFO: Plan 0: ḡ=4, γE[v]=7.5, Q=11.5
+2026-06-01 15:52:14,000 INFO: Plan 0: ḡ=5, γE[v]=7.5, Q=12.5
+2026-06-01 15:52:16,731 INFO: Plan 0: ḡ=4, γE[v]=5.0, Q=9.0
+2026-06-01 15:52:22,970 INFO: Plan 0: ḡ=4, γE[v]=6.0, Q=10.0
+2026-06-01 15:52:23,289 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 15:52:31,322 INFO: Plan 0: ḡ=5, γE[v]=7.5, Q=12.5
+2026-06-01 15:52:40,315 INFO: Plan 1: ḡ=2, γE[v]=4.0, Q=6.0
+2026-06-01 15:52:40,535 INFO: Plan 0: ḡ=2, γE[v]=4.0, Q=6.0
+2026-06-01 15:52:40,810 INFO: Plan 0: ḡ=0, γE[v]=7.5, Q=7.5
+2026-06-01 15:52:41,275 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 15:52:43,216 INFO: Plan 0: ḡ=0, γE[v]=10.0, Q=10.0
+2026-06-01 15:52:44,420 INFO: Plan 0: ḡ=5, γE[v]=22.5, Q=27.5
+2026-06-01 15:52:45,705 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 15:52:57,863 INFO: Plan 0: ḡ=2, γE[v]=6.0, Q=8.0
+2026-06-01 15:52:58,104 INFO: Plan 0: ḡ=1, γE[v]=5.0, Q=6.0
+2026-06-01 15:53:00,824 INFO: Plan 0: ḡ=4, γE[v]=5.0, Q=9.0
+2026-06-01 15:53:04,554 INFO: Plan 0: ḡ=10, γE[v]=10.0, Q=20.0
+2026-06-01 15:53:05,517 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 15:53:05,698 INFO: Plan 0: ḡ=5, γE[v]=7.5, Q=12.5
+2026-06-01 15:53:05,722 INFO: Plan 0: ḡ=5, γE[v]=7.5, Q=12.5
+  [1/93] click.types seed=42: {'divhints_random': 9, 'divhints_oracle': 9, 'cov_qvalue': 31, 'cov_qvalue_calib': 9}
+2026-06-01 15:53:16,165 INFO: Plan 0: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 15:53:16,492 INFO: Plan 0: ḡ=22, γE[v]=14.0, Q=36.0
+2026-06-01 15:53:18,815 INFO: Plan 0: ḡ=10, γE[v]=7.5, Q=17.5
+2026-06-01 15:53:21,973 INFO: Plan 0: ḡ=18, γE[v]=17.5, Q=35.5
+2026-06-01 15:53:22,666 INFO: Plan 0: ḡ=0, γE[v]=25.0, Q=25.0
+2026-06-01 15:53:30,945 INFO: Plan 0: ḡ=10, γE[v]=15.0, Q=25.0
+2026-06-01 15:53:32,082 INFO: Plan 1: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 15:53:32,106 INFO: Plan 0: ḡ=2, γE[v]=4.0, Q=6.0
+2026-06-01 15:53:32,559 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 15:53:41,109 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+  [2/93] click.decorators seed=42: {'divhints_random': 36, 'divhints_oracle': 36, 'cov_qvalue': 36, 'cov_qvalue_calib': 35}
+2026-06-01 15:53:44,423 INFO: Plan 0: ḡ=5, γE[v]=7.5, Q=12.5
+2026-06-01 15:53:46,697 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 15:53:46,736 INFO: Plan 0: ḡ=4, γE[v]=7.5, Q=11.5
+  [3/93] click.termui seed=42: {'divhints_random': 12, 'divhints_oracle': 7, 'cov_qvalue': 7, 'cov_qvalue_calib': 22}
+2026-06-01 15:54:00,618 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 15:54:01,886 INFO: Plan 0: ḡ=12, γE[v]=10.0, Q=22.0
+2026-06-01 15:54:01,924 INFO: Plan 1: ḡ=10, γE[v]=7.5, Q=17.5
+2026-06-01 15:54:06,534 INFO: Plan 2: ḡ=2, γE[v]=4.0, Q=6.0
+2026-06-01 15:54:06,780 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 15:54:06,805 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 15:54:06,819 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 15:54:06,970 INFO: Plan 1: ḡ=0, γE[v]=2.5, Q=2.5
+  [4/93] click.core seed=42: {'divhints_random': 210, 'divhints_oracle': 312, 'cov_qvalue': 152, 'cov_qvalue_calib': 223}
+2026-06-01 15:54:24,419 INFO: Plan 1: ḡ=0, γE[v]=15.0, Q=15.0
+2026-06-01 15:54:24,547 INFO: Plan 0: ḡ=2, γE[v]=7.5, Q=9.5
+2026-06-01 15:54:26,351 INFO: Plan 0: ḡ=1, γE[v]=5.0, Q=6.0
+2026-06-01 15:54:27,441 INFO: Plan 0: ḡ=4, γE[v]=6.0, Q=10.0
+  [5/93] click.testing seed=42: {'divhints_random': 34, 'divhints_oracle': 37, 'cov_qvalue': 34, 'cov_qvalue_calib': 37}
+  [6/93] click.shell_completion seed=42: {'divhints_random': 11, 'divhints_oracle': 11, 'cov_qvalue': 9, 'cov_qvalue_calib': 30}
+2026-06-01 15:54:33,204 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+  [7/93] click.parser seed=42: {'divhints_random': 46, 'divhints_oracle': 50, 'cov_qvalue': 21, 'cov_qvalue_calib': 51}
+2026-06-01 15:54:49,567 INFO: Plan 0: ḡ=4, γE[v]=5.0, Q=9.0
+  [8/93] click.utils seed=42: {'divhints_random': 14, 'divhints_oracle': 21, 'cov_qvalue': 16, 'cov_qvalue_calib': 14}
+2026-06-01 16:00:49,107 INFO: Plan 0: ḡ=2, γE[v]=4.0, Q=6.0
+2026-06-01 16:00:49,344 INFO: Plan 0: ḡ=1, γE[v]=25.0, Q=26.0
+2026-06-01 16:00:49,389 INFO: Plan 1: ḡ=2, γE[v]=3.5, Q=5.5
+2026-06-01 16:00:49,500 INFO: Plan 2: ḡ=3, γE[v]=5.0, Q=8.0
+2026-06-01 16:00:49,501 INFO: Selected plan 0 with Q=26.0
+2026-06-01 16:00:49,529 INFO: Plan 1: ḡ=4, γE[v]=0.0, Q=4.0
+2026-06-01 16:00:49,530 INFO: Selected plan 0 with Q=6.0
+2026-06-01 16:01:01,001 INFO: Plan 1: ḡ=1, γE[v]=7.5, Q=8.5
+2026-06-01 16:01:01,333 INFO: Plan 0: ḡ=1, γE[v]=2.5, Q=3.5
+2026-06-01 16:01:01,334 INFO: Selected plan 1 with Q=8.5
+2026-06-01 16:01:03,067 INFO: Plan 0: ḡ=1, γE[v]=2.5, Q=3.5
+2026-06-01 16:01:03,217 INFO: Plan 2: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:01:03,506 INFO: Plan 1: ḡ=12, γE[v]=10.0, Q=22.0
+2026-06-01 16:01:03,507 INFO: Selected plan 1 with Q=22.0
+2026-06-01 16:01:08,933 INFO: Plan 1: ḡ=1, γE[v]=24.5, Q=25.5
+2026-06-01 16:01:09,234 INFO: Plan 0: ḡ=10, γE[v]=20.0, Q=30.0
+2026-06-01 16:01:09,234 INFO: Selected plan 0 with Q=30.0
+2026-06-01 16:01:17,965 INFO: Plan 1: ḡ=8, γE[v]=6.0, Q=14.0
+2026-06-01 16:01:18,323 INFO: Plan 0: ḡ=5, γE[v]=7.5, Q=12.5
+2026-06-01 16:01:18,324 INFO: Selected plan 1 with Q=14.0
+2026-06-01 16:01:23,570 INFO: Plan 1: ḡ=0, γE[v]=25.0, Q=25.0
+2026-06-01 16:01:23,765 INFO: Plan 0: ḡ=12, γE[v]=19.0, Q=31.0
+2026-06-01 16:01:23,766 INFO: Selected plan 0 with Q=31.0
+2026-06-01 16:01:27,547 INFO: Plan 0: ḡ=2, γE[v]=20.0, Q=22.0
+2026-06-01 16:01:27,576 INFO: Plan 2: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:01:27,715 INFO: Plan 1: ḡ=6, γE[v]=6.0, Q=12.0
+2026-06-01 16:01:27,716 INFO: Selected plan 0 with Q=22.0
+2026-06-01 16:01:34,341 INFO: Plan 0: ḡ=4, γE[v]=20.0, Q=24.0
+2026-06-01 16:01:34,566 INFO: Plan 1: ḡ=1, γE[v]=0.0, Q=1.0
+2026-06-01 16:01:34,567 INFO: Selected plan 0 with Q=24.0
+2026-06-01 16:01:37,760 INFO: Plan 0: ḡ=18, γE[v]=16.0, Q=34.0
+2026-06-01 16:01:37,971 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:01:37,972 INFO: Selected plan 0 with Q=34.0
+2026-06-01 16:01:46,333 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:01:46,393 INFO: Plan 0: ḡ=5, γE[v]=7.5, Q=12.5
+2026-06-01 16:01:46,513 INFO: Plan 0: ḡ=4, γE[v]=6.0, Q=10.0
+2026-06-01 16:01:46,513 INFO: Selected plan 0 with Q=10.0
+2026-06-01 16:01:46,830 INFO: Plan 1: ḡ=4, γE[v]=6.0, Q=10.0
+2026-06-01 16:01:46,831 INFO: Selected plan 0 with Q=12.5
+2026-06-01 16:01:47,829 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:01:48,469 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:01:48,469 INFO: Selected plan 0 with Q=0.0
+2026-06-01 16:02:01,251 INFO: Plan 0: ḡ=1, γE[v]=7.5, Q=8.5
+2026-06-01 16:02:01,508 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:02:01,508 INFO: Selected plan 0 with Q=8.5
+2026-06-01 16:02:13,300 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:02:13,466 INFO: Plan 0: ḡ=4, γE[v]=6.0, Q=10.0
+2026-06-01 16:02:13,709 INFO: Plan 1: ḡ=2, γE[v]=4.0, Q=6.0
+2026-06-01 16:02:13,709 INFO: Selected plan 0 with Q=7.0
+2026-06-01 16:02:13,879 INFO: Plan 1: ḡ=2, γE[v]=6.0, Q=8.0
+2026-06-01 16:02:13,879 INFO: Selected plan 0 with Q=10.0
+2026-06-01 16:02:28,793 INFO: Plan 1: ḡ=4, γE[v]=5.0, Q=9.0
+2026-06-01 16:02:28,809 INFO: Plan 0: ḡ=3, γE[v]=5.0, Q=8.0
+2026-06-01 16:02:28,814 INFO: Selected plan 1 with Q=9.0
+2026-06-01 16:02:42,338 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:02:42,398 INFO: Plan 1: ḡ=2, γE[v]=6.0, Q=8.0
+2026-06-01 16:02:42,399 INFO: Selected plan 1 with Q=8.0
+2026-06-01 16:02:50,619 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:02:50,942 INFO: Plan 1: ḡ=5, γE[v]=22.5, Q=27.5
+2026-06-01 16:02:51,158 INFO: Plan 2: ḡ=18, γE[v]=16.0, Q=34.0
+2026-06-01 16:02:51,159 INFO: Selected plan 2 with Q=34.0
+2026-06-01 16:02:51,858 INFO: Plan 1: ḡ=12, γE[v]=9.0, Q=21.0
+2026-06-01 16:02:52,002 INFO: Plan 0: ḡ=5, γE[v]=7.5, Q=12.5
+2026-06-01 16:02:52,003 INFO: Selected plan 1 with Q=21.0
+2026-06-01 16:03:06,242 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:03:07,955 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:03:08,030 INFO: Plan 0: ḡ=5, γE[v]=17.5, Q=22.5
+2026-06-01 16:03:08,031 INFO: Selected plan 0 with Q=22.5
+2026-06-01 16:03:13,716 INFO: Plan 1: ḡ=2, γE[v]=4.0, Q=6.0
+2026-06-01 16:03:13,929 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:03:13,930 INFO: Selected plan 0 with Q=7.0
+2026-06-01 16:03:16,052 INFO: Plan 0: ḡ=2, γE[v]=51.0, Q=53.0
+2026-06-01 16:03:16,097 INFO: Plan 1: ḡ=2, γE[v]=2.5, Q=4.5
+2026-06-01 16:03:16,097 INFO: Selected plan 0 with Q=53.0
+2026-06-01 16:03:16,758 INFO: Plan 1: ḡ=1, γE[v]=5.0, Q=6.0
+2026-06-01 16:03:17,033 INFO: Plan 0: ḡ=4, γE[v]=6.0, Q=10.0
+2026-06-01 16:03:17,034 INFO: Selected plan 0 with Q=10.0
+2026-06-01 16:03:19,890 INFO: Plan 1: ḡ=12, γE[v]=14.0, Q=26.0
+2026-06-01 16:03:19,905 INFO: Plan 2: ḡ=12, γE[v]=9.0, Q=21.0
+2026-06-01 16:03:20,032 INFO: Plan 0: ḡ=12, γE[v]=9.0, Q=21.0
+2026-06-01 16:03:31,525 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:03:31,687 INFO: Plan 0: ḡ=6, γE[v]=12.5, Q=18.5
+2026-06-01 16:03:31,688 INFO: Selected plan 1 with Q=29.5
+2026-06-01 16:03:34,300 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:03:34,527 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:03:37,185 INFO: Plan 0: ḡ=5, γE[v]=7.5, Q=12.5
+2026-06-01 16:03:37,232 INFO: Plan 1: ḡ=1, γE[v]=0.0, Q=1.0
+2026-06-01 16:03:37,233 INFO: Selected plan 0 with Q=12.5
+2026-06-01 16:03:52,937 INFO: Plan 1: ḡ=7, γE[v]=17.5, Q=24.5
+2026-06-01 16:03:52,968 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:04:03,928 INFO: Plan 1: ḡ=1, γE[v]=2.0, Q=3.0
+2026-06-01 16:04:04,053 INFO: Plan 0: ḡ=2, γE[v]=2.5, Q=4.5
+2026-06-01 16:04:04,065 INFO: Plan 2: ḡ=2, γE[v]=6.0, Q=8.0
+2026-06-01 16:04:05,727 INFO: Plan 0: ḡ=3, γE[v]=23.5, Q=26.5
+2026-06-01 16:04:07,995 INFO: Plan 1: ḡ=4, γE[v]=6.0, Q=10.0
+2026-06-01 16:04:08,214 INFO: Plan 0: ḡ=4, γE[v]=6.0, Q=10.0
+2026-06-01 16:04:11,336 INFO: Plan 1: ḡ=2, γE[v]=24.0, Q=26.0
+2026-06-01 16:04:11,458 INFO: Plan 0: ḡ=1, γE[v]=7.5, Q=8.5
+2026-06-01 16:04:12,027 INFO: Plan 0: ḡ=10, γE[v]=15.0, Q=25.0
+2026-06-01 16:04:17,999 INFO: Plan 0: ḡ=6, γE[v]=6.0, Q=12.0
+2026-06-01 16:04:18,282 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:04:21,098 INFO: Plan 0: ḡ=2, γE[v]=24.0, Q=26.0
+2026-06-01 16:04:22,672 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:04:25,121 INFO: Plan 2: ḡ=4, γE[v]=5.0, Q=9.0
+2026-06-01 16:04:25,289 INFO: Plan 1: ḡ=1, γE[v]=2.0, Q=3.0
+2026-06-01 16:04:25,558 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:04:25,873 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:04:28,466 INFO: Plan 0: ḡ=4, γE[v]=10.0, Q=14.0
+2026-06-01 16:04:29,122 INFO: Plan 0: ḡ=18, γE[v]=16.0, Q=34.0
+2026-06-01 16:04:39,982 INFO: Plan 1: ḡ=2, γE[v]=4.0, Q=6.0
+2026-06-01 16:04:40,552 INFO: Plan 0: ḡ=1, γE[v]=3.0, Q=4.0
+2026-06-01 16:04:41,546 INFO: Plan 0: ḡ=1, γE[v]=0.0, Q=1.0
+2026-06-01 16:04:42,626 INFO: Plan 0: ḡ=1, γE[v]=20.0, Q=21.0
+2026-06-01 16:04:49,648 INFO: Plan 1: ḡ=10, γE[v]=20.0, Q=30.0
+2026-06-01 16:04:49,898 INFO: Plan 0: ḡ=2, γE[v]=24.0, Q=26.0
+2026-06-01 16:04:50,198 INFO: Plan 0: ḡ=10, γE[v]=15.0, Q=25.0
+2026-06-01 16:04:53,642 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:04:55,809 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:04:58,202 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:05:05,771 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:05:07,444 INFO: Plan 1: ḡ=1, γE[v]=0.0, Q=1.0
+2026-06-01 16:05:07,532 INFO: Plan 0: ḡ=18, γE[v]=16.0, Q=34.0
+2026-06-01 16:05:08,384 INFO: Plan 0: ḡ=2, γE[v]=9.0, Q=11.0
+2026-06-01 16:05:12,536 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:05:13,133 INFO: Plan 1: ḡ=2, γE[v]=4.0, Q=6.0
+2026-06-01 16:05:13,133 INFO: Plan 0: ḡ=5, γE[v]=7.5, Q=12.5
+2026-06-01 16:05:16,911 INFO: Plan 0: ḡ=2, γE[v]=4.0, Q=6.0
+2026-06-01 16:05:17,368 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:05:19,422 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:05:19,890 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:05:22,875 INFO: Plan 0: ḡ=4, γE[v]=7.5, Q=11.5
+2026-06-01 16:05:23,012 INFO: Plan 0: ḡ=5, γE[v]=22.5, Q=27.5
+2026-06-01 16:05:31,611 INFO: Plan 0: ḡ=2, γE[v]=2.0, Q=4.0
+2026-06-01 16:05:35,093 INFO: Plan 0: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 16:05:35,173 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:05:48,188 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:05:53,285 INFO: Plan 0: ḡ=12, γE[v]=10.0, Q=22.0
+2026-06-01 16:05:53,515 INFO: Plan 1: ḡ=1, γE[v]=5.0, Q=6.0
+2026-06-01 16:05:55,077 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:05:58,395 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:05:58,798 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:06:01,192 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:06:01,239 INFO: Plan 0: ḡ=20, γE[v]=15.0, Q=35.0
+2026-06-01 16:06:01,603 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:06:09,049 INFO: Plan 0: ḡ=1, γE[v]=2.0, Q=3.0
+2026-06-01 16:06:09,235 INFO: Plan 0: ḡ=4, γE[v]=7.5, Q=11.5
+2026-06-01 16:06:10,681 INFO: Plan 0: ḡ=22, γE[v]=14.0, Q=36.0
+2026-06-01 16:06:12,567 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:06:20,327 INFO: Plan 0: ḡ=2, γE[v]=2.0, Q=4.0
+2026-06-01 16:06:22,743 INFO: Plan 0: ḡ=2, γE[v]=20.0, Q=22.0
+2026-06-01 16:06:27,332 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:06:27,892 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:06:33,944 INFO: Plan 0: ḡ=10, γE[v]=10.0, Q=20.0
+2026-06-01 16:06:37,548 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:06:37,759 INFO: Plan 0: ḡ=3, γE[v]=7.5, Q=10.5
+2026-06-01 16:06:38,030 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:06:44,637 INFO: Plan 0: ḡ=2, γE[v]=0.0, Q=2.0
+2026-06-01 16:06:46,089 INFO: Plan 0: ḡ=1, γE[v]=5.0, Q=6.0
+2026-06-01 16:06:49,213 INFO: Plan 0: ḡ=2, γE[v]=6.0, Q=8.0
+2026-06-01 16:06:52,577 INFO: Plan 0: ḡ=2, γE[v]=10.0, Q=12.0
+2026-06-01 16:06:53,471 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:06:57,438 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:07:01,026 INFO: Plan 0: ḡ=2, γE[v]=2.5, Q=4.5
+2026-06-01 16:07:03,143 INFO: Plan 0: ḡ=12, γE[v]=19.0, Q=31.0
+2026-06-01 16:07:04,160 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:07:07,162 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:07:13,809 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:07:15,031 INFO: Plan 0: ḡ=2, γE[v]=20.0, Q=22.0
+2026-06-01 16:07:15,797 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:07:16,779 INFO: Plan 0: ḡ=5, γE[v]=15.0, Q=20.0
+2026-06-01 16:07:17,148 INFO: Plan 0: ḡ=0, γE[v]=20.0, Q=20.0
+2026-06-01 16:07:17,896 INFO: Plan 0: ḡ=1, γE[v]=5.0, Q=6.0
+2026-06-01 16:07:17,952 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:07:20,169 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:07:20,319 INFO: Plan 0: ḡ=10, γE[v]=10.0, Q=20.0
+2026-06-01 16:07:21,681 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+  [9/93] click.formatting seed=42: {'divhints_random': 31, 'divhints_oracle': 31, 'cov_qvalue': 31, 'cov_qvalue_calib': 31}
+2026-06-01 16:07:30,518 INFO: Plan 0: ḡ=1, γE[v]=200.5, Q=201.5
+2026-06-01 16:07:36,108 INFO: Plan 0: ḡ=3, γE[v]=7.5, Q=10.5
+2026-06-01 16:07:36,512 INFO: Plan 0: ḡ=1, γE[v]=6.0, Q=7.0
+2026-06-01 16:07:39,810 INFO: Plan 0: ḡ=2, γE[v]=2.5, Q=4.5
+2026-06-01 16:07:40,114 INFO: Plan 0: ḡ=18, γE[v]=17.5, Q=35.5
+2026-06-01 16:07:40,182 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:07:40,523 INFO: Plan 1: ḡ=7, γE[v]=20.0, Q=27.0
+  [10/93] click.exceptions seed=42: {'divhints_random': 10, 'divhints_oracle': 14, 'cov_qvalue': 14, 'cov_qvalue_calib': 14}
+2026-06-01 16:07:51,239 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+  [11/93] requests.utils seed=42: {'divhints_random': 41, 'divhints_oracle': 63, 'cov_qvalue': 41, 'cov_qvalue_calib': 60}
+2026-06-01 16:07:54,371 INFO: Plan 0: ḡ=5, γE[v]=17.5, Q=22.5
+  [12/93] requests.auth seed=42: {'divhints_random': 49, 'divhints_oracle': 49, 'cov_qvalue': 49, 'cov_qvalue_calib': 49}
+2026-06-01 16:08:01,947 INFO: Plan 0: ḡ=2, γE[v]=4.0, Q=6.0
+  [13/93] requests.cookies seed=42: {'divhints_random': 8, 'divhints_oracle': 8, 'cov_qvalue': 8, 'cov_qvalue_calib': 8}
+2026-06-01 16:08:09,840 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:08:10,112 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0
+  [14/93] requests.sessions seed=42: {'divhints_random': 19, 'divhints_oracle': 30, 'cov_qvalue': 23, 'cov_qvalue_calib': 29}
+  [15/93] requests.models seed=42: {'divhints_random': 114, 'divhints_oracle': 112, 'cov_qvalue': 122, 'cov_qvalue_calib': 125}
+  [16/93] requests.adapters seed=42: {'divhints_random': 73, 'divhints_oracle': 62, 'cov_qvalue': 62, 'cov_qvalue_calib': 71}
+2026-06-01 16:12:30,097 INFO: Retrying request to /chat/completions in 0.420072 seconds
+2026-06-01 16:14:07,587 INFO: Plan 0: ḡ=5, γE[v]=7.5, Q=12.5
+2026-06-01 16:14:07,736 INFO: Plan 2: ḡ=1, γE[v]=5.0, Q=6.0
+2026-06-01 16:14:07,737 INFO: Plan 1: ḡ=4, γE[v]=5.0, Q=9.0
+2026-06-01 16:14:07,738 INFO: Selected plan 0 with Q=12.5
+2026-06-01 16:14:21,697 INFO: Plan 0: ḡ=6, γE[v]=6.0, Q=12.0
+2026-06-01 16:14:21,964 INFO: Plan 1: ḡ=5, γE[v]=7.5, Q=12.5
+2026-06-01 16:14:21,964 INFO: Selected plan 1 with Q=12.5
+2026-06-01 16:14:32,582 INFO: Plan 1: ḡ=1, γE[v]=25.0, Q=26.0
+2026-06-01 16:14:32,767 INFO: Plan 0: ḡ=0, γE[v]=2.0, Q=2.0
+2026-06-01 16:14:32,767 INFO: Selected plan 1 with Q=26.0
+2026-06-01 16:14:35,961 INFO: Plan 0: ḡ=2, γE[v]=4.0, Q=6.0
+2026-06-01 16:14:35,988 INFO: Plan 1: ḡ=2, γE[v]=4.0, Q=6.0
+2026-06-01 16:14:36,461 INFO: Plan 2: ḡ=4, γE[v]=6.0, Q=10.0
+2026-06-01 16:14:36,462 INFO: Selected plan 2 with Q=10.0
+2026-06-01 16:14:37,233 INFO: Plan 0: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 16:14:37,336 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:14:37,336 INFO: Selected plan 1 with Q=7.0
+2026-06-01 16:14:57,569 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:14:57,647 INFO: Plan 1: ḡ=3, γE[v]=20.0, Q=23.0
+2026-06-01 16:14:57,647 INFO: Selected plan 0 with Q=29.5
+2026-06-01 16:15:13,296 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:15:13,419 INFO: Plan 0: ḡ=4, γE[v]=4.0, Q=8.0
+2026-06-01 16:15:13,419 INFO: Selected plan 0 with Q=8.0
+2026-06-01 16:15:23,349 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:15:23,491 INFO: Plan 1: ḡ=1, γE[v]=2.5, Q=3.5
+2026-06-01 16:15:23,491 INFO: Selected plan 0 with Q=7.0
+2026-06-01 16:15:35,789 INFO: Plan 1: ḡ=1, γE[v]=5.0, Q=6.0
+2026-06-01 16:15:35,918 INFO: Plan 0: ḡ=12, γE[v]=12.0, Q=24.0
+2026-06-01 16:15:35,918 INFO: Selected plan 0 with Q=24.0
+2026-06-01 16:15:40,366 INFO: Plan 2: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:15:40,534 INFO: Plan 0: ḡ=2, γE[v]=24.0, Q=26.0
+2026-06-01 16:15:40,656 INFO: Plan 1: ḡ=3, γE[v]=22.5, Q=25.5
+2026-06-01 16:15:40,657 INFO: Selected plan 2 with Q=29.5
+2026-06-01 16:15:49,414 INFO: Plan 0: ḡ=1, γE[v]=5.0, Q=6.0
+2026-06-01 16:15:49,551 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:15:49,551 INFO: Selected plan 1 with Q=7.0
+2026-06-01 16:16:01,084 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:16:01,465 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:16:01,466 INFO: Selected plan 0 with Q=7.0
+2026-06-01 16:16:10,453 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:16:10,912 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:16:10,913 INFO: Selected plan 1 with Q=29.5
+2026-06-01 16:16:11,142 INFO: Plan 2: ḡ=6, γE[v]=7.5, Q=13.5
+2026-06-01 16:16:11,237 INFO: Plan 0: ḡ=5, γE[v]=7.5, Q=12.5
+2026-06-01 16:16:11,575 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:16:11,576 INFO: Selected plan 2 with Q=13.5
+2026-06-01 16:16:23,429 INFO: Plan 1: ḡ=2, γE[v]=20.0, Q=22.0
+2026-06-01 16:16:23,461 INFO: Plan 0: ḡ=4, γE[v]=6.0, Q=10.0
+2026-06-01 16:16:23,461 INFO: Selected plan 1 with Q=22.0
+2026-06-01 16:16:24,509 INFO: Plan 1: ḡ=1, γE[v]=5.0, Q=6.0
+2026-06-01 16:16:24,613 INFO: Plan 2: ḡ=1, γE[v]=5.0, Q=6.0
+2026-06-01 16:16:24,658 INFO: Plan 0: ḡ=0, γE[v]=25.0, Q=25.0
+2026-06-01 16:16:24,659 INFO: Selected plan 0 with Q=25.0
+2026-06-01 16:16:44,726 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:16:44,950 INFO: Plan 1: ḡ=10, γE[v]=15.0, Q=25.0
+2026-06-01 16:16:44,950 INFO: Selected plan 1 with Q=25.0
+2026-06-01 16:16:48,339 INFO: Plan 1: ḡ=2, γE[v]=20.0, Q=22.0
+2026-06-01 16:16:48,398 INFO: Plan 0: ḡ=12, γE[v]=14.0, Q=26.0
+2026-06-01 16:16:48,398 INFO: Selected plan 0 with Q=26.0
+2026-06-01 16:16:54,527 INFO: Plan 2: ḡ=2, γE[v]=4.0, Q=6.0
+2026-06-01 16:16:54,838 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:16:55,096 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:16:59,876 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:17:01,814 INFO: Plan 0: ḡ=1, γE[v]=2.5, Q=3.5
+2026-06-01 16:17:01,883 INFO: Plan 1: ḡ=2, γE[v]=2.0, Q=4.0
+2026-06-01 16:17:02,178 INFO: Plan 1: ḡ=1, γE[v]=5.0, Q=6.0
+2026-06-01 16:17:02,790 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:17:02,790 INFO: Selected plan 0 with Q=29.5
+2026-06-01 16:17:03,453 INFO: Plan 0: ḡ=4, γE[v]=6.0, Q=10.0
+2026-06-01 16:17:11,348 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:17:11,349 INFO: Selected plan 0 with Q=10.0
+2026-06-01 16:17:17,979 INFO: Plan 2: ḡ=10, γE[v]=7.5, Q=17.5
+2026-06-01 16:17:18,208 INFO: Plan 1: ḡ=5, γE[v]=5.0, Q=10.0
+2026-06-01 16:17:18,208 INFO: Plan 0: ḡ=5, γE[v]=7.5, Q=12.5
+2026-06-01 16:17:24,603 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:17:24,679 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:17:24,817 INFO: Plan 0: ḡ=5, γE[v]=15.0, Q=20.0
+2026-06-01 16:17:27,488 INFO: Plan 0: ḡ=2, γE[v]=2.0, Q=4.0
+2026-06-01 16:17:35,352 INFO: Plan 0: ḡ=2, γE[v]=2.0, Q=4.0
+2026-06-01 16:17:43,063 INFO: Plan 0: ḡ=5, γE[v]=7.5, Q=12.5
+2026-06-01 16:17:49,152 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:17:49,513 INFO: Plan 0: ḡ=3, γE[v]=23.5, Q=26.5
+2026-06-01 16:17:49,914 INFO: Plan 0: ḡ=2, γE[v]=2.0, Q=4.0
+2026-06-01 16:17:50,906 INFO: Plan 0: ḡ=4, γE[v]=6.0, Q=10.0
+2026-06-01 16:18:08,684 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:18:09,330 INFO: Plan 1: ḡ=5, γE[v]=7.5, Q=12.5
+2026-06-01 16:18:09,363 INFO: Plan 2: ḡ=7, γE[v]=6.0, Q=13.0
+2026-06-01 16:18:09,608 INFO: Plan 0: ḡ=10, γE[v]=10.0, Q=20.0
+2026-06-01 16:18:09,807 INFO: Plan 0: ḡ=2, γE[v]=2.0, Q=4.0
+2026-06-01 16:18:16,112 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:18:17,021 INFO: Plan 0: ḡ=1, γE[v]=2.0, Q=3.0
+2026-06-01 16:18:17,268 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:18:22,426 INFO: Plan 1: ḡ=1, γE[v]=5.0, Q=6.0
+2026-06-01 16:18:22,636 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:18:22,637 INFO: Selected plan 1 with Q=6.0
+2026-06-01 16:18:22,984 INFO: Plan 0: ḡ=0, γE[v]=2.5, Q=2.5
+2026-06-01 16:18:34,839 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:18:34,869 INFO: Plan 0: ḡ=2, γE[v]=0.0, Q=2.0
+2026-06-01 16:18:34,870 INFO: Selected plan 1 with Q=7.0
+2026-06-01 16:18:40,479 INFO: Plan 0: ḡ=1, γE[v]=20.0, Q=21.0
+2026-06-01 16:18:43,616 INFO: Plan 0: ḡ=5, γE[v]=17.5, Q=22.5
+2026-06-01 16:18:46,766 INFO: Plan 0: ḡ=1, γE[v]=2.5, Q=3.5
+2026-06-01 16:18:50,954 INFO: Plan 0: ḡ=1, γE[v]=10.0, Q=11.0
+2026-06-01 16:18:51,061 INFO: Plan 1: ḡ=2, γE[v]=9.0, Q=11.0
+2026-06-01 16:18:55,240 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:18:57,599 INFO: Plan 0: ḡ=5, γE[v]=7.5, Q=12.5
+2026-06-01 16:19:07,546 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:19:11,886 INFO: Plan 0: ḡ=1, γE[v]=25.0, Q=26.0
+2026-06-01 16:19:14,737 INFO: Plan 1: ḡ=3, γE[v]=23.5, Q=26.5
+2026-06-01 16:19:14,995 INFO: Plan 0: ḡ=2, γE[v]=7.5, Q=9.5
+2026-06-01 16:19:16,851 INFO: Plan 2: ḡ=6, γE[v]=7.5, Q=13.5
+2026-06-01 16:19:17,093 INFO: Plan 0: ḡ=5, γE[v]=5.0, Q=10.0
+2026-06-01 16:19:17,230 INFO: Plan 1: ḡ=2, γE[v]=4.0, Q=6.0
+2026-06-01 16:19:18,557 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:19:24,460 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:19:43,507 INFO: Plan 0: ḡ=5, γE[v]=22.5, Q=27.5
+2026-06-01 16:19:43,536 INFO: Plan 0: ḡ=1, γE[v]=5.0, Q=6.0
+2026-06-01 16:19:46,588 INFO: Plan 0: ḡ=5, γE[v]=5.0, Q=10.0
+2026-06-01 16:19:46,797 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:19:54,320 INFO: Plan 0: ḡ=4, γE[v]=5.0, Q=9.0
+2026-06-01 16:19:57,106 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:20:01,335 INFO: Plan 0: ḡ=0, γE[v]=20.0, Q=20.0
+2026-06-01 16:20:01,435 INFO: Plan 1: ḡ=0, γE[v]=7.5, Q=7.5
+2026-06-01 16:20:02,827 INFO: Plan 0: ḡ=4, γE[v]=6.0, Q=10.0
+2026-06-01 16:20:03,067 INFO: Plan 1: ḡ=3, γE[v]=7.5, Q=10.5
+2026-06-01 16:20:03,115 INFO: Plan 2: ḡ=10, γE[v]=20.0, Q=30.0
+2026-06-01 16:20:04,435 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:20:04,819 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:20:16,024 INFO: Plan 0: ḡ=7, γE[v]=6.0, Q=13.0
+  [17/93] flask.helpers seed=42: {'divhints_random': 2, 'divhints_oracle': 9, 'cov_qvalue': 10, 'cov_qvalue_calib': 9}
+2026-06-01 16:20:27,609 INFO: Plan 0: ḡ=10, γE[v]=15.0, Q=25.0
+2026-06-01 16:20:27,808 INFO: Plan 0: ḡ=2, γE[v]=24.0, Q=26.0
+2026-06-01 16:20:32,672 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:20:33,099 INFO: Plan 2: ḡ=2, γE[v]=4.0, Q=6.0
+2026-06-01 16:20:33,405 INFO: Plan 0: ḡ=1, γE[v]=2.5, Q=3.5
+2026-06-01 16:20:36,217 INFO: Plan 0: ḡ=3, γE[v]=7.5, Q=10.5
+2026-06-01 16:20:37,693 INFO: Plan 0: ḡ=2, γE[v]=7.5, Q=9.5
+2026-06-01 16:20:37,847 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:20:37,962 INFO: Plan 2: ḡ=10, γE[v]=12.5, Q=22.5
+2026-06-01 16:20:43,887 INFO: Plan 0: ḡ=1, γE[v]=5.0, Q=6.0
+2026-06-01 16:20:50,845 INFO: Plan 0: ḡ=1, γE[v]=5.0, Q=6.0
+2026-06-01 16:20:57,599 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:21:06,552 INFO: Plan 0: ḡ=2, γE[v]=2.5, Q=4.5
+  [18/93] flask.ctx seed=42: {'divhints_random': 58, 'divhints_oracle': 58, 'cov_qvalue': 56, 'cov_qvalue_calib': 58}
+2026-06-01 16:21:13,587 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:21:13,919 INFO: Plan 0: ḡ=18, γE[v]=17.5, Q=35.5
+2026-06-01 16:21:15,016 INFO: Plan 0: ḡ=10, γE[v]=10.0, Q=20.0
+  [19/93] flask.sessions seed=42: {'divhints_random': 4, 'divhints_oracle': 4, 'cov_qvalue': 4, 'cov_qvalue_calib': 4}
+  [20/93] flask.cli seed=42: {'divhints_random': 77, 'divhints_oracle': 78, 'cov_qvalue': 78, 'cov_qvalue_calib': 78}
+  [21/93] flask.app seed=42: {'divhints_random': 183, 'divhints_oracle': 90, 'cov_qvalue': 172, 'cov_qvalue_calib': 82}
+2026-06-01 16:21:31,912 INFO: Plan 0: ḡ=10, γE[v]=12.5, Q=22.5
+2026-06-01 16:21:38,181 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+  [22/93] flask.config seed=42: {'divhints_random': 52, 'divhints_oracle': 50, 'cov_qvalue': 45, 'cov_qvalue_calib': 30}
+2026-06-01 16:21:47,015 INFO: Plan 0: ḡ=20, γE[v]=15.0, Q=35.0
+2026-06-01 16:22:10,908 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:22:14,046 INFO: Plan 0: ḡ=2, γE[v]=4.0, Q=6.0
+  [23/93] flask.testing seed=42: {'divhints_random': 17, 'divhints_oracle': 9, 'cov_qvalue': 9, 'cov_qvalue_calib': 8}
+2026-06-01 16:22:25,586 INFO: Plan 0: ḡ=0, γE[v]=5.0, Q=5.0
+  [24/93] flask.json.tag seed=42: {'divhints_random': 24, 'divhints_oracle': 25, 'cov_qvalue': 25, 'cov_qvalue_calib': 24}
+2026-06-01 16:27:07,592 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:27:07,695 INFO: Plan 1: ḡ=2, γE[v]=4.0, Q=6.0
+2026-06-01 16:27:07,696 INFO: Selected plan 0 with Q=7.0
+2026-06-01 16:27:44,298 INFO: Plan 0: ḡ=4, γE[v]=5.0, Q=9.0
+2026-06-01 16:27:44,446 INFO: Plan 1: ḡ=2, γE[v]=2.0, Q=4.0
+2026-06-01 16:27:44,446 INFO: Selected plan 0 with Q=9.0
+2026-06-01 16:27:53,448 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:27:53,772 INFO: Plan 1: ḡ=2, γE[v]=20.0, Q=22.0
+2026-06-01 16:27:53,773 INFO: Selected plan 1 with Q=22.0
+2026-06-01 16:28:33,242 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:28:33,616 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:28:33,616 INFO: Selected plan 0 with Q=0.0
+2026-06-01 16:28:36,520 INFO: Plan 1: ḡ=4, γE[v]=6.0, Q=10.0
+2026-06-01 16:28:36,621 INFO: Plan 0: ḡ=10, γE[v]=10.0, Q=20.0
+2026-06-01 16:28:36,621 INFO: Selected plan 0 with Q=20.0
+2026-06-01 16:28:44,433 INFO: Plan 2: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:28:44,634 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:28:44,766 INFO: Plan 0: ḡ=2, γE[v]=2.5, Q=4.5
+2026-06-01 16:28:44,766 INFO: Selected plan 0 with Q=4.5
+2026-06-01 16:28:52,883 INFO: Plan 0: ḡ=2, γE[v]=3.0, Q=5.0
+2026-06-01 16:28:53,284 INFO: Plan 1: ḡ=4, γE[v]=5.0, Q=9.0
+2026-06-01 16:28:53,284 INFO: Selected plan 1 with Q=9.0
+2026-06-01 16:28:57,742 INFO: Plan 2: ḡ=12, γE[v]=19.0, Q=31.0
+2026-06-01 16:28:57,760 INFO: Plan 0: ḡ=12, γE[v]=19.0, Q=31.0
+2026-06-01 16:28:57,784 INFO: Plan 1: ḡ=18, γE[v]=16.0, Q=34.0
+2026-06-01 16:28:57,784 INFO: Selected plan 1 with Q=34.0
+2026-06-01 16:29:01,396 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:29:01,897 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:29:01,898 INFO: Selected plan 0 with Q=0.0
+2026-06-01 16:29:12,680 INFO: Plan 0: ḡ=12, γE[v]=15.0, Q=27.0
+2026-06-01 16:29:12,755 INFO: Plan 1: ḡ=1, γE[v]=24.5, Q=25.5
+2026-06-01 16:29:12,905 INFO: Plan 2: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:29:12,905 INFO: Selected plan 2 with Q=29.5
+2026-06-01 16:29:13,369 INFO: Plan 0: ḡ=0, γE[v]=2.5, Q=2.5
+2026-06-01 16:29:13,517 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:29:13,517 INFO: Selected plan 0 with Q=2.5
+2026-06-01 16:29:13,597 INFO: Plan 0: ḡ=5, γE[v]=17.5, Q=22.5
+2026-06-01 16:29:14,021 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:29:14,262 INFO: Plan 2: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:29:14,299 INFO: Plan 1: ḡ=18, γE[v]=17.5, Q=35.5
+2026-06-01 16:29:14,299 INFO: Selected plan 1 with Q=35.5
+2026-06-01 16:29:14,451 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:29:14,452 INFO: Selected plan 0 with Q=29.5
+2026-06-01 16:29:28,051 INFO: Plan 1: ḡ=22, γE[v]=17.5, Q=39.5
+2026-06-01 16:29:28,238 INFO: Plan 0: ḡ=2, γE[v]=7.5, Q=9.5
+2026-06-01 16:29:28,238 INFO: Selected plan 1 with Q=39.5
+2026-06-01 16:29:35,239 INFO: Plan 2: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:29:35,445 INFO: Plan 0: ḡ=0, γE[v]=10.0, Q=10.0
+2026-06-01 16:29:35,465 INFO: Plan 1: ḡ=8, γE[v]=17.5, Q=25.5
+2026-06-01 16:29:35,465 INFO: Selected plan 1 with Q=25.5
+2026-06-01 16:29:41,362 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:29:41,683 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:29:41,683 INFO: Selected plan 0 with Q=29.5
+2026-06-01 16:29:44,336 INFO: Plan 1: ḡ=2, γE[v]=3.0, Q=5.0
+2026-06-01 16:29:44,521 INFO: Plan 2: ḡ=2, γE[v]=2.0, Q=4.0
+2026-06-01 16:29:44,691 INFO: Plan 0: ḡ=2, γE[v]=3.0, Q=5.0
+2026-06-01 16:29:46,817 INFO: Plan 0: ḡ=5, γE[v]=22.5, Q=27.5
+2026-06-01 16:29:46,905 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:29:46,906 INFO: Selected plan 1 with Q=29.5
+2026-06-01 16:29:58,770 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:29:58,865 INFO: Plan 1: ḡ=5, γE[v]=20.0, Q=25.0
+2026-06-01 16:29:58,865 INFO: Selected plan 0 with Q=29.5
+2026-06-01 16:30:00,498 INFO: Plan 2: ḡ=0, γE[v]=15.0, Q=15.0
+2026-06-01 16:30:00,646 INFO: Plan 0: ḡ=0, γE[v]=10.0, Q=10.0
+2026-06-01 16:30:00,775 INFO: Plan 1: ḡ=5, γE[v]=22.5, Q=27.5
+2026-06-01 16:30:00,776 INFO: Selected plan 1 with Q=27.5
+2026-06-01 16:30:09,754 INFO: Plan 1: ḡ=5, γE[v]=7.5, Q=12.5
+2026-06-01 16:30:09,803 INFO: Plan 0: ḡ=7, γE[v]=17.5, Q=24.5
+2026-06-01 16:30:09,803 INFO: Selected plan 0 with Q=24.5
+2026-06-01 16:30:15,001 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:30:15,377 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:30:15,377 INFO: Selected plan 1 with Q=7.0
+2026-06-01 16:30:16,420 INFO: Plan 0: ḡ=10, γE[v]=17.5, Q=27.5
+2026-06-01 16:30:16,696 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:30:16,697 INFO: Selected plan 1 with Q=29.5
+2026-06-01 16:30:22,375 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:30:22,750 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:30:22,751 INFO: Selected plan 1 with Q=29.5
+2026-06-01 16:30:23,887 INFO: Plan 1: ḡ=18, γE[v]=17.5, Q=35.5
+2026-06-01 16:30:24,142 INFO: Plan 0: ḡ=0, γE[v]=20.0, Q=20.0
+2026-06-01 16:30:24,142 INFO: Selected plan 1 with Q=35.5
+2026-06-01 16:30:28,147 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:30:29,108 INFO: Plan 0: ḡ=10, γE[v]=2.5, Q=12.5
+2026-06-01 16:30:35,360 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:30:35,414 INFO: Plan 1: ḡ=12, γE[v]=15.0, Q=27.0
+2026-06-01 16:30:35,414 INFO: Selected plan 0 with Q=29.5
+2026-06-01 16:30:39,961 INFO: Plan 2: ḡ=0, γE[v]=10.0, Q=10.0
+2026-06-01 16:30:40,513 INFO: Plan 1: ḡ=18, γE[v]=22.5, Q=40.5
+2026-06-01 16:30:40,540 INFO: Plan 0: ḡ=8, γE[v]=21.0, Q=29.0
+2026-06-01 16:30:40,540 INFO: Selected plan 1 with Q=40.5
+2026-06-01 16:30:50,000 INFO: Plan 1: ḡ=10, γE[v]=10.0, Q=20.0
+2026-06-01 16:30:50,504 INFO: Plan 0: ḡ=0, γE[v]=2.0, Q=2.0
+2026-06-01 16:30:50,802 INFO: Plan 0: ḡ=5, γE[v]=10.0, Q=15.0
+2026-06-01 16:30:50,803 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:30:50,804 INFO: Selected plan 0 with Q=15.0
+2026-06-01 16:30:51,219 INFO: Plan 1: ḡ=0, γE[v]=1.0, Q=1.0
+2026-06-01 16:30:51,292 INFO: Plan 0: ḡ=4, γE[v]=23.0, Q=27.0
+2026-06-01 16:30:53,137 INFO: Plan 0: ḡ=15, γE[v]=17.5, Q=32.5
+2026-06-01 16:30:53,461 INFO: Plan 1: ḡ=0, γE[v]=10.0, Q=10.0
+2026-06-01 16:30:53,461 INFO: Selected plan 0 with Q=32.5
+2026-06-01 16:31:02,030 INFO: Plan 1: ḡ=4, γE[v]=15.0, Q=19.0
+2026-06-01 16:31:02,236 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:31:02,237 INFO: Selected plan 0 with Q=29.5
+2026-06-01 16:31:05,872 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:31:06,351 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:31:06,351 INFO: Selected plan 0 with Q=29.5
+2026-06-01 16:31:08,998 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:31:09,289 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:31:09,462 INFO: Plan 0: ḡ=0, γE[v]=2.0, Q=2.0
+2026-06-01 16:31:09,463 INFO: Selected plan 0 with Q=2.0
+2026-06-01 16:31:15,330 INFO: Plan 0: ḡ=5, γE[v]=20.0, Q=25.0
+2026-06-01 16:31:20,389 INFO: Plan 1: ḡ=18, γE[v]=17.5, Q=35.5
+2026-06-01 16:31:20,767 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:31:20,767 INFO: Selected plan 1 with Q=35.5
+2026-06-01 16:31:21,490 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:31:21,541 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:31:21,542 INFO: Selected plan 0 with Q=0.0
+2026-06-01 16:31:26,038 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:31:30,310 INFO: Plan 1: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 16:31:30,798 INFO: Plan 0: ḡ=1, γE[v]=5.0, Q=6.0
+2026-06-01 16:31:35,534 INFO: Plan 2: ḡ=5, γE[v]=22.5, Q=27.5
+2026-06-01 16:31:35,591 INFO: Plan 0: ḡ=15, γE[v]=17.5, Q=32.5
+2026-06-01 16:31:36,060 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:31:36,060 INFO: Selected plan 0 with Q=32.5
+2026-06-01 16:31:36,193 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:31:38,620 INFO: Plan 0: ḡ=0, γE[v]=1.0, Q=1.0
+2026-06-01 16:31:48,112 INFO: Plan 1: ḡ=18, γE[v]=16.0, Q=34.0
+2026-06-01 16:31:48,169 INFO: Plan 0: ḡ=5, γE[v]=22.5, Q=27.5
+2026-06-01 16:31:48,696 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:31:55,531 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:31:55,909 INFO: Plan 1: ḡ=12, γE[v]=22.5, Q=34.5
+2026-06-01 16:31:58,739 INFO: Plan 1: ḡ=0, γE[v]=2.5, Q=2.5
+2026-06-01 16:31:59,173 INFO: Plan 0: ḡ=0, γE[v]=25.0, Q=25.0
+2026-06-01 16:32:01,010 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:32:07,768 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:32:08,036 INFO: Plan 0: ḡ=18, γE[v]=17.5, Q=35.5
+2026-06-01 16:32:08,113 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:32:15,023 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:32:17,534 INFO: Plan 0: ḡ=12, γE[v]=19.0, Q=31.0
+2026-06-01 16:32:19,558 INFO: Plan 0: ḡ=0, γE[v]=2.5, Q=2.5
+2026-06-01 16:32:24,443 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:32:25,218 INFO: Plan 0: ḡ=20, γE[v]=17.5, Q=37.5
+2026-06-01 16:32:26,072 INFO: Plan 1: ḡ=12, γE[v]=19.0, Q=31.0
+2026-06-01 16:32:26,073 INFO: Plan 0: ḡ=5, γE[v]=20.0, Q=25.0
+2026-06-01 16:32:33,088 INFO: Plan 1: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 16:32:33,136 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:32:41,656 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:32:44,877 INFO: Plan 0: ḡ=2, γE[v]=4.0, Q=6.0
+2026-06-01 16:32:49,325 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:32:54,243 INFO: Plan 1: ḡ=2, γE[v]=6.0, Q=8.0
+2026-06-01 16:32:54,514 INFO: Plan 0: ḡ=5, γE[v]=10.0, Q=15.0
+2026-06-01 16:32:54,714 INFO: Plan 0: ḡ=2, γE[v]=2.0, Q=4.0
+2026-06-01 16:32:54,792 INFO: Plan 0: ḡ=5, γE[v]=17.5, Q=22.5
+2026-06-01 16:33:01,357 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+  [25/93] flask.templating seed=42: {'divhints_random': 46, 'divhints_oracle': 16, 'cov_qvalue': 49, 'cov_qvalue_calib': 7}
+2026-06-01 16:33:13,430 INFO: Plan 2: ḡ=12, γE[v]=19.0, Q=31.0
+2026-06-01 16:33:13,538 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:33:13,870 INFO: Plan 1: ḡ=12, γE[v]=14.0, Q=26.0
+2026-06-01 16:33:17,496 INFO: Plan 0: ḡ=5, γE[v]=7.5, Q=12.5
+2026-06-01 16:33:22,366 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:33:28,190 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:33:31,018 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:33:31,904 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:33:38,054 INFO: Plan 1: ḡ=5, γE[v]=15.0, Q=20.0
+2026-06-01 16:33:38,185 INFO: Plan 0: ḡ=20, γE[v]=17.5, Q=37.5
+2026-06-01 16:33:42,289 INFO: Plan 0: ḡ=0, γE[v]=2.5, Q=2.5
+2026-06-01 16:33:42,677 INFO: Plan 1: ḡ=0, γE[v]=2.5, Q=2.5
+2026-06-01 16:33:46,281 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:33:46,658 INFO: Plan 1: ḡ=10, γE[v]=20.0, Q=30.0
+2026-06-01 16:33:47,627 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:33:52,697 INFO: Plan 0: ḡ=2, γE[v]=2.5, Q=4.5
+2026-06-01 16:33:56,101 INFO: Plan 0: ḡ=2, γE[v]=7.5, Q=9.5
+2026-06-01 16:33:56,249 INFO: Plan 0: ḡ=0, γE[v]=25.0, Q=25.0
+2026-06-01 16:33:56,355 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+  [26/93] rich.text seed=42: {'divhints_random': 28, 'divhints_oracle': 30, 'cov_qvalue': 28, 'cov_qvalue_calib': 30}
+2026-06-01 16:34:00,599 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:34:00,870 INFO: Plan 1: ḡ=12, γE[v]=10.0, Q=22.0
+2026-06-01 16:34:07,550 INFO: Plan 0: ḡ=0, γE[v]=2.5, Q=2.5
+2026-06-01 16:34:07,726 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:34:16,173 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:34:16,233 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:34:20,194 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:34:21,590 INFO: Plan 0: ḡ=4, γE[v]=3.0, Q=7.0
+2026-06-01 16:34:23,335 INFO: Plan 0: ḡ=22, γE[v]=17.5, Q=39.5
+2026-06-01 16:34:23,485 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:34:25,426 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:34:31,996 INFO: Plan 1: ḡ=5, γE[v]=20.0, Q=25.0
+2026-06-01 16:34:32,118 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:34:33,760 INFO: Plan 2: ḡ=5, γE[v]=10.0, Q=15.0
+2026-06-01 16:34:33,823 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:34:34,014 INFO: Plan 0: ḡ=12, γE[v]=9.0, Q=21.0
+2026-06-01 16:34:38,589 INFO: Plan 0: ḡ=12, γE[v]=19.0, Q=31.0
+2026-06-01 16:34:38,832 INFO: Plan 1: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 16:34:39,330 INFO: Plan 2: ḡ=12, γE[v]=17.5, Q=29.5
+  [27/93] rich.progress seed=42: {'divhints_random': 129, 'divhints_oracle': 166, 'cov_qvalue': 171, 'cov_qvalue_calib': 176}
+2026-06-01 16:34:57,632 INFO: Plan 0: ḡ=12, γE[v]=20.0, Q=32.0
+  [28/93] rich.pretty seed=42: {'divhints_random': 9, 'divhints_oracle': 71, 'cov_qvalue': 9, 'cov_qvalue_calib': 9}
+2026-06-01 16:35:04,318 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:35:04,685 INFO: Plan 0: ḡ=1, γE[v]=0.0, Q=1.0
+2026-06-01 16:35:04,886 INFO: Plan 1: ḡ=5, γE[v]=7.5, Q=12.5
+2026-06-01 16:35:10,006 INFO: Plan 0: ḡ=1, γE[v]=1.5, Q=2.5
+  [29/93] flask.json.provider seed=42: {'divhints_random': 43, 'divhints_oracle': 46, 'cov_qvalue': 44, 'cov_qvalue_calib': 46}
+2026-06-01 16:35:21,981 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:35:22,220 INFO: Plan 0: ḡ=5, γE[v]=20.0, Q=25.0
+2026-06-01 16:35:31,594 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:35:31,774 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:35:37,711 INFO: Plan 0: ḡ=10, γE[v]=0.0, Q=10.0
+2026-06-01 16:35:41,322 INFO: Plan 0: ḡ=2, γE[v]=24.0, Q=26.0
+  [30/93] rich.table seed=42: {'divhints_random': 189, 'divhints_oracle': 188, 'cov_qvalue': 203, 'cov_qvalue_calib': 154}
+2026-06-01 16:36:01,328 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:36:01,470 INFO: Plan 2: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:36:01,528 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:36:02,526 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+  [31/93] rich.console seed=42: {'divhints_random': 272, 'divhints_oracle': 290, 'cov_qvalue': 251, 'cov_qvalue_calib': 242}
+  [32/93] rich.syntax seed=42: {'divhints_random': 98, 'divhints_oracle': 102, 'cov_qvalue': 98, 'cov_qvalue_calib': 97}
+2026-06-01 16:40:00,414 INFO: Plan 0: ḡ=1, γE[v]=0.0, Q=1.0
+2026-06-01 16:40:00,536 INFO: Plan 1: ḡ=1, γE[v]=20.0, Q=21.0
+2026-06-01 16:40:00,536 INFO: Selected plan 1 with Q=21.0
+2026-06-01 16:41:03,428 INFO: Plan 1: ḡ=18, γE[v]=16.0, Q=34.0
+2026-06-01 16:41:03,614 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:41:03,615 INFO: Selected plan 1 with Q=34.0
+2026-06-01 16:41:19,214 INFO: Plan 0: ḡ=10, γE[v]=15.0, Q=25.0
+2026-06-01 16:41:19,393 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:41:19,393 INFO: Selected plan 1 with Q=29.5
+2026-06-01 16:41:27,045 INFO: Plan 1: ḡ=2, γE[v]=24.0, Q=26.0
+2026-06-01 16:41:27,365 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:41:27,365 INFO: Selected plan 1 with Q=26.0
+2026-06-01 16:41:40,405 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:41:40,743 INFO: Plan 1: ḡ=1, γE[v]=2.0, Q=3.0
+2026-06-01 16:41:40,743 INFO: Selected plan 1 with Q=3.0
+2026-06-01 16:42:02,866 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:42:02,912 INFO: Plan 2: ḡ=15, γE[v]=17.5, Q=32.5
+2026-06-01 16:42:02,945 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:42:02,946 INFO: Selected plan 2 with Q=32.5
+2026-06-01 16:42:05,369 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:42:05,397 INFO: Plan 0: ḡ=2, γE[v]=24.0, Q=26.0
+2026-06-01 16:42:05,397 INFO: Selected plan 0 with Q=26.0
+2026-06-01 16:42:21,689 INFO: Plan 1: ḡ=12, γE[v]=19.0, Q=31.0
+2026-06-01 16:42:21,750 INFO: Plan 2: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:42:21,931 INFO: Plan 0: ḡ=10, γE[v]=20.0, Q=30.0
+2026-06-01 16:42:21,932 INFO: Selected plan 1 with Q=31.0
+2026-06-01 16:42:23,997 INFO: Plan 1: ḡ=5, γE[v]=17.5, Q=22.5
+2026-06-01 16:42:24,013 INFO: Plan 0: ḡ=12, γE[v]=19.0, Q=31.0
+2026-06-01 16:42:24,599 INFO: Plan 2: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:42:24,600 INFO: Selected plan 0 with Q=31.0
+2026-06-01 16:42:32,028 INFO: Plan 0: ḡ=5, γE[v]=7.5, Q=12.5
+2026-06-01 16:42:32,059 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:42:32,060 INFO: Selected plan 0 with Q=12.5
+2026-06-01 16:42:40,531 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:42:40,795 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:42:40,795 INFO: Selected plan 1 with Q=29.5
+2026-06-01 16:42:49,608 INFO: Plan 1: ḡ=0, γE[v]=25.0, Q=25.0
+2026-06-01 16:42:49,809 INFO: Plan 0: ḡ=10, γE[v]=20.0, Q=30.0
+2026-06-01 16:42:50,547 INFO: Plan 0: ḡ=1, γE[v]=5.0, Q=6.0
+2026-06-01 16:42:50,858 INFO: Plan 2: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:42:50,914 INFO: Plan 1: ḡ=2, γE[v]=24.0, Q=26.0
+2026-06-01 16:42:50,915 INFO: Selected plan 1 with Q=26.0
+2026-06-01 16:43:15,984 INFO: Plan 0: ḡ=5, γE[v]=20.0, Q=25.0
+2026-06-01 16:43:20,427 INFO: Plan 1: ḡ=4, γE[v]=23.0, Q=27.0
+2026-06-01 16:43:20,488 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:43:20,488 INFO: Selected plan 0 with Q=29.5
+2026-06-01 16:43:31,554 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:43:31,645 INFO: Plan 0: ḡ=18, γE[v]=17.5, Q=35.5
+2026-06-01 16:43:39,120 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:43:39,431 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:43:39,431 INFO: Selected plan 0 with Q=7.0
+2026-06-01 16:43:42,369 INFO: Plan 0: ḡ=1, γE[v]=7.5, Q=8.5
+2026-06-01 16:43:42,418 INFO: Plan 1: ḡ=0, γE[v]=10.0, Q=10.0
+2026-06-01 16:43:42,419 INFO: Selected plan 1 with Q=10.0
+2026-06-01 16:43:45,917 INFO: Plan 1: ḡ=5, γE[v]=22.5, Q=27.5
+2026-06-01 16:43:46,429 INFO: Plan 0: ḡ=1, γE[v]=5.0, Q=6.0
+2026-06-01 16:43:46,429 INFO: Selected plan 1 with Q=27.5
+2026-06-01 16:43:50,643 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:43:50,643 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:43:50,644 INFO: Selected plan 0 with Q=7.0
+2026-06-01 16:43:50,962 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:43:51,121 INFO: Plan 1: ḡ=12, γE[v]=19.0, Q=31.0
+2026-06-01 16:43:51,122 INFO: Selected plan 1 with Q=31.0
+2026-06-01 16:43:54,017 INFO: Plan 0: ḡ=15, γE[v]=17.5, Q=32.5
+2026-06-01 16:43:55,092 INFO: Plan 1: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 16:43:55,437 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:43:55,438 INFO: Selected plan 0 with Q=29.5
+2026-06-01 16:44:06,045 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:44:06,225 INFO: Plan 1: ḡ=1, γE[v]=24.5, Q=25.5
+2026-06-01 16:44:13,178 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:44:13,410 INFO: Plan 1: ḡ=18, γE[v]=16.0, Q=34.0
+2026-06-01 16:44:13,666 INFO: Plan 0: ḡ=18, γE[v]=16.0, Q=34.0
+2026-06-01 16:44:13,667 INFO: Selected plan 0 with Q=34.0
+2026-06-01 16:44:14,596 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:44:14,748 INFO: Plan 1: ḡ=2, γE[v]=7.5, Q=9.5
+2026-06-01 16:44:14,749 INFO: Selected plan 1 with Q=9.5
+2026-06-01 16:44:15,196 INFO: Plan 1: ḡ=2, γE[v]=7.5, Q=9.5
+2026-06-01 16:44:15,208 INFO: Plan 0: ḡ=15, γE[v]=17.5, Q=32.5
+2026-06-01 16:44:15,208 INFO: Selected plan 0 with Q=32.5
+2026-06-01 16:44:25,786 INFO: Plan 1: ḡ=1, γE[v]=5.0, Q=6.0
+2026-06-01 16:44:25,897 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:44:26,865 INFO: Plan 0: ḡ=5, γE[v]=7.5, Q=12.5
+2026-06-01 16:44:27,006 INFO: Plan 1: ḡ=4, γE[v]=6.0, Q=10.0
+2026-06-01 16:44:27,006 INFO: Selected plan 0 with Q=12.5
+2026-06-01 16:44:41,772 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:44:42,304 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:44:42,442 INFO: Plan 1: ḡ=20, γE[v]=20.0, Q=40.0
+2026-06-01 16:44:42,443 INFO: Selected plan 1 with Q=40.0
+2026-06-01 16:44:49,482 INFO: Plan 0: ḡ=1, γE[v]=7.5, Q=8.5
+2026-06-01 16:44:54,179 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:44:55,385 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:44:55,492 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:44:55,493 INFO: Selected plan 0 with Q=29.5
+2026-06-01 16:45:01,651 INFO: Plan 1: ḡ=10, γE[v]=15.0, Q=25.0
+2026-06-01 16:45:01,884 INFO: Plan 0: ḡ=10, γE[v]=20.0, Q=30.0
+2026-06-01 16:45:01,884 INFO: Selected plan 0 with Q=30.0
+2026-06-01 16:45:02,992 INFO: Plan 0: ḡ=0, γE[v]=10.0, Q=10.0
+2026-06-01 16:45:03,207 INFO: Plan 1: ḡ=0, γE[v]=25.0, Q=25.0
+2026-06-01 16:45:03,341 INFO: Plan 0: ḡ=1, γE[v]=5.0, Q=6.0
+2026-06-01 16:45:05,791 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:45:08,607 INFO: Plan 1: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 16:45:08,639 INFO: Plan 0: ḡ=12, γE[v]=12.5, Q=24.5
+2026-06-01 16:45:08,639 INFO: Selected plan 0 with Q=24.5
+2026-06-01 16:45:13,870 INFO: Plan 0: ḡ=12, γE[v]=19.0, Q=31.0
+2026-06-01 16:45:20,124 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:45:21,638 INFO: Plan 0: ḡ=2, γE[v]=7.5, Q=9.5
+2026-06-01 16:45:22,201 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:45:22,202 INFO: Selected plan 0 with Q=9.5
+2026-06-01 16:45:25,171 INFO: Plan 0: ḡ=1, γE[v]=5.0, Q=6.0
+2026-06-01 16:45:26,932 INFO: Plan 1: ḡ=0, γE[v]=25.0, Q=25.0
+2026-06-01 16:45:26,964 INFO: Plan 0: ḡ=10, γE[v]=20.0, Q=30.0
+2026-06-01 16:45:29,705 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:45:31,964 INFO: Plan 0: ḡ=2, γE[v]=24.0, Q=26.0
+2026-06-01 16:45:32,351 INFO: Plan 1: ḡ=12, γE[v]=19.0, Q=31.0
+2026-06-01 16:45:38,825 INFO: Plan 0: ḡ=1, γE[v]=7.5, Q=8.5
+2026-06-01 16:45:38,972 INFO: Plan 2: ḡ=18, γE[v]=16.0, Q=34.0
+2026-06-01 16:45:39,163 INFO: Plan 1: ḡ=12, γE[v]=19.0, Q=31.0
+2026-06-01 16:45:42,379 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:45:44,046 INFO: Plan 0: ḡ=18, γE[v]=17.5, Q=35.5
+2026-06-01 16:45:44,202 INFO: Plan 1: ḡ=15, γE[v]=17.5, Q=32.5
+2026-06-01 16:45:48,371 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:45:48,539 INFO: Plan 1: ḡ=5, γE[v]=20.0, Q=25.0
+2026-06-01 16:45:50,396 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:45:52,600 INFO: Plan 1: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 16:45:52,811 INFO: Plan 0: ḡ=5, γE[v]=17.5, Q=22.5
+2026-06-01 16:46:04,975 INFO: Plan 1: ḡ=18, γE[v]=16.0, Q=34.0
+2026-06-01 16:46:05,036 INFO: Plan 0: ḡ=15, γE[v]=17.5, Q=32.5
+2026-06-01 16:46:05,387 INFO: Plan 0: ḡ=1, γE[v]=2.5, Q=3.5
+2026-06-01 16:46:07,091 INFO: Plan 1: ḡ=1, γE[v]=20.0, Q=21.0
+2026-06-01 16:46:07,334 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:46:07,500 INFO: Plan 1: ḡ=2, γE[v]=7.5, Q=9.5
+2026-06-01 16:46:07,558 INFO: Plan 2: ḡ=0, γE[v]=10.0, Q=10.0
+2026-06-01 16:46:07,589 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:46:08,038 INFO: Plan 0: ḡ=10, γE[v]=15.0, Q=25.0
+2026-06-01 16:46:08,039 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:46:14,544 INFO: Plan 0: ḡ=0, γE[v]=10.0, Q=10.0
+2026-06-01 16:46:18,961 INFO: Plan 0: ḡ=0, γE[v]=20.0, Q=20.0
+2026-06-01 16:46:19,223 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:46:24,571 INFO: Plan 0: ḡ=2, γE[v]=6.0, Q=8.0
+2026-06-01 16:46:25,420 INFO: Plan 0: ḡ=18, γE[v]=15.0, Q=33.0
+2026-06-01 16:46:29,242 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:46:29,244 INFO: Plan 0: ḡ=2, γE[v]=24.0, Q=26.0
+2026-06-01 16:46:29,468 INFO: Plan 0: ḡ=20, γE[v]=20.0, Q=40.0
+2026-06-01 16:46:30,225 INFO: Plan 1: ḡ=8, γE[v]=17.5, Q=25.5
+2026-06-01 16:46:30,392 INFO: Plan 2: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:46:30,405 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:46:37,387 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:46:38,888 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:46:43,006 INFO: Plan 0: ḡ=10, γE[v]=20.0, Q=30.0
+2026-06-01 16:46:49,214 INFO: Plan 1: ḡ=0, γE[v]=10.0, Q=10.0
+2026-06-01 16:46:49,483 INFO: Plan 0: ḡ=12, γE[v]=19.0, Q=31.0
+2026-06-01 16:46:52,573 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:46:52,602 INFO: Plan 1: ḡ=5, γE[v]=22.5, Q=27.5
+2026-06-01 16:46:53,770 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:46:56,006 INFO: Plan 0: ḡ=18, γE[v]=16.0, Q=34.0
+2026-06-01 16:46:56,187 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:46:58,144 INFO: Plan 1: ḡ=5, γE[v]=0.0, Q=5.0
+2026-06-01 16:46:58,292 INFO: Plan 2: ḡ=5, γE[v]=22.5, Q=27.5
+2026-06-01 16:46:58,606 INFO: Plan 0: ḡ=18, γE[v]=16.0, Q=34.0
+2026-06-01 16:46:59,958 INFO: Plan 0: ḡ=1, γE[v]=2.5, Q=3.5
+2026-06-01 16:47:01,207 INFO: Plan 0: ḡ=5, γE[v]=20.0, Q=25.0
+2026-06-01 16:47:09,728 INFO: Plan 0: ḡ=12, γE[v]=22.5, Q=34.5
+2026-06-01 16:47:14,415 INFO: Plan 2: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:47:14,517 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:47:14,791 INFO: Plan 0: ḡ=15, γE[v]=17.5, Q=32.5
+2026-06-01 16:47:18,295 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:47:19,029 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:47:20,543 INFO: Plan 0: ḡ=12, γE[v]=19.0, Q=31.0
+2026-06-01 16:47:22,576 INFO: Plan 0: ḡ=18, γE[v]=16.0, Q=34.0
+2026-06-01 16:47:22,649 INFO: Plan 1: ḡ=5, γE[v]=20.0, Q=25.0
+2026-06-01 16:47:23,025 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:47:32,147 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+  [33/93] rich.markdown seed=42: {'divhints_random': 86, 'divhints_oracle': 84, 'cov_qvalue': 65, 'cov_qvalue_calib': 92}
+2026-06-01 16:47:38,832 INFO: Plan 0: ḡ=12, γE[v]=15.0, Q=27.0
+2026-06-01 16:47:39,177 INFO: Plan 2: ḡ=0, γE[v]=25.0, Q=25.0
+2026-06-01 16:47:39,179 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:47:39,298 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:47:39,368 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:47:42,046 INFO: Plan 0: ḡ=2, γE[v]=7.5, Q=9.5
+2026-06-01 16:47:42,485 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:47:42,535 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:47:43,443 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:47:45,772 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+  [34/93] rich.segment seed=42: {'divhints_random': 60, 'divhints_oracle': 60, 'cov_qvalue': 60, 'cov_qvalue_calib': 60}
+2026-06-01 16:47:56,984 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:47:59,970 INFO: Plan 0: ḡ=12, γE[v]=14.0, Q=26.0
+2026-06-01 16:48:00,180 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:48:00,616 INFO: Plan 0: ḡ=10, γE[v]=17.5, Q=27.5
+2026-06-01 16:48:01,511 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:48:01,866 INFO: Plan 1: ḡ=18, γE[v]=16.0, Q=34.0
+2026-06-01 16:48:01,905 INFO: Plan 2: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:48:03,773 INFO: Plan 0: ḡ=10, γE[v]=20.0, Q=30.0
+2026-06-01 16:48:16,174 INFO: Plan 0: ḡ=5, γE[v]=20.0, Q=25.0
+2026-06-01 16:48:19,219 INFO: Plan 0: ḡ=15, γE[v]=17.5, Q=32.5
+2026-06-01 16:48:19,520 INFO: Plan 1: ḡ=5, γE[v]=22.5, Q=27.5
+2026-06-01 16:48:24,186 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:48:31,287 INFO: Plan 0: ḡ=18, γE[v]=17.5, Q=35.5
+2026-06-01 16:48:31,400 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:48:31,700 INFO: Plan 0: ḡ=18, γE[v]=17.5, Q=35.5
+2026-06-01 16:48:32,844 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+  [35/93] rich.color seed=42: {'divhints_random': 64, 'divhints_oracle': 69, 'cov_qvalue': 65, 'cov_qvalue_calib': 60}
+2026-06-01 16:48:42,753 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:48:43,009 INFO: Plan 0: ḡ=12, γE[v]=22.5, Q=34.5
+2026-06-01 16:48:50,700 INFO: Plan 0: ḡ=18, γE[v]=17.5, Q=35.5
+2026-06-01 16:48:56,848 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:49:00,114 INFO: Plan 0: ḡ=0, γE[v]=22.5, Q=22.5
+2026-06-01 16:49:06,597 INFO: Plan 0: ḡ=1, γE[v]=5.0, Q=6.0
+2026-06-01 16:49:10,731 INFO: Plan 0: ḡ=2, γE[v]=20.0, Q=22.0
+2026-06-01 16:49:11,194 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:49:15,589 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:49:15,815 INFO: Plan 1: ḡ=5, γE[v]=22.5, Q=27.5
+2026-06-01 16:49:26,261 INFO: Plan 1: ḡ=12, γE[v]=19.0, Q=31.0
+2026-06-01 16:49:26,286 INFO: Plan 2: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:49:26,352 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:49:31,019 INFO: Plan 0: ḡ=5, γE[v]=22.5, Q=27.5
+2026-06-01 16:49:32,807 INFO: Plan 0: ḡ=12, γE[v]=19.0, Q=31.0
+2026-06-01 16:49:38,233 INFO: Plan 0: ḡ=12, γE[v]=19.0, Q=31.0
+  [36/93] jinja2.compiler seed=42: {'divhints_random': 112, 'divhints_oracle': 35, 'cov_qvalue': 105, 'cov_qvalue_calib': 82}
+2026-06-01 16:49:48,669 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:49:48,812 INFO: Plan 0: ḡ=18, γE[v]=16.0, Q=34.0
+  [37/93] rich.layout seed=42: {'divhints_random': 17, 'divhints_oracle': 64, 'cov_qvalue': 62, 'cov_qvalue_calib': 62}
+2026-06-01 16:49:52,259 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:49:55,098 INFO: Plan 0: ḡ=4, γE[v]=0.0, Q=4.0
+  [38/93] rich.style seed=42: {'divhints_random': 97, 'divhints_oracle': 109, 'cov_qvalue': 104, 'cov_qvalue_calib': 97}
+2026-06-01 16:50:09,407 INFO: Plan 0: ḡ=18, γE[v]=16.0, Q=34.0
+  [39/93] rich.traceback seed=42: {'divhints_random': 71, 'divhints_oracle': 72, 'cov_qvalue': 71, 'cov_qvalue_calib': 85}
+2026-06-01 16:50:25,989 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+  [40/93] jinja2.filters seed=42: {'divhints_random': 129, 'divhints_oracle': 139, 'cov_qvalue': 138, 'cov_qvalue_calib': 138}
+2026-06-01 16:54:51,155 INFO: Plan 2: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:54:51,244 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:54:51,703 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:54:51,704 INFO: Selected plan 0 with Q=7.0
+2026-06-01 16:54:54,948 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:54:55,320 INFO: Plan 1: ḡ=5, γE[v]=22.5, Q=27.5
+2026-06-01 16:54:55,320 INFO: Selected plan 0 with Q=29.5
+2026-06-01 16:55:03,706 INFO: Plan 2: ḡ=1, γE[v]=1.0, Q=2.0
+2026-06-01 16:55:03,869 INFO: Plan 1: ḡ=1, γE[v]=2.5, Q=3.5
+2026-06-01 16:55:04,023 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:55:04,024 INFO: Selected plan 0 with Q=7.0
+2026-06-01 16:55:08,797 INFO: Plan 0: ḡ=1, γE[v]=0.0, Q=1.0
+2026-06-01 16:55:09,354 INFO: Plan 1: ḡ=1, γE[v]=25.0, Q=26.0
+2026-06-01 16:55:09,354 INFO: Selected plan 1 with Q=26.0
+2026-06-01 16:55:19,633 INFO: Plan 2: ḡ=2, γE[v]=4.0, Q=6.0
+2026-06-01 16:55:19,760 INFO: Plan 0: ḡ=1, γE[v]=20.0, Q=21.0
+2026-06-01 16:55:19,958 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:55:19,958 INFO: Selected plan 0 with Q=21.0
+2026-06-01 16:55:28,004 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:55:28,157 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:55:28,157 INFO: Selected plan 0 with Q=29.5
+2026-06-01 16:55:34,222 INFO: Plan 0: ḡ=1, γE[v]=24.5, Q=25.5
+2026-06-01 16:55:34,267 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:55:34,267 INFO: Selected plan 0 with Q=25.5
+2026-06-01 16:55:47,887 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:55:48,433 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:55:48,434 INFO: Selected plan 1 with Q=7.0
+2026-06-01 16:56:02,798 INFO: Plan 1: ḡ=2, γE[v]=4.0, Q=6.0
+2026-06-01 16:56:02,888 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:56:02,889 INFO: Selected plan 0 with Q=7.0
+2026-06-01 16:56:18,949 INFO: Plan 1: ḡ=4, γE[v]=5.0, Q=9.0
+2026-06-01 16:56:19,043 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:56:19,044 INFO: Selected plan 1 with Q=9.0
+2026-06-01 16:56:28,416 INFO: Plan 1: ḡ=6, γE[v]=10.0, Q=16.0
+2026-06-01 16:56:28,622 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:56:28,651 INFO: Plan 2: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:56:28,651 INFO: Selected plan 1 with Q=16.0
+2026-06-01 16:56:40,185 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:56:40,266 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:56:40,523 INFO: Plan 2: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:56:40,523 INFO: Selected plan 2 with Q=7.0
+2026-06-01 16:57:02,682 INFO: Plan 1: ḡ=1, γE[v]=24.5, Q=25.5
+2026-06-01 16:57:02,697 INFO: Plan 0: ḡ=12, γE[v]=19.0, Q=31.0
+2026-06-01 16:57:02,821 INFO: Plan 2: ḡ=18, γE[v]=16.0, Q=34.0
+2026-06-01 16:57:03,593 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:57:04,108 INFO: Plan 1: ḡ=1, γE[v]=5.0, Q=6.0
+2026-06-01 16:57:04,108 INFO: Selected plan 0 with Q=7.0
+2026-06-01 16:57:10,428 INFO: Plan 0: ḡ=2, γE[v]=24.0, Q=26.0
+2026-06-01 16:57:10,818 INFO: Plan 1: ḡ=5, γE[v]=22.5, Q=27.5
+2026-06-01 16:57:10,819 INFO: Selected plan 1 with Q=27.5
+2026-06-01 16:57:20,791 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:57:20,840 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:57:20,976 INFO: Plan 2: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:57:32,839 INFO: Plan 0: ḡ=5, γE[v]=17.5, Q=22.5
+2026-06-01 16:57:38,870 INFO: Plan 1: ḡ=3, γE[v]=23.5, Q=26.5
+2026-06-01 16:57:39,109 INFO: Plan 0: ḡ=4, γE[v]=6.0, Q=10.0
+2026-06-01 16:57:39,110 INFO: Selected plan 1 with Q=26.5
+2026-06-01 16:57:43,128 INFO: Plan 1: ḡ=1, γE[v]=10.0, Q=11.0
+2026-06-01 16:57:43,256 INFO: Plan 0: ḡ=2, γE[v]=24.0, Q=26.0
+2026-06-01 16:57:52,528 INFO: Plan 2: ḡ=5, γE[v]=22.5, Q=27.5
+2026-06-01 16:57:52,837 INFO: Plan 1: ḡ=2, γE[v]=24.0, Q=26.0
+2026-06-01 16:57:52,957 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:57:52,957 INFO: Selected plan 2 with Q=27.5
+2026-06-01 16:57:55,967 INFO: Plan 0: ḡ=18, γE[v]=17.5, Q=35.5
+2026-06-01 16:57:57,827 INFO: Plan 1: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 16:57:57,917 INFO: Plan 0: ḡ=1, γE[v]=2.5, Q=3.5
+2026-06-01 16:57:57,917 INFO: Selected plan 1 with Q=5.0
+2026-06-01 16:58:04,342 INFO: Plan 2: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:58:04,510 INFO: Plan 1: ḡ=2, γE[v]=1.0, Q=3.0
+2026-06-01 16:58:04,553 INFO: Plan 0: ḡ=1, γE[v]=5.0, Q=6.0
+2026-06-01 16:58:08,004 INFO: Plan 0: ḡ=5, γE[v]=7.5, Q=12.5
+2026-06-01 16:58:09,338 INFO: Plan 0: ḡ=5, γE[v]=7.5, Q=12.5
+2026-06-01 16:58:09,703 INFO: Plan 1: ḡ=2, γE[v]=24.0, Q=26.0
+2026-06-01 16:58:09,704 INFO: Selected plan 1 with Q=26.0
+2026-06-01 16:58:18,921 INFO: Plan 0: ḡ=2, γE[v]=24.0, Q=26.0
+2026-06-01 16:58:24,440 INFO: Plan 0: ḡ=5, γE[v]=22.5, Q=27.5
+2026-06-01 16:58:24,677 INFO: Plan 1: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 16:58:24,677 INFO: Selected plan 0 with Q=27.5
+2026-06-01 16:58:26,893 INFO: Plan 0: ḡ=2, γE[v]=0.0, Q=2.0
+2026-06-01 16:58:33,928 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:58:34,516 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:58:34,517 INFO: Selected plan 0 with Q=29.5
+2026-06-01 16:58:41,104 INFO: Plan 1: ḡ=2, γE[v]=4.0, Q=6.0
+2026-06-01 16:58:41,104 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:58:41,115 INFO: Plan 0: ḡ=0, γE[v]=10.0, Q=10.0
+2026-06-01 16:58:41,182 INFO: Plan 1: ḡ=2, γE[v]=24.0, Q=26.0
+2026-06-01 16:58:41,182 INFO: Selected plan 1 with Q=26.0
+2026-06-01 16:58:41,263 INFO: Plan 2: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:58:41,890 INFO: Plan 0: ḡ=3, γE[v]=20.0, Q=23.0
+2026-06-01 16:58:42,372 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:58:56,898 INFO: Plan 0: ḡ=2, γE[v]=7.5, Q=9.5
+2026-06-01 16:59:02,315 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:59:02,328 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:59:02,777 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:59:07,447 INFO: Plan 1: ḡ=10, γE[v]=20.0, Q=30.0
+2026-06-01 16:59:07,567 INFO: Plan 0: ḡ=12, γE[v]=19.0, Q=31.0
+2026-06-01 16:59:07,567 INFO: Selected plan 0 with Q=31.0
+2026-06-01 16:59:08,474 INFO: Plan 0: ḡ=1, γE[v]=50.0, Q=51.0
+2026-06-01 16:59:08,577 INFO: Plan 2: ḡ=1, γE[v]=0.0, Q=1.0
+2026-06-01 16:59:08,936 INFO: Plan 1: ḡ=1, γE[v]=24.5, Q=25.5
+2026-06-01 16:59:10,019 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 16:59:21,472 INFO: Plan 1: ḡ=6, γE[v]=7.5, Q=13.5
+2026-06-01 16:59:21,758 INFO: Plan 0: ḡ=10, γE[v]=10.0, Q=20.0
+2026-06-01 16:59:30,749 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:59:30,889 INFO: Plan 1: ḡ=12, γE[v]=14.0, Q=26.0
+2026-06-01 16:59:32,326 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:59:32,479 INFO: Plan 2: ḡ=5, γE[v]=17.5, Q=22.5
+2026-06-01 16:59:32,706 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:59:35,963 INFO: Plan 0: ḡ=5, γE[v]=7.5, Q=12.5
+2026-06-01 16:59:36,009 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:59:36,010 INFO: Selected plan 0 with Q=12.5
+2026-06-01 16:59:37,391 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 16:59:39,636 INFO: Plan 0: ḡ=0, γE[v]=25.0, Q=25.0
+2026-06-01 16:59:39,684 INFO: Plan 1: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 16:59:46,550 INFO: Plan 0: ḡ=1, γE[v]=5.0, Q=6.0
+2026-06-01 16:59:46,675 INFO: Plan 2: ḡ=2, γE[v]=2.5, Q=4.5
+2026-06-01 16:59:46,898 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:59:46,915 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:59:57,488 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 16:59:59,317 INFO: Plan 0: ḡ=0, γE[v]=25.0, Q=25.0
+2026-06-01 17:00:06,736 INFO: Plan 0: ḡ=0, γE[v]=25.0, Q=25.0
+2026-06-01 17:00:12,482 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:00:13,893 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 17:00:14,497 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:00:22,436 INFO: Plan 1: ḡ=5, γE[v]=5.0, Q=10.0
+2026-06-01 17:00:22,721 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 17:00:22,722 INFO: Selected plan 1 with Q=10.0
+2026-06-01 17:00:28,327 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 17:00:29,929 INFO: Plan 0: ḡ=18, γE[v]=16.0, Q=34.0
+2026-06-01 17:00:32,709 INFO: Plan 0: ḡ=5, γE[v]=7.5, Q=12.5
+2026-06-01 17:00:32,729 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 17:00:35,399 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+  [41/93] jinja2.environment seed=42: {'divhints_random': 86, 'divhints_oracle': 97, 'cov_qvalue': 82, 'cov_qvalue_calib': 96}
+2026-06-01 17:00:43,068 INFO: Plan 0: ḡ=1, γE[v]=0.0, Q=1.0
+2026-06-01 17:00:48,312 INFO: Plan 1: ḡ=1, γE[v]=5.0, Q=6.0
+2026-06-01 17:00:48,511 INFO: Plan 0: ḡ=1, γE[v]=5.0, Q=6.0
+2026-06-01 17:00:49,022 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 17:00:51,039 INFO: Plan 1: ḡ=4, γE[v]=5.0, Q=9.0
+2026-06-01 17:00:51,142 INFO: Plan 0: ḡ=4, γE[v]=7.5, Q=11.5
+2026-06-01 17:00:57,546 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+  [42/93] jinja2.nodes seed=42: {'divhints_random': 10, 'divhints_oracle': 11, 'cov_qvalue': 10, 'cov_qvalue_calib': 11}
+2026-06-01 17:01:12,649 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 17:01:13,862 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 17:01:15,655 INFO: Plan 0: ḡ=0, γE[v]=2.5, Q=2.5
+2026-06-01 17:01:16,018 INFO: Plan 1: ḡ=0, γE[v]=25.0, Q=25.0
+2026-06-01 17:01:30,662 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 17:01:37,154 INFO: Plan 0: ḡ=12, γE[v]=19.0, Q=31.0
+2026-06-01 17:01:37,566 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:01:37,860 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:01:43,294 INFO: Plan 0: ḡ=4, γE[v]=7.5, Q=11.5
+2026-06-01 17:01:43,436 INFO: Plan 1: ḡ=6, γE[v]=7.5, Q=13.5
+2026-06-01 17:01:53,738 INFO: Plan 2: ḡ=0, γE[v]=25.0, Q=25.0
+2026-06-01 17:01:53,757 INFO: Plan 0: ḡ=2, γE[v]=7.5, Q=9.5
+2026-06-01 17:01:53,813 INFO: Plan 1: ḡ=1, γE[v]=5.0, Q=6.0
+2026-06-01 17:02:00,172 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 17:02:00,228 INFO: Plan 2: ḡ=1, γE[v]=22.5, Q=23.5
+2026-06-01 17:02:00,431 INFO: Plan 1: ḡ=0, γE[v]=2.5, Q=2.5
+2026-06-01 17:02:01,997 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+  [43/93] jinja2.runtime seed=42: {'divhints_random': 66, 'divhints_oracle': 66, 'cov_qvalue': 65, 'cov_qvalue_calib': 66}
+2026-06-01 17:02:10,586 INFO: Plan 0: ḡ=18, γE[v]=17.5, Q=35.5
+2026-06-01 17:02:10,873 INFO: Plan 1: ḡ=5, γE[v]=10.0, Q=15.0
+2026-06-01 17:02:12,865 INFO: Plan 0: ḡ=6, γE[v]=20.0, Q=26.0
+2026-06-01 17:02:18,044 INFO: Plan 0: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 17:02:27,267 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 17:02:33,685 INFO: Plan 0: ḡ=10, γE[v]=10.0, Q=20.0
+2026-06-01 17:02:37,425 INFO: Plan 1: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 17:02:37,632 INFO: Plan 0: ḡ=1, γE[v]=7.5, Q=8.5
+  [44/93] jinja2.utils seed=42: {'divhints_random': 11, 'divhints_oracle': 11, 'cov_qvalue': 11, 'cov_qvalue_calib': 11}
+2026-06-01 17:02:42,299 INFO: Plan 0: ḡ=18, γE[v]=16.0, Q=34.0
+2026-06-01 17:02:58,696 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:03:01,423 INFO: Plan 0: ḡ=18, γE[v]=17.5, Q=35.5
+2026-06-01 17:03:16,645 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 17:03:16,645 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:03:24,332 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 17:03:24,381 INFO: Plan 1: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 17:03:40,453 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:03:41,127 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+  [45/93] jinja2.ext seed=42: {'divhints_random': 54, 'divhints_oracle': 82, 'cov_qvalue': 4, 'cov_qvalue_calib': 82}
+2026-06-01 17:04:02,550 INFO: Plan 0: ḡ=18, γE[v]=17.5, Q=35.5
+2026-06-01 17:04:17,146 INFO: Plan 0: ḡ=12, γE[v]=19.0, Q=31.0
+  [46/93] jinja2.loaders seed=42: {'divhints_random': 24, 'divhints_oracle': 25, 'cov_qvalue': 24, 'cov_qvalue_calib': 55}
+  [47/93] jinja2.lexer seed=42: {'divhints_random': 97, 'divhints_oracle': 107, 'cov_qvalue': 101, 'cov_qvalue_calib': 103}
+2026-06-01 17:07:34,585 INFO: Plan 0: ḡ=0, γE[v]=2.5, Q=2.5
+2026-06-01 17:07:34,799 INFO: Plan 1: ḡ=2, γE[v]=7.5, Q=9.5
+2026-06-01 17:07:34,800 INFO: Selected plan 1 with Q=9.5
+2026-06-01 17:07:48,066 INFO: Plan 0: ḡ=4, γE[v]=6.0, Q=10.0
+2026-06-01 17:07:48,164 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 17:07:48,164 INFO: Selected plan 0 with Q=10.0
+2026-06-01 17:07:55,162 INFO: Plan 0: ḡ=2, γE[v]=24.0, Q=26.0
+2026-06-01 17:07:55,262 INFO: Plan 1: ḡ=1, γE[v]=5.0, Q=6.0
+2026-06-01 17:07:55,262 INFO: Selected plan 0 with Q=26.0
+2026-06-01 17:08:31,672 INFO: Plan 1: ḡ=1, γE[v]=5.0, Q=6.0
+2026-06-01 17:08:32,228 INFO: Plan 0: ḡ=4, γE[v]=6.0, Q=10.0
+2026-06-01 17:08:32,228 INFO: Selected plan 0 with Q=10.0
+2026-06-01 17:09:19,884 INFO: Plan 0: ḡ=2, γE[v]=6.0, Q=8.0
+2026-06-01 17:09:19,947 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 17:09:19,947 INFO: Selected plan 0 with Q=8.0
+2026-06-01 17:09:32,665 INFO: Plan 1: ḡ=1, γE[v]=1.0, Q=2.0
+2026-06-01 17:09:32,826 INFO: Plan 0: ḡ=3, γE[v]=23.5, Q=26.5
+2026-06-01 17:09:33,175 INFO: Plan 2: ḡ=1, γE[v]=0.0, Q=1.0
+2026-06-01 17:09:33,175 INFO: Selected plan 0 with Q=26.5
+2026-06-01 17:09:41,797 INFO: Plan 0: ḡ=5, γE[v]=22.5, Q=27.5
+2026-06-01 17:09:42,012 INFO: Plan 1: ḡ=12, γE[v]=22.5, Q=34.5
+2026-06-01 17:09:42,013 INFO: Selected plan 1 with Q=34.5
+2026-06-01 17:09:48,331 INFO: Plan 0: ḡ=1, γE[v]=12.5, Q=13.5
+2026-06-01 17:09:48,648 INFO: Plan 1: ḡ=1, γE[v]=25.0, Q=26.0
+2026-06-01 17:09:48,768 INFO: Plan 2: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 17:10:12,682 INFO: Plan 0: ḡ=6, γE[v]=7.5, Q=13.5
+2026-06-01 17:10:12,859 INFO: Plan 2: ḡ=12, γE[v]=14.0, Q=26.0
+2026-06-01 17:10:13,187 INFO: Plan 1: ḡ=1, γE[v]=7.5, Q=8.5
+2026-06-01 17:10:31,770 INFO: Plan 0: ḡ=1, γE[v]=5000000.0, Q=5000001.0
+2026-06-01 17:10:37,520 INFO: Plan 0: ḡ=12, γE[v]=15.0, Q=27.0
+2026-06-01 17:10:45,866 INFO: Plan 0: ḡ=10, γE[v]=15.0, Q=25.0
+2026-06-01 17:11:01,353 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 17:11:02,585 INFO: Plan 0: ḡ=18, γE[v]=17.5, Q=35.5
+2026-06-01 17:11:02,643 INFO: Plan 1: ḡ=0, γE[v]=20.0, Q=20.0
+2026-06-01 17:11:02,746 INFO: Plan 2: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:11:02,746 INFO: Selected plan 0 with Q=35.5
+2026-06-01 17:11:07,772 INFO: Plan 0: ḡ=1, γE[v]=5.0, Q=6.0
+2026-06-01 17:11:07,979 INFO: Plan 1: ḡ=10, γE[v]=20.0, Q=30.0
+2026-06-01 17:11:07,979 INFO: Selected plan 1 with Q=30.0
+2026-06-01 17:11:12,058 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 17:11:12,271 INFO: Plan 1: ḡ=12, γE[v]=19.0, Q=31.0
+2026-06-01 17:11:12,271 INFO: Selected plan 1 with Q=31.0
+2026-06-01 17:11:15,867 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 17:11:15,893 INFO: Plan 0: ḡ=10, γE[v]=20.0, Q=30.0
+2026-06-01 17:11:37,340 INFO: Plan 0: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 17:11:37,465 INFO: Plan 1: ḡ=5, γE[v]=22.5, Q=27.5
+2026-06-01 17:11:37,516 INFO: Plan 2: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:11:37,516 INFO: Selected plan 2 with Q=29.5
+2026-06-01 17:11:41,248 INFO: Plan 0: ḡ=5, γE[v]=12.5, Q=17.5
+2026-06-01 17:11:56,088 INFO: Plan 0: ḡ=10, γE[v]=15.0, Q=25.0
+2026-06-01 17:11:57,335 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 17:11:57,523 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 17:11:57,523 INFO: Selected plan 0 with Q=7.0
+2026-06-01 17:12:10,543 INFO: Retrying request to /chat/completions in 0.420072 seconds
+2026-06-01 17:12:11,826 INFO: Plan 0: ḡ=1, γE[v]=0.0, Q=1.0
+2026-06-01 17:12:14,093 INFO: Plan 0: ḡ=1, γE[v]=0.0, Q=1.0
+2026-06-01 17:12:22,517 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 17:12:22,579 INFO: Plan 1: ḡ=12, γE[v]=19.0, Q=31.0
+2026-06-01 17:12:29,084 INFO: Plan 0: ḡ=1, γE[v]=2.5, Q=3.5
+2026-06-01 17:12:31,760 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 17:12:36,016 INFO: Plan 0: ḡ=5, γE[v]=17.5, Q=22.5
+2026-06-01 17:12:51,555 INFO: Plan 0: ḡ=2, γE[v]=7.5, Q=9.5
+2026-06-01 17:12:52,144 INFO: Plan 0: ḡ=10, γE[v]=20.0, Q=30.0
+  [48/93] jinja2.parser seed=42: {'divhints_random': 13, 'divhints_oracle': 13, 'cov_qvalue': 103, 'cov_qvalue_calib': 114}
+2026-06-01 17:13:04,849 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 17:13:07,927 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 17:13:08,109 INFO: Plan 0: ḡ=10, γE[v]=20.0, Q=30.0
+2026-06-01 17:13:17,908 INFO: Plan 0: ḡ=2, γE[v]=6.0, Q=8.0
+2026-06-01 17:13:18,722 INFO: Plan 0: ḡ=0, γE[v]=25.0, Q=25.0
+2026-06-01 17:13:18,807 INFO: Plan 1: ḡ=12, γE[v]=15.0, Q=27.0
+2026-06-01 17:13:18,807 INFO: Selected plan 1 with Q=27.0
+2026-06-01 17:13:19,431 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 17:13:19,766 INFO: Plan 1: ḡ=10, γE[v]=10.0, Q=20.0
+2026-06-01 17:13:25,917 INFO: Plan 0: ḡ=5, γE[v]=17.5, Q=22.5
+2026-06-01 17:13:26,242 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+  [49/93] jinja2.bccache seed=42: {'divhints_random': 5, 'divhints_oracle': 5, 'cov_qvalue': 5, 'cov_qvalue_calib': 5}
+2026-06-01 17:13:34,585 INFO: Plan 0: ḡ=12, γE[v]=19.0, Q=31.0
+2026-06-01 17:13:44,459 INFO: Plan 0: ḡ=18, γE[v]=17.5, Q=35.5
+2026-06-01 17:13:48,840 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:13:49,108 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:13:55,035 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:14:04,211 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 17:14:06,358 INFO: Plan 0: ḡ=2, γE[v]=4.0, Q=6.0
+2026-06-01 17:14:15,518 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:14:15,702 INFO: Plan 1: ḡ=0, γE[v]=20.0, Q=20.0
+2026-06-01 17:14:16,775 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 17:14:17,051 INFO: Plan 0: ḡ=10, γE[v]=20.0, Q=30.0
+2026-06-01 17:14:20,239 INFO: Plan 0: ḡ=10, γE[v]=10.0, Q=20.0
+2026-06-01 17:14:20,293 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:14:32,235 INFO: Plan 1: ḡ=10, γE[v]=15.0, Q=25.0
+2026-06-01 17:14:32,409 INFO: Plan 0: ḡ=12, γE[v]=14.0, Q=26.0
+2026-06-01 17:14:32,409 INFO: Selected plan 0 with Q=26.0
+2026-06-01 17:14:38,714 INFO: Plan 0: ḡ=0, γE[v]=2.5, Q=2.5
+2026-06-01 17:14:43,518 INFO: Plan 0: ḡ=12, γE[v]=14.0, Q=26.0
+2026-06-01 17:14:46,544 INFO: Plan 0: ḡ=0, γE[v]=20.0, Q=20.0
+2026-06-01 17:14:50,592 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:14:53,597 INFO: Plan 0: ḡ=4, γE[v]=6.0, Q=10.0
+2026-06-01 17:14:56,816 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:14:57,448 INFO: Plan 1: ḡ=1, γE[v]=0.0, Q=1.0
+2026-06-01 17:14:59,812 INFO: Plan 1: ḡ=10, γE[v]=20.0, Q=30.0
+2026-06-01 17:14:59,845 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 17:15:02,019 INFO: Plan 1: ḡ=5, γE[v]=20.0, Q=25.0
+2026-06-01 17:15:02,020 INFO: Plan 0: ḡ=0, γE[v]=20.0, Q=20.0
+2026-06-01 17:15:02,053 INFO: Plan 2: ḡ=12, γE[v]=17.5, Q=29.5
+  [50/93] jinja2.sandbox seed=42: {'divhints_random': 59, 'divhints_oracle': 77, 'cov_qvalue': 59, 'cov_qvalue_calib': 80}
+2026-06-01 17:15:15,524 INFO: Plan 0: ḡ=18, γE[v]=17.5, Q=35.5
+2026-06-01 17:15:17,753 INFO: Plan 0: ḡ=15, γE[v]=17.5, Q=32.5
+2026-06-01 17:15:20,329 INFO: Plan 0: ḡ=10, γE[v]=17.5, Q=27.5
+2026-06-01 17:15:33,088 INFO: Plan 0: ḡ=10, γE[v]=17.5, Q=27.5
+2026-06-01 17:15:35,513 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:15:35,843 INFO: Plan 0: ḡ=1, γE[v]=0.0, Q=1.0
+2026-06-01 17:15:39,849 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 17:15:40,933 INFO: Plan 0: ḡ=5, γE[v]=17.5, Q=22.5
+2026-06-01 17:15:43,263 INFO: Plan 0: ḡ=80, γE[v]=0.0, Q=80.0
+2026-06-01 17:15:54,357 INFO: Plan 1: ḡ=3, γE[v]=20.0, Q=23.0
+2026-06-01 17:15:54,414 INFO: Plan 0: ḡ=1, γE[v]=20.0, Q=21.0
+2026-06-01 17:15:54,974 INFO: Plan 0: ḡ=12, γE[v]=19.0, Q=31.0
+2026-06-01 17:15:56,561 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:16:00,446 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:16:03,536 INFO: Plan 0: ḡ=22, γE[v]=17.5, Q=39.5
+2026-06-01 17:16:15,179 INFO: Plan 0: ḡ=3, γE[v]=5.0, Q=8.0
+2026-06-01 17:16:18,234 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:16:18,346 INFO: Plan 0: ḡ=1, γE[v]=7.5, Q=8.5
+2026-06-01 17:16:19,148 INFO: Plan 0: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 17:16:23,382 INFO: Plan 0: ḡ=8, γE[v]=17.5, Q=25.5
+2026-06-01 17:16:31,476 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 17:16:35,270 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+  [51/93] httpx._models seed=42: {'divhints_random': 104, 'divhints_oracle': 172, 'cov_qvalue': 112, 'cov_qvalue_calib': 180}
+2026-06-01 17:16:38,317 INFO: Plan 0: ḡ=2, γE[v]=7.5, Q=9.5
+2026-06-01 17:16:45,390 INFO: Plan 1: ḡ=2, γE[v]=24.0, Q=26.0
+2026-06-01 17:16:45,445 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+  [52/93] httpx._client seed=42: {'divhints_random': 135, 'divhints_oracle': 131, 'cov_qvalue': 128, 'cov_qvalue_calib': 159}
+2026-06-01 17:17:01,912 INFO: Plan 0: ḡ=5, γE[v]=7.5, Q=12.5
+2026-06-01 17:17:07,120 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 17:17:09,054 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 17:17:21,149 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 17:17:21,479 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 17:17:21,561 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:17:24,060 INFO: Plan 0: ḡ=12, γE[v]=15.0, Q=27.0
+2026-06-01 17:17:38,743 INFO: Plan 1: ḡ=1, γE[v]=24.5, Q=25.5
+2026-06-01 17:17:39,101 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:18:02,925 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+  [53/93] httpx._main seed=42: {'divhints_random': 79, 'divhints_oracle': 80, 'cov_qvalue': 69, 'cov_qvalue_calib': 80}
+2026-06-01 17:18:08,842 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+  [54/93] httpx._urlparse seed=42: {'divhints_random': 44, 'divhints_oracle': 66, 'cov_qvalue': 35, 'cov_qvalue_calib': 66}
+2026-06-01 17:18:34,843 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 17:19:10,681 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 17:19:11,092 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+  [55/93] httpx._urls seed=42: {'divhints_random': 62, 'divhints_oracle': 73, 'cov_qvalue': 69, 'cov_qvalue_calib': 64}
+2026-06-01 17:20:26,684 INFO: Plan 1: ḡ=4, γE[v]=5.0, Q=9.0
+2026-06-01 17:20:26,890 INFO: Plan 0: ḡ=6, γE[v]=5.0, Q=11.0
+2026-06-01 17:20:26,890 INFO: Selected plan 0 with Q=11.0
+2026-06-01 17:21:03,398 INFO: Plan 0: ḡ=12, γE[v]=15.0, Q=27.0
+2026-06-01 17:21:03,576 INFO: Plan 1: ḡ=4, γE[v]=7.5, Q=11.5
+2026-06-01 17:21:03,577 INFO: Selected plan 0 with Q=27.0
+2026-06-01 17:21:52,991 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 17:21:53,377 INFO: Plan 1: ḡ=1, γE[v]=1.0, Q=2.0
+2026-06-01 17:21:53,378 INFO: Selected plan 1 with Q=2.0
+2026-06-01 17:22:57,330 INFO: Plan 0: ḡ=10, γE[v]=15.0, Q=25.0
+2026-06-01 17:22:57,389 INFO: Plan 1: ḡ=4, γE[v]=7.5, Q=11.5
+2026-06-01 17:22:57,390 INFO: Selected plan 0 with Q=25.0
+2026-06-01 17:23:13,642 INFO: Plan 0: ḡ=4, γE[v]=5.0, Q=9.0
+2026-06-01 17:23:13,826 INFO: Plan 1: ḡ=7, γE[v]=6.0, Q=13.0
+2026-06-01 17:23:14,798 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 17:23:30,595 INFO: Plan 0: ḡ=4, γE[v]=4.0, Q=8.0
+2026-06-01 17:23:35,631 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 17:23:54,321 INFO: Plan 1: ḡ=4, γE[v]=5.0, Q=9.0
+2026-06-01 17:23:54,572 INFO: Plan 0: ḡ=4, γE[v]=5.0, Q=9.0
+2026-06-01 17:24:11,817 INFO: Plan 0: ḡ=10, γE[v]=10.0, Q=20.0
+2026-06-01 17:24:14,313 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 17:24:14,752 INFO: Plan 0: ḡ=12, γE[v]=15.0, Q=27.0
+2026-06-01 17:24:25,009 INFO: Plan 1: ḡ=1, γE[v]=5.0, Q=6.0
+2026-06-01 17:24:25,087 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 17:24:25,087 INFO: Selected plan 1 with Q=6.0
+2026-06-01 17:24:27,779 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 17:25:03,171 INFO: Plan 1: ḡ=18, γE[v]=16.0, Q=34.0
+2026-06-01 17:25:03,318 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:25:03,318 INFO: Selected plan 1 with Q=34.0
+2026-06-01 17:25:07,583 INFO: Plan 0: ḡ=1, γE[v]=7.5, Q=8.5
+2026-06-01 17:25:07,636 INFO: Plan 1: ḡ=2, γE[v]=20.0, Q=22.0
+2026-06-01 17:25:30,190 INFO: Plan 1: ḡ=12, γE[v]=19.0, Q=31.0
+2026-06-01 17:25:30,368 INFO: Plan 0: ḡ=12, γE[v]=19.0, Q=31.0
+2026-06-01 17:25:30,381 INFO: Plan 2: ḡ=0, γE[v]=1.5, Q=1.5
+2026-06-01 17:25:30,381 INFO: Selected plan 0 with Q=31.0
+2026-06-01 17:25:32,329 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 17:25:32,545 INFO: Plan 0: ḡ=2, γE[v]=7.5, Q=9.5
+2026-06-01 17:25:32,546 INFO: Selected plan 0 with Q=9.5
+2026-06-01 17:25:36,711 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 17:25:37,062 INFO: Plan 0: ḡ=10, γE[v]=20.0, Q=30.0
+2026-06-01 17:25:46,451 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:25:46,760 INFO: Plan 1: ḡ=0, γE[v]=20.0, Q=20.0
+2026-06-01 17:25:46,760 INFO: Selected plan 0 with Q=29.5
+2026-06-01 17:25:53,119 INFO: Plan 1: ḡ=2, γE[v]=7.5, Q=9.5
+2026-06-01 17:25:53,144 INFO: Plan 0: ḡ=5, γE[v]=7.5, Q=12.5
+2026-06-01 17:25:55,409 INFO: Plan 1: ḡ=10, γE[v]=20.0, Q=30.0
+2026-06-01 17:25:55,633 INFO: Plan 0: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 17:25:55,633 INFO: Selected plan 1 with Q=30.0
+2026-06-01 17:26:00,547 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 17:26:00,757 INFO: Plan 0: ḡ=5, γE[v]=17.5, Q=22.5
+2026-06-01 17:26:07,453 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 17:26:07,572 INFO: Plan 1: ḡ=5, γE[v]=7.5, Q=12.5
+2026-06-01 17:26:07,573 INFO: Selected plan 1 with Q=12.5
+2026-06-01 17:26:16,596 INFO: Plan 0: ḡ=4, γE[v]=7.5, Q=11.5
+2026-06-01 17:26:19,609 INFO: Plan 1: ḡ=5, γE[v]=7.5, Q=12.5
+2026-06-01 17:26:19,774 INFO: Plan 0: ḡ=0, γE[v]=7.5, Q=7.5
+2026-06-01 17:26:19,775 INFO: Selected plan 1 with Q=12.5
+2026-06-01 17:26:27,130 INFO: Plan 0: ḡ=8, γE[v]=12.5, Q=20.5
+2026-06-01 17:26:31,905 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 17:26:32,137 INFO: Plan 1: ḡ=12, γE[v]=19.0, Q=31.0
+2026-06-01 17:26:32,611 INFO: Plan 0: ḡ=18, γE[v]=17.5, Q=35.5
+2026-06-01 17:26:32,622 INFO: Plan 2: ḡ=18, γE[v]=16.0, Q=34.0
+2026-06-01 17:26:32,623 INFO: Selected plan 0 with Q=35.5
+2026-06-01 17:26:33,340 INFO: Plan 0: ḡ=6, γE[v]=17.5, Q=23.5
+2026-06-01 17:26:33,628 INFO: Plan 2: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:26:33,639 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 17:26:33,908 INFO: Plan 1: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 17:26:33,909 INFO: Selected plan 2 with Q=29.5
+2026-06-01 17:26:47,678 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 17:26:50,290 INFO: Plan 0: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 17:26:50,303 INFO: Plan 2: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:26:50,337 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:26:50,337 INFO: Selected plan 1 with Q=29.5
+2026-06-01 17:26:59,062 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 17:27:02,803 INFO: Plan 1: ḡ=1, γE[v]=5.0, Q=6.0
+2026-06-01 17:27:02,940 INFO: Plan 0: ḡ=0, γE[v]=1.0, Q=1.0
+2026-06-01 17:27:02,999 INFO: Plan 0: ḡ=5, γE[v]=7.5, Q=12.5
+2026-06-01 17:27:04,914 INFO: Plan 0: ḡ=0, γE[v]=25.0, Q=25.0
+2026-06-01 17:27:05,261 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:27:05,262 INFO: Selected plan 1 with Q=29.5
+  [56/93] httpx._api seed=42: {'divhints_random': 6, 'divhints_oracle': 12, 'cov_qvalue': 11, 'cov_qvalue_calib': 6}
+  [57/93] httpx._utils seed=42: {'divhints_random': 22, 'divhints_oracle': 23, 'cov_qvalue': 20, 'cov_qvalue_calib': 22}
+2026-06-01 17:27:19,571 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:27:19,686 INFO: Plan 0: ḡ=18, γE[v]=17.5, Q=35.5
+2026-06-01 17:27:19,686 INFO: Selected plan 0 with Q=35.5
+2026-06-01 17:27:20,225 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 17:27:26,596 INFO: Plan 0: ḡ=1, γE[v]=25.0, Q=26.0
+2026-06-01 17:27:28,069 INFO: Plan 0: ḡ=5, γE[v]=22.5, Q=27.5
+2026-06-01 17:27:34,584 INFO: Plan 0: ḡ=5, γE[v]=7.5, Q=12.5
+2026-06-01 17:27:34,665 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 17:27:41,721 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 17:27:41,836 INFO: Plan 2: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:27:41,969 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 17:27:41,970 INFO: Selected plan 2 with Q=29.5
+2026-06-01 17:27:46,443 INFO: Plan 0: ḡ=10, γE[v]=15.0, Q=25.0
+2026-06-01 17:27:51,202 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 17:27:58,028 INFO: Plan 1: ḡ=10, γE[v]=15.0, Q=25.0
+2026-06-01 17:27:58,068 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:27:58,068 INFO: Selected plan 0 with Q=29.5
+2026-06-01 17:28:00,997 INFO: Plan 0: ḡ=0, γE[v]=25.0, Q=25.0
+2026-06-01 17:28:05,789 INFO: Plan 0: ḡ=10, γE[v]=15.0, Q=25.0
+2026-06-01 17:28:11,357 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:28:12,839 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 17:28:14,767 INFO: Plan 0: ḡ=0, γE[v]=25.0, Q=25.0
+2026-06-01 17:28:19,671 INFO: Plan 0: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 17:28:24,487 INFO: Plan 0: ḡ=12, γE[v]=19.0, Q=31.0
+2026-06-01 17:28:24,669 INFO: Plan 1: ḡ=12, γE[v]=19.0, Q=31.0
+2026-06-01 17:28:24,834 INFO: Plan 2: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:28:27,129 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:28:27,189 INFO: Plan 1: ḡ=5, γE[v]=12.5, Q=17.5
+2026-06-01 17:28:27,189 INFO: Selected plan 0 with Q=29.5
+2026-06-01 17:28:34,042 INFO: Plan 0: ḡ=2, γE[v]=7.5, Q=9.5
+2026-06-01 17:28:34,244 INFO: Plan 0: ḡ=1, γE[v]=5.0, Q=6.0
+2026-06-01 17:28:37,513 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:28:40,765 INFO: Plan 0: ḡ=1, γE[v]=5.0, Q=6.0
+2026-06-01 17:28:53,471 INFO: Plan 0: ḡ=0, γE[v]=25.0, Q=25.0
+2026-06-01 17:28:57,126 INFO: Plan 0: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 17:28:59,853 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:29:00,094 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:29:00,106 INFO: Plan 0: ḡ=2, γE[v]=4.0, Q=6.0
+2026-06-01 17:29:00,628 INFO: Plan 0: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 17:29:00,709 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:29:00,709 INFO: Selected plan 1 with Q=29.5
+2026-06-01 17:29:02,121 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:29:14,747 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:29:14,816 INFO: Plan 2: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:29:14,854 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 17:29:14,901 INFO: Plan 1: ḡ=1, γE[v]=50.0, Q=51.0
+  [58/93] httpx._transports.default seed=42: {'divhints_random': 10, 'divhints_oracle': 17, 'cov_qvalue': 5, 'cov_qvalue_calib': 12}
+2026-06-01 17:29:24,019 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 17:29:24,672 INFO: Plan 0: ḡ=12, γE[v]=19.0, Q=31.0
+2026-06-01 17:29:29,515 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 17:29:37,132 INFO: Plan 0: ḡ=0, γE[v]=25.0, Q=25.0
+2026-06-01 17:29:37,268 INFO: Plan 1: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 17:29:37,755 INFO: Plan 0: ḡ=5, γE[v]=0.0, Q=5.0
+2026-06-01 17:29:37,780 INFO: Plan 2: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 17:29:37,904 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:29:45,564 INFO: Plan 0: ḡ=10, γE[v]=0.0, Q=10.0
+2026-06-01 17:29:48,371 INFO: Plan 0: ḡ=4, γE[v]=5.0, Q=9.0
+2026-06-01 17:29:48,774 INFO: Plan 0: ḡ=12, γE[v]=19.0, Q=31.0
+2026-06-01 17:29:56,439 INFO: Plan 0: ḡ=1, γE[v]=5.0, Q=6.0
+2026-06-01 17:29:58,843 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:30:02,857 INFO: Plan 0: ḡ=5, γE[v]=7.5, Q=12.5
+2026-06-01 17:30:03,046 INFO: Plan 1: ḡ=10, γE[v]=10.0, Q=20.0
+2026-06-01 17:30:08,569 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:30:11,087 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 17:30:11,635 INFO: Plan 1: ḡ=0, γE[v]=25.0, Q=25.0
+2026-06-01 17:30:18,355 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:30:23,394 INFO: Plan 1: ḡ=18, γE[v]=17.5, Q=35.5
+2026-06-01 17:30:23,721 INFO: Plan 0: ḡ=0, γE[v]=22.5, Q=22.5
+2026-06-01 17:30:28,364 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:30:32,381 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:30:35,329 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 17:30:35,520 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+  [59/93] httpx._auth seed=42: {'divhints_random': 55, 'divhints_oracle': 53, 'cov_qvalue': 51, 'cov_qvalue_calib': 4}
+2026-06-01 17:30:48,396 INFO: Plan 0: ḡ=15, γE[v]=17.5, Q=32.5
+2026-06-01 17:30:52,365 INFO: Plan 0: ḡ=12, γE[v]=14.0, Q=26.0
+2026-06-01 17:30:53,208 INFO: Plan 0: ḡ=5, γE[v]=17.5, Q=22.5
+2026-06-01 17:30:53,235 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:30:53,763 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+  [60/93] pydantic.types seed=42: {'divhints_random': 152, 'divhints_oracle': 154, 'cov_qvalue': 129, 'cov_qvalue_calib': 142}
+2026-06-01 17:31:12,951 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:31:13,052 INFO: Plan 1: ḡ=5, γE[v]=10.0, Q=15.0
+2026-06-01 17:31:15,294 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+  [61/93] httpx._config seed=42: {'divhints_random': 18, 'divhints_oracle': 24, 'cov_qvalue': 19, 'cov_qvalue_calib': 28}
+2026-06-01 17:31:37,616 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 17:31:39,875 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:31:52,365 INFO: Plan 0: ḡ=1, γE[v]=7.5, Q=8.5
+2026-06-01 17:31:52,555 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:31:54,950 INFO: Plan 0: ḡ=0, γE[v]=2.5, Q=2.5
+2026-06-01 17:32:09,154 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:32:09,565 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:32:09,577 INFO: Plan 1: ḡ=18, γE[v]=16.0, Q=34.0
+2026-06-01 17:32:24,345 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:32:24,688 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+  [62/93] pydantic.json_schema seed=42: {'divhints_random': 274, 'divhints_oracle': 290, 'cov_qvalue': 250, 'cov_qvalue_calib': 260}
+2026-06-01 17:32:46,204 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:33:05,135 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:33:24,690 INFO: Plan 0: ḡ=5, γE[v]=12.5, Q=17.5
+2026-06-01 17:33:37,682 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 17:33:37,837 INFO: Plan 2: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 17:33:37,948 INFO: Plan 1: ḡ=0, γE[v]=1.0, Q=1.0
+2026-06-01 17:33:37,948 INFO: Selected plan 1 with Q=1.0
+2026-06-01 17:33:39,619 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:33:39,986 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:33:44,121 INFO: Plan 0: ḡ=5, γE[v]=12.5, Q=17.5
+2026-06-01 17:33:44,580 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 17:33:44,580 INFO: Selected plan 0 with Q=17.5
+2026-06-01 17:33:56,852 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:33:56,865 INFO: Plan 1: ḡ=2, γE[v]=9.0, Q=11.0
+2026-06-01 17:33:57,281 INFO: Plan 2: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 17:33:57,281 INFO: Selected plan 0 with Q=29.5
+2026-06-01 17:34:03,185 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:34:03,795 INFO: Plan 1: ḡ=10, γE[v]=2.5, Q=12.5
+2026-06-01 17:34:03,806 INFO: Plan 0: ḡ=0, γE[v]=2.5, Q=2.5
+2026-06-01 17:34:03,806 INFO: Selected plan 1 with Q=12.5
+  [63/93] pydantic.main seed=42: {'divhints_random': 174, 'divhints_oracle': 202, 'cov_qvalue': 151, 'cov_qvalue_calib': 217}
+2026-06-01 17:35:33,969 INFO: Plan 0: ḡ=1, γE[v]=2.5, Q=3.5
+2026-06-01 17:35:34,388 INFO: Plan 1: ḡ=0, γE[v]=2.5, Q=2.5
+2026-06-01 17:35:34,389 INFO: Selected plan 0 with Q=3.5
+2026-06-01 17:36:15,796 INFO: Plan 0: ḡ=2, γE[v]=7.5, Q=9.5
+2026-06-01 17:36:15,894 INFO: Plan 1: ḡ=1, γE[v]=5.0, Q=6.0
+2026-06-01 17:36:15,894 INFO: Selected plan 0 with Q=9.5
+2026-06-01 17:36:18,246 INFO: Plan 0: ḡ=12, γE[v]=19.0, Q=31.0
+2026-06-01 17:36:24,120 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 17:36:24,122 INFO: Plan 1: ḡ=0, γE[v]=1.0, Q=1.0
+2026-06-01 17:36:41,315 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 17:36:56,512 INFO: Plan 0: ḡ=5, γE[v]=22.5, Q=27.5
+2026-06-01 17:37:06,655 INFO: Plan 0: ḡ=10, γE[v]=10.0, Q=20.0
+2026-06-01 17:37:11,823 INFO: Plan 0: ḡ=20, γE[v]=15.0, Q=35.0
+2026-06-01 17:37:35,568 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:37:40,230 INFO: Plan 0: ḡ=5, γE[v]=10.0, Q=15.0
+2026-06-01 17:37:40,377 INFO: Plan 1: ḡ=4, γE[v]=6.0, Q=10.0
+2026-06-01 17:37:40,378 INFO: Selected plan 0 with Q=15.0
+2026-06-01 17:37:46,470 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 17:37:54,540 INFO: Plan 0: ḡ=10, γE[v]=20.0, Q=30.0
+2026-06-01 17:38:09,140 INFO: Plan 0: ḡ=10, γE[v]=20.0, Q=30.0
+2026-06-01 17:38:09,265 INFO: Plan 1: ḡ=18, γE[v]=17.5, Q=35.5
+2026-06-01 17:38:09,948 INFO: Plan 0: ḡ=0, γE[v]=2.5, Q=2.5
+2026-06-01 17:38:16,337 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:38:16,654 INFO: Plan 1: ḡ=2, γE[v]=24.0, Q=26.0
+2026-06-01 17:38:16,654 INFO: Selected plan 0 with Q=29.5
+2026-06-01 17:38:37,017 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 17:38:37,365 INFO: Plan 1: ḡ=1, γE[v]=5.0, Q=6.0
+2026-06-01 17:38:37,418 INFO: Plan 0: ḡ=2, γE[v]=4.0, Q=6.0
+2026-06-01 17:38:37,418 INFO: Selected plan 0 with Q=6.0
+2026-06-01 17:38:41,001 INFO: Plan 0: ḡ=12, γE[v]=19.0, Q=31.0
+2026-06-01 17:38:41,302 INFO: Plan 2: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:38:41,463 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 17:38:41,463 INFO: Selected plan 0 with Q=31.0
+2026-06-01 17:38:50,683 INFO: Plan 0: ḡ=1, γE[v]=25.0, Q=26.0
+2026-06-01 17:38:52,304 INFO: Plan 0: ḡ=0, γE[v]=25.0, Q=25.0
+2026-06-01 17:38:57,195 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:38:57,296 INFO: Plan 0: ḡ=0, γE[v]=25.0, Q=25.0
+2026-06-01 17:38:57,471 INFO: Plan 2: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 17:38:57,472 INFO: Selected plan 1 with Q=29.5
+2026-06-01 17:39:04,606 INFO: Plan 0: ḡ=5, γE[v]=22.5, Q=27.5
+2026-06-01 17:39:06,275 INFO: Plan 0: ḡ=2, γE[v]=7.5, Q=9.5
+2026-06-01 17:39:17,537 INFO: Plan 2: ḡ=10, γE[v]=15.0, Q=25.0
+2026-06-01 17:39:17,818 INFO: Plan 1: ḡ=10, γE[v]=12.5, Q=22.5
+2026-06-01 17:39:17,896 INFO: Plan 0: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 17:39:17,896 INFO: Selected plan 2 with Q=25.0
+2026-06-01 17:39:18,598 INFO: Plan 1: ḡ=5, γE[v]=7.5, Q=12.5
+2026-06-01 17:39:18,645 INFO: Plan 0: ḡ=10, γE[v]=10.0, Q=20.0
+2026-06-01 17:39:18,645 INFO: Selected plan 0 with Q=20.0
+2026-06-01 17:39:21,251 INFO: Plan 0: ḡ=0, γE[v]=25.0, Q=25.0
+2026-06-01 17:39:33,374 INFO: Plan 0: ḡ=10, γE[v]=10.0, Q=20.0
+2026-06-01 17:39:34,667 INFO: Plan 1: ḡ=12, γE[v]=19.0, Q=31.0
+2026-06-01 17:39:34,949 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:39:35,258 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:39:35,420 INFO: Plan 2: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:39:35,420 INFO: Selected plan 1 with Q=31.0
+2026-06-01 17:39:47,055 INFO: Plan 0: ḡ=1, γE[v]=25.0, Q=26.0
+2026-06-01 17:39:53,558 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:39:53,709 INFO: Plan 0: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 17:39:53,709 INFO: Selected plan 1 with Q=29.5
+2026-06-01 17:39:59,150 INFO: Plan 0: ḡ=1, γE[v]=5.0, Q=6.0
+2026-06-01 17:39:59,913 INFO: Plan 0: ḡ=1, γE[v]=24.5, Q=25.5
+  [64/93] pydantic.config seed=42: {'divhints_random': 1, 'divhints_oracle': 1, 'cov_qvalue': 1, 'cov_qvalue_calib': 1}
+2026-06-01 17:40:05,723 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 17:40:06,230 INFO: Plan 1: ḡ=0, γE[v]=25.0, Q=25.0
+2026-06-01 17:40:06,231 INFO: Selected plan 1 with Q=25.0
+2026-06-01 17:40:17,443 INFO: Plan 0: ḡ=2, γE[v]=4.0, Q=6.0
+  [65/93] pydantic.fields seed=42: {'divhints_random': 88, 'divhints_oracle': 79, 'cov_qvalue': 89, 'cov_qvalue_calib': 102}
+2026-06-01 17:40:21,500 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 17:40:22,326 INFO: Plan 0: ḡ=2, γE[v]=4.0, Q=6.0
+2026-06-01 17:40:22,424 INFO: Plan 1: ḡ=2, γE[v]=4.0, Q=6.0
+2026-06-01 17:40:22,425 INFO: Selected plan 0 with Q=6.0
+2026-06-01 17:40:25,020 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 17:40:25,348 INFO: Plan 0: ḡ=6, γE[v]=22.0, Q=28.0
+2026-06-01 17:40:43,026 INFO: Plan 1: ḡ=1, γE[v]=1.5, Q=2.5
+2026-06-01 17:40:43,302 INFO: Plan 0: ḡ=2, γE[v]=24.0, Q=26.0
+2026-06-01 17:41:00,557 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:41:00,750 INFO: Plan 0: ḡ=1, γE[v]=0.0, Q=1.0
+2026-06-01 17:41:18,191 INFO: Plan 1: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 17:41:18,378 INFO: Plan 0: ḡ=1, γE[v]=0.0, Q=1.0
+2026-06-01 17:41:18,379 INFO: Selected plan 1 with Q=5.0
+2026-06-01 17:41:22,731 INFO: Plan 0: ḡ=0, γE[v]=25.0, Q=25.0
+2026-06-01 17:41:23,664 INFO: Plan 0: ḡ=1, γE[v]=25.0, Q=26.0
+2026-06-01 17:41:29,225 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:41:29,359 INFO: Plan 1: ḡ=10, γE[v]=0.0, Q=10.0
+2026-06-01 17:41:37,115 INFO: Plan 0: ḡ=1, γE[v]=20.0, Q=21.0
+2026-06-01 17:41:38,671 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 17:41:47,121 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 17:41:47,219 INFO: Plan 0: ḡ=5, γE[v]=20.0, Q=25.0
+2026-06-01 17:41:47,219 INFO: Selected plan 0 with Q=25.0
+2026-06-01 17:41:47,876 INFO: Plan 0: ḡ=18, γE[v]=16.0, Q=34.0
+2026-06-01 17:41:51,362 INFO: Plan 0: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 17:41:51,401 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:41:56,684 INFO: Plan 0: ḡ=2, γE[v]=4.0, Q=6.0
+2026-06-01 17:41:58,536 INFO: Plan 1: ḡ=1, γE[v]=2.5, Q=3.5
+2026-06-01 17:41:58,669 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 17:41:58,858 INFO: Plan 2: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 17:42:04,458 INFO: Plan 0: ḡ=12, γE[v]=19.0, Q=31.0
+2026-06-01 17:42:11,369 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:42:11,503 INFO: Plan 1: ḡ=7, γE[v]=9.0, Q=16.0
+2026-06-01 17:42:20,547 INFO: Plan 0: ḡ=5, γE[v]=7.5, Q=12.5
+2026-06-01 17:42:20,584 INFO: Plan 1: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 17:42:22,101 INFO: Plan 0: ḡ=12, γE[v]=19.0, Q=31.0
+2026-06-01 17:42:26,673 INFO: Plan 0: ḡ=12, γE[v]=14.0, Q=26.0
+2026-06-01 17:42:28,654 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+  [66/93] pydantic.networks seed=42: {'divhints_random': 34, 'divhints_oracle': 35, 'cov_qvalue': 34, 'cov_qvalue_calib': 35}
+2026-06-01 17:42:36,264 INFO: Plan 1: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 17:42:36,418 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:42:37,350 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 17:42:47,031 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:42:52,426 INFO: Plan 0: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 17:43:07,047 INFO: Plan 0: ḡ=2, γE[v]=4.0, Q=6.0
+2026-06-01 17:43:10,260 INFO: Plan 0: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 17:43:15,433 INFO: Plan 1: ḡ=5, γE[v]=22.5, Q=27.5
+2026-06-01 17:43:15,460 INFO: Plan 0: ḡ=5, γE[v]=17.5, Q=22.5
+2026-06-01 17:43:24,755 INFO: Plan 0: ḡ=5, γE[v]=10.0, Q=15.0
+2026-06-01 17:43:25,625 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 17:43:26,038 INFO: Plan 0: ḡ=1, γE[v]=7.5, Q=8.5
+2026-06-01 17:43:38,829 INFO: Plan 0: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 17:43:38,830 INFO: Plan 1: ḡ=5, γE[v]=20.0, Q=25.0
+2026-06-01 17:43:39,655 INFO: Plan 0: ḡ=4, γE[v]=6.0, Q=10.0
+2026-06-01 17:43:40,460 INFO: Plan 0: ḡ=5, γE[v]=7.5, Q=12.5
+2026-06-01 17:43:40,589 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+  [67/93] pydantic.functional_validators seed=42: {'divhints_random': 36, 'divhints_oracle': 36, 'cov_qvalue': 36, 'cov_qvalue_calib': 36}
+2026-06-01 17:43:56,708 INFO: Plan 1: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 17:43:56,760 INFO: Plan 0: ḡ=2, γE[v]=7.5, Q=9.5
+2026-06-01 17:43:56,761 INFO: Selected plan 0 with Q=9.5
+2026-06-01 17:44:00,434 INFO: Plan 0: ḡ=2, γE[v]=0.0, Q=2.0
+2026-06-01 17:44:10,208 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 17:44:15,445 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:44:15,680 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:44:20,232 INFO: Plan 0: ḡ=0, γE[v]=2.5, Q=2.5
+2026-06-01 17:44:24,189 INFO: Plan 0: ḡ=1, γE[v]=0.0, Q=1.0
+2026-06-01 17:44:24,683 INFO: Plan 1: ḡ=5, γE[v]=17.5, Q=22.5
+2026-06-01 17:44:30,542 INFO: Plan 0: ḡ=1, γE[v]=0.0, Q=1.0
+2026-06-01 17:44:30,605 INFO: Plan 1: ḡ=18, γE[v]=16.0, Q=34.0
+  [68/93] pydantic.color seed=42: {'divhints_random': 85, 'divhints_oracle': 93, 'cov_qvalue': 93, 'cov_qvalue_calib': 96}
+2026-06-01 17:45:07,319 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:45:07,558 INFO: Plan 0: ḡ=18, γE[v]=17.5, Q=35.5
+2026-06-01 17:45:11,025 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 17:45:16,744 INFO: Plan 0: ḡ=5, γE[v]=17.5, Q=22.5
+  [69/93] pydantic.functional_serializers seed=42: {'divhints_random': 22, 'divhints_oracle': 22, 'cov_qvalue': 22, 'cov_qvalue_calib': 22}
+2026-06-01 17:45:31,548 INFO: Plan 0: ḡ=5, γE[v]=7.5, Q=12.5
+  [70/93] pydantic.type_adapter seed=42: {'divhints_random': 18, 'divhints_oracle': 18, 'cov_qvalue': 17, 'cov_qvalue_calib': 18}
+2026-06-01 17:45:50,443 INFO: Plan 0: ḡ=12, γE[v]=19.0, Q=31.0
+2026-06-01 17:46:12,341 INFO: Plan 0: ḡ=0, γE[v]=12.5, Q=12.5
+2026-06-01 17:46:26,203 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:46:39,649 INFO: Plan 0: ḡ=1, γE[v]=0.0, Q=1.0
+2026-06-01 17:46:54,222 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:46:54,224 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:47:12,558 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 17:47:12,667 INFO: Plan 1: ḡ=1, γE[v]=2.5, Q=3.5
+2026-06-01 17:47:12,667 INFO: Selected plan 0 with Q=7.0
+2026-06-01 17:47:34,409 INFO: Plan 0: ḡ=6, γE[v]=10.0, Q=16.0
+2026-06-01 17:47:34,752 INFO: Plan 1: ḡ=1, γE[v]=5.0, Q=6.0
+2026-06-01 17:47:34,752 INFO: Selected plan 0 with Q=16.0
+2026-06-01 17:47:35,332 INFO: Plan 0: ḡ=12, γE[v]=19.0, Q=31.0
+2026-06-01 17:47:35,691 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 17:47:52,473 INFO: Plan 0: ḡ=5, γE[v]=10.0, Q=15.0
+2026-06-01 17:48:07,026 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:48:07,298 INFO: Plan 0: ḡ=5, γE[v]=20.0, Q=25.0
+2026-06-01 17:48:07,521 INFO: Plan 1: ḡ=1, γE[v]=5.0, Q=6.0
+2026-06-01 17:48:07,824 INFO: Plan 0: ḡ=4, γE[v]=7.5, Q=11.5
+2026-06-01 17:48:07,825 INFO: Selected plan 0 with Q=11.5
+2026-06-01 17:48:23,367 INFO: Plan 0: ḡ=10, γE[v]=20.0, Q=30.0
+2026-06-01 17:48:23,699 INFO: Plan 1: ḡ=12, γE[v]=15.0, Q=27.0
+  [71/93] werkzeug.http seed=42: {'divhints_random': 59, 'divhints_oracle': 62, 'cov_qvalue': 61, 'cov_qvalue_calib': 100}
+2026-06-01 17:50:01,629 INFO: Plan 0: ḡ=10, γE[v]=20.0, Q=30.0
+2026-06-01 17:50:04,169 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 17:50:17,549 INFO: Plan 0: ḡ=2, γE[v]=24.0, Q=26.0
+2026-06-01 17:50:19,171 INFO: Plan 0: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 17:50:19,476 INFO: Plan 1: ḡ=12, γE[v]=19.0, Q=31.0
+2026-06-01 17:50:19,476 INFO: Selected plan 1 with Q=31.0
+2026-06-01 17:50:34,257 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:50:34,348 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:50:34,348 INFO: Selected plan 0 with Q=29.5
+2026-06-01 17:50:34,431 INFO: Plan 0: ḡ=2, γE[v]=1.5, Q=3.5
+2026-06-01 17:50:46,727 INFO: Plan 1: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 17:50:46,801 INFO: Plan 0: ḡ=5, γE[v]=20.0, Q=25.0
+2026-06-01 17:50:47,131 INFO: Plan 2: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:50:47,131 INFO: Selected plan 2 with Q=29.5
+2026-06-01 17:50:48,794 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 17:51:10,270 INFO: Plan 1: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 17:51:10,311 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 17:51:10,311 INFO: Selected plan 1 with Q=5.0
+2026-06-01 17:51:12,612 INFO: Plan 0: ḡ=5, γE[v]=5.0, Q=10.0
+2026-06-01 17:51:26,997 INFO: Plan 1: ḡ=4, γE[v]=5.0, Q=9.0
+2026-06-01 17:51:27,380 INFO: Plan 0: ḡ=1, γE[v]=1.5, Q=2.5
+2026-06-01 17:51:27,695 INFO: Plan 0: ḡ=2, γE[v]=7.5, Q=9.5
+2026-06-01 17:51:40,957 INFO: Plan 0: ḡ=0, γE[v]=20.0, Q=20.0
+2026-06-01 17:51:41,155 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:51:41,155 INFO: Selected plan 1 with Q=29.5
+2026-06-01 17:51:47,595 INFO: Plan 0: ḡ=1, γE[v]=20.0, Q=21.0
+2026-06-01 17:51:47,610 INFO: Plan 1: ḡ=1, γE[v]=24.5, Q=25.5
+2026-06-01 17:51:47,664 INFO: Plan 2: ḡ=3, γE[v]=7.5, Q=10.5
+2026-06-01 17:51:47,665 INFO: Selected plan 1 with Q=25.5
+2026-06-01 17:51:56,308 INFO: Plan 0: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 17:51:56,457 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:51:56,457 INFO: Selected plan 1 with Q=29.5
+2026-06-01 17:51:56,487 INFO: Plan 1: ḡ=2, γE[v]=24.0, Q=26.0
+2026-06-01 17:51:56,488 INFO: Plan 0: ḡ=2, γE[v]=24.0, Q=26.0
+2026-06-01 17:51:56,488 INFO: Selected plan 0 with Q=26.0
+2026-06-01 17:52:00,322 INFO: Plan 1: ḡ=2, γE[v]=12.5, Q=14.5
+2026-06-01 17:52:00,483 INFO: Plan 0: ḡ=2, γE[v]=24.0, Q=26.0
+2026-06-01 17:52:00,483 INFO: Selected plan 0 with Q=26.0
+2026-06-01 17:52:01,052 INFO: Plan 0: ḡ=5, γE[v]=7.5, Q=12.5
+2026-06-01 17:52:11,811 INFO: Plan 1: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 17:52:11,957 INFO: Plan 0: ḡ=0, γE[v]=2.5, Q=2.5
+2026-06-01 17:52:11,957 INFO: Selected plan 1 with Q=5.0
+2026-06-01 17:52:12,960 INFO: Plan 1: ḡ=1, γE[v]=24.5, Q=25.5
+2026-06-01 17:52:13,306 INFO: Plan 0: ḡ=2, γE[v]=4.0, Q=6.0
+2026-06-01 17:52:13,307 INFO: Selected plan 1 with Q=25.5
+2026-06-01 17:52:24,305 INFO: Plan 2: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 17:52:24,331 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:52:24,359 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 17:52:24,359 INFO: Selected plan 1 with Q=29.5
+2026-06-01 17:52:27,996 INFO: Plan 0: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 17:52:51,100 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:52:51,193 INFO: Plan 0: ḡ=4, γE[v]=5.0, Q=9.0
+2026-06-01 17:52:51,219 INFO: Plan 1: ḡ=3, γE[v]=2.5, Q=5.5
+2026-06-01 17:52:51,285 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:52:51,286 INFO: Selected plan 0 with Q=29.5
+2026-06-01 17:53:05,887 INFO: Plan 0: ḡ=0, γE[v]=25.0, Q=25.0
+2026-06-01 17:53:06,255 INFO: Plan 1: ḡ=5, γE[v]=22.5, Q=27.5
+2026-06-01 17:53:06,255 INFO: Selected plan 1 with Q=27.5
+2026-06-01 17:53:09,429 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 17:53:09,495 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:53:09,495 INFO: Selected plan 1 with Q=29.5
+2026-06-01 17:53:17,379 INFO: Plan 0: ḡ=1, γE[v]=1.5, Q=2.5
+2026-06-01 17:53:18,938 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:53:19,116 INFO: Plan 0: ḡ=1, γE[v]=2.5, Q=3.5
+2026-06-01 17:53:19,116 INFO: Selected plan 1 with Q=29.5
+2026-06-01 17:53:25,591 INFO: Plan 0: ḡ=2, γE[v]=24.0, Q=26.0
+2026-06-01 17:53:25,948 INFO: Plan 1: ḡ=2, γE[v]=20.0, Q=22.0
+2026-06-01 17:53:25,948 INFO: Selected plan 0 with Q=26.0
+  [72/93] werkzeug.serving seed=42: {'divhints_random': 30, 'divhints_oracle': 19, 'cov_qvalue': 8, 'cov_qvalue_calib': 9}
+2026-06-01 17:53:38,983 INFO: Plan 1: ḡ=2, γE[v]=7.5, Q=9.5
+2026-06-01 17:53:39,242 INFO: Plan 0: ḡ=2, γE[v]=24.0, Q=26.0
+2026-06-01 17:53:39,243 INFO: Selected plan 0 with Q=26.0
+2026-06-01 17:53:40,965 INFO: Plan 0: ḡ=1, γE[v]=2.0, Q=3.0
+2026-06-01 17:53:41,907 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 17:53:42,280 INFO: Plan 0: ḡ=1, γE[v]=24.5, Q=25.5
+2026-06-01 17:53:46,682 INFO: Plan 1: ḡ=2, γE[v]=24.0, Q=26.0
+2026-06-01 17:53:46,782 INFO: Plan 0: ḡ=12, γE[v]=19.0, Q=31.0
+2026-06-01 17:53:46,808 INFO: Plan 2: ḡ=12, γE[v]=19.0, Q=31.0
+2026-06-01 17:53:54,434 INFO: Plan 0: ḡ=4, γE[v]=6.0, Q=10.0
+2026-06-01 17:53:54,442 INFO: Plan 1: ḡ=1, γE[v]=0.0, Q=1.0
+2026-06-01 17:53:56,011 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:53:56,014 INFO: Plan 2: ḡ=10, γE[v]=20.0, Q=30.0
+2026-06-01 17:53:56,023 INFO: Plan 0: ḡ=2, γE[v]=24.0, Q=26.0
+2026-06-01 17:53:56,023 INFO: Selected plan 2 with Q=30.0
+2026-06-01 17:53:58,721 INFO: Plan 0: ḡ=10, γE[v]=15.0, Q=25.0
+2026-06-01 17:54:18,816 INFO: Plan 0: ḡ=5, γE[v]=7.5, Q=12.5
+2026-06-01 17:54:19,151 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+  [73/93] werkzeug.datastructures.structures seed=42: {'divhints_random': 23, 'divhints_oracle': 13, 'cov_qvalue': 12, 'cov_qvalue_calib': 13}
+2026-06-01 17:54:31,316 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:54:31,449 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:54:31,449 INFO: Selected plan 0 with Q=29.5
+2026-06-01 17:54:33,174 INFO: Plan 0: ḡ=2, γE[v]=6.0, Q=8.0
+2026-06-01 17:54:41,537 INFO: Plan 0: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 17:54:46,062 INFO: Plan 1: ḡ=4, γE[v]=23.0, Q=27.0
+2026-06-01 17:54:46,410 INFO: Plan 2: ḡ=2, γE[v]=24.0, Q=26.0
+2026-06-01 17:54:46,542 INFO: Plan 0: ḡ=1, γE[v]=24.5, Q=25.5
+2026-06-01 17:54:47,247 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 17:54:51,541 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 17:54:51,875 INFO: Plan 1: ḡ=12, γE[v]=14.0, Q=26.0
+2026-06-01 17:54:55,175 INFO: Plan 1: ḡ=2, γE[v]=6.0, Q=8.0
+2026-06-01 17:54:55,761 INFO: Plan 0: ḡ=5, γE[v]=22.5, Q=27.5
+2026-06-01 17:54:55,871 INFO: Plan 0: ḡ=10, γE[v]=20.0, Q=30.0
+2026-06-01 17:55:08,519 INFO: Plan 0: ḡ=2, γE[v]=24.0, Q=26.0
+2026-06-01 17:55:11,337 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 17:55:11,916 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 17:55:11,917 INFO: Selected plan 0 with Q=7.0
+2026-06-01 17:55:14,620 INFO: Plan 1: ḡ=10, γE[v]=20.0, Q=30.0
+2026-06-01 17:55:14,723 INFO: Plan 0: ḡ=8, γE[v]=17.5, Q=25.5
+2026-06-01 17:55:23,198 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:55:23,661 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:55:25,789 INFO: Plan 0: ḡ=2, γE[v]=24.0, Q=26.0
+2026-06-01 17:55:26,010 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 17:55:26,179 INFO: Plan 0: ḡ=7, γE[v]=6.0, Q=13.0
+2026-06-01 17:55:29,967 INFO: Plan 0: ḡ=5, γE[v]=7.5, Q=12.5
+2026-06-01 17:55:32,880 INFO: Plan 0: ḡ=5, γE[v]=22.5, Q=27.5
+2026-06-01 17:55:33,074 INFO: Plan 1: ḡ=12, γE[v]=19.0, Q=31.0
+2026-06-01 17:55:41,810 INFO: Plan 1: ḡ=12, γE[v]=9.0, Q=21.0
+2026-06-01 17:55:41,874 INFO: Plan 0: ḡ=12, γE[v]=10.0, Q=22.0
+2026-06-01 17:55:41,874 INFO: Selected plan 0 with Q=22.0
+2026-06-01 17:55:49,970 INFO: Plan 1: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 17:55:50,004 INFO: Plan 0: ḡ=0, γE[v]=20.0, Q=20.0
+2026-06-01 17:55:50,407 INFO: Plan 2: ḡ=5, γE[v]=15.0, Q=20.0
+2026-06-01 17:55:51,818 INFO: Plan 0: ḡ=5, γE[v]=7.5, Q=12.5
+2026-06-01 17:55:53,857 INFO: Plan 0: ḡ=0, γE[v]=2.5, Q=2.5
+2026-06-01 17:55:57,601 INFO: Plan 2: ḡ=0, γE[v]=10.0, Q=10.0
+2026-06-01 17:55:57,667 INFO: Plan 1: ḡ=1, γE[v]=5.0, Q=6.0
+2026-06-01 17:55:57,980 INFO: Plan 0: ḡ=5, γE[v]=17.5, Q=22.5
+2026-06-01 17:56:05,654 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 17:56:08,863 INFO: Plan 1: ḡ=2, γE[v]=24.0, Q=26.0
+2026-06-01 17:56:09,256 INFO: Plan 0: ḡ=2, γE[v]=17.5, Q=19.5
+2026-06-01 17:56:09,494 INFO: Plan 0: ḡ=5, γE[v]=20.0, Q=25.0
+2026-06-01 17:56:20,549 INFO: Plan 0: ḡ=2, γE[v]=20.0, Q=22.0
+2026-06-01 17:56:20,980 INFO: Plan 0: ḡ=12, γE[v]=14.0, Q=26.0
+2026-06-01 17:56:21,411 INFO: Plan 1: ḡ=0, γE[v]=4.0, Q=4.0
+2026-06-01 17:56:21,411 INFO: Selected plan 0 with Q=26.0
+2026-06-01 17:56:23,251 INFO: Plan 0: ḡ=0, γE[v]=20.0, Q=20.0
+2026-06-01 17:56:23,422 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 17:56:27,289 INFO: Plan 0: ḡ=2, γE[v]=20.0, Q=22.0
+2026-06-01 17:56:35,031 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 17:56:35,189 INFO: Plan 1: ḡ=8, γE[v]=7.5, Q=15.5
+2026-06-01 17:56:36,804 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 17:56:42,203 INFO: Plan 0: ḡ=5, γE[v]=7.5, Q=12.5
+2026-06-01 17:56:44,950 INFO: Plan 1: ḡ=3, γE[v]=20.0, Q=23.0
+2026-06-01 17:56:45,469 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 17:57:00,127 INFO: Plan 1: ḡ=5, γE[v]=17.5, Q=22.5
+2026-06-01 17:57:00,136 INFO: Plan 0: ḡ=6, γE[v]=9.0, Q=15.0
+2026-06-01 17:57:00,556 INFO: Plan 0: ḡ=4, γE[v]=15.0, Q=19.0
+2026-06-01 17:57:01,287 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 17:57:11,229 INFO: Plan 0: ḡ=5, γE[v]=7.5, Q=12.5
+2026-06-01 17:57:15,631 INFO: Plan 0: ḡ=2, γE[v]=24.0, Q=26.0
+2026-06-01 17:57:19,969 INFO: Plan 1: ḡ=0, γE[v]=7.5, Q=7.5
+2026-06-01 17:57:20,115 INFO: Plan 2: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:57:20,300 INFO: Plan 0: ḡ=7, γE[v]=17.5, Q=24.5
+2026-06-01 17:57:23,050 INFO: Plan 1: ḡ=2, γE[v]=7.5, Q=9.5
+2026-06-01 17:57:23,077 INFO: Plan 0: ḡ=5, γE[v]=22.5, Q=27.5
+2026-06-01 17:57:33,063 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 17:57:35,320 INFO: Plan 2: ḡ=5, γE[v]=7.5, Q=12.5
+2026-06-01 17:57:35,571 INFO: Plan 1: ḡ=5, γE[v]=7.5, Q=12.5
+2026-06-01 17:57:35,878 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 17:57:37,383 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 17:57:37,481 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+  [74/93] werkzeug.routing.rules seed=42: {'divhints_random': 16, 'divhints_oracle': 16, 'cov_qvalue': 16, 'cov_qvalue_calib': 16}
+2026-06-01 17:57:39,611 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 17:57:46,960 INFO: Plan 0: ḡ=2, γE[v]=0.0, Q=2.0
+  [75/93] werkzeug.routing.map seed=42: {'divhints_random': 96, 'divhints_oracle': 102, 'cov_qvalue': 97, 'cov_qvalue_calib': 102}
+2026-06-01 17:57:57,789 INFO: Plan 0: ḡ=2, γE[v]=9.0, Q=11.0
+2026-06-01 17:57:58,235 INFO: Plan 0: ḡ=5, γE[v]=20.0, Q=25.0
+2026-06-01 17:57:58,481 INFO: Plan 1: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 17:58:08,405 INFO: Plan 0: ḡ=5, γE[v]=7.5, Q=12.5
+2026-06-01 17:58:11,292 INFO: Plan 0: ḡ=3, γE[v]=7.5, Q=10.5
+2026-06-01 17:58:14,271 INFO: Plan 0: ḡ=5, γE[v]=22.5, Q=27.5
+  [76/93] werkzeug.sansio.response seed=42: {'divhints_random': 68, 'divhints_oracle': 71, 'cov_qvalue': 55, 'cov_qvalue_calib': 64}
+2026-06-01 17:58:22,584 INFO: Plan 0: ḡ=1, γE[v]=7.5, Q=8.5
+2026-06-01 17:58:28,000 INFO: Plan 0: ḡ=1, γE[v]=22.5, Q=23.5
+2026-06-01 17:58:28,904 INFO: Plan 0: ḡ=0, γE[v]=2.5, Q=2.5
+2026-06-01 17:58:43,562 INFO: Plan 0: ḡ=2, γE[v]=24.0, Q=26.0
+2026-06-01 17:58:50,167 INFO: Plan 0: ḡ=5, γE[v]=12.5, Q=17.5
+2026-06-01 17:58:50,325 INFO: Plan 1: ḡ=2, γE[v]=20.0, Q=22.0
+2026-06-01 17:58:53,284 INFO: Plan 0: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 17:59:02,269 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 17:59:06,123 INFO: Plan 0: ḡ=5, γE[v]=17.5, Q=22.5
+2026-06-01 17:59:06,501 INFO: Plan 1: ḡ=10, γE[v]=20.0, Q=30.0
+2026-06-01 17:59:15,640 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+  [77/93] werkzeug.exceptions seed=42: {'divhints_random': 30, 'divhints_oracle': 28, 'cov_qvalue': 28, 'cov_qvalue_calib': 31}
+  [78/93] werkzeug.wrappers.response seed=42: {'divhints_random': 59, 'divhints_oracle': 62, 'cov_qvalue': 65, 'cov_qvalue_calib': 59}
+2026-06-01 17:59:30,014 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 17:59:58,132 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 17:59:58,252 INFO: Plan 1: ḡ=12, γE[v]=9.0, Q=21.0
+2026-06-01 18:00:09,332 INFO: Plan 2: ḡ=1, γE[v]=24.5, Q=25.5
+2026-06-01 18:00:09,477 INFO: Plan 0: ḡ=12, γE[v]=19.0, Q=31.0
+2026-06-01 18:00:09,783 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 18:00:09,784 INFO: Selected plan 0 with Q=31.0
+2026-06-01 18:00:23,665 INFO: Plan 1: ḡ=1, γE[v]=7.5, Q=8.5
+2026-06-01 18:00:23,666 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 18:00:23,666 INFO: Selected plan 0 with Q=29.5
+2026-06-01 18:00:55,039 INFO: Plan 0: ḡ=2, γE[v]=24.0, Q=26.0
+2026-06-01 18:00:55,456 INFO: Plan 1: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 18:00:55,456 INFO: Selected plan 1 with Q=29.5
+2026-06-01 18:01:06,537 INFO: Plan 0: ḡ=6, γE[v]=7.5, Q=13.5
+  [79/93] werkzeug.utils seed=42: {'divhints_random': 16, 'divhints_oracle': 15, 'cov_qvalue': 16, 'cov_qvalue_calib': 16}
+2026-06-01 18:01:39,164 INFO: Plan 0: ḡ=10, γE[v]=15.0, Q=25.0
+2026-06-01 18:01:39,180 INFO: Plan 1: ḡ=1, γE[v]=0.0, Q=1.0
+2026-06-01 18:01:39,511 INFO: Plan 2: ḡ=5, γE[v]=22.5, Q=27.5
+2026-06-01 18:01:39,511 INFO: Selected plan 2 with Q=27.5
+2026-06-01 18:02:35,432 INFO: Plan 0: ḡ=3, γE[v]=23.5, Q=26.5
+2026-06-01 18:03:21,357 INFO: Plan 0: ḡ=10, γE[v]=20.0, Q=30.0
+2026-06-01 18:03:31,043 INFO: Plan 0: ḡ=1, γE[v]=5.0, Q=6.0
+2026-06-01 18:03:51,664 INFO: Plan 0: ḡ=2, γE[v]=7.5, Q=9.5
+2026-06-01 18:03:51,687 INFO: Plan 0: ḡ=1, γE[v]=7.5, Q=8.5
+2026-06-01 18:03:51,724 INFO: Plan 1: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 18:03:51,811 INFO: Plan 2: ḡ=10, γE[v]=12.5, Q=22.5
+2026-06-01 18:03:51,812 INFO: Selected plan 2 with Q=22.5
+2026-06-01 18:03:52,681 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 18:03:53,433 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 18:03:53,434 INFO: Selected plan 0 with Q=0.0
+2026-06-01 18:04:02,114 INFO: Plan 0: ḡ=2, γE[v]=10.0, Q=12.0
+2026-06-01 18:04:21,824 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 18:04:47,124 INFO: Plan 0: ḡ=5, γE[v]=17.5, Q=22.5
+2026-06-01 18:04:47,249 INFO: Plan 1: ḡ=2, γE[v]=20.0, Q=22.0
+2026-06-01 18:05:22,309 INFO: Plan 0: ḡ=5, γE[v]=17.5, Q=22.5
+2026-06-01 18:05:27,613 INFO: Plan 0: ḡ=0, γE[v]=25.0, Q=25.0
+2026-06-01 18:05:36,037 INFO: Plan 0: ḡ=5, γE[v]=20.0, Q=25.0
+2026-06-01 18:06:02,054 INFO: Plan 0: ḡ=2, γE[v]=7.5, Q=9.5
+  [80/93] werkzeug.wrappers.request seed=42: {'divhints_random': 58, 'divhints_oracle': 63, 'cov_qvalue': 61, 'cov_qvalue_calib': 58}
+2026-06-01 18:06:21,954 INFO: Plan 0: ḡ=0, γE[v]=25.0, Q=25.0
+2026-06-01 18:06:36,049 INFO: Plan 0: ḡ=1, γE[v]=0.0, Q=1.0
+2026-06-01 18:06:38,927 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 18:06:39,523 INFO: Plan 0: ḡ=10, γE[v]=20.0, Q=30.0
+2026-06-01 18:06:43,356 INFO: Plan 1: ḡ=1, γE[v]=5.0, Q=6.0
+2026-06-01 18:06:43,808 INFO: Plan 0: ḡ=1, γE[v]=5.0, Q=6.0
+2026-06-01 18:06:43,808 INFO: Selected plan 0 with Q=6.0
+  [81/93] werkzeug.local seed=42: {'divhints_random': 20, 'divhints_oracle': 34, 'cov_qvalue': 24, 'cov_qvalue_calib': 31}
+2026-06-01 18:06:58,422 INFO: Plan 0: ḡ=2, γE[v]=2.0, Q=4.0
+2026-06-01 18:07:01,593 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 18:07:13,613 INFO: Plan 0: ḡ=2, γE[v]=4.0, Q=6.0
+2026-06-01 18:07:13,833 INFO: Plan 1: ḡ=3, γE[v]=5.0, Q=8.0
+2026-06-01 18:07:13,833 INFO: Selected plan 1 with Q=8.0
+2026-06-01 18:07:20,991 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 18:07:21,117 INFO: Plan 0: ḡ=1, γE[v]=2.5, Q=3.5
+2026-06-01 18:07:24,465 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 18:07:24,488 INFO: Plan 1: ḡ=5, γE[v]=7.5, Q=12.5
+2026-06-01 18:07:34,957 INFO: Plan 0: ḡ=5, γE[v]=7.5, Q=12.5
+2026-06-01 18:07:36,430 INFO: Plan 0: ḡ=4, γE[v]=10.0, Q=14.0
+2026-06-01 18:07:36,480 INFO: Plan 1: ḡ=12, γE[v]=19.0, Q=31.0
+2026-06-01 18:07:36,480 INFO: Selected plan 1 with Q=31.0
+2026-06-01 18:07:38,607 INFO: Plan 0: ḡ=1, γE[v]=2.0, Q=3.0
+2026-06-01 18:07:57,886 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 18:08:02,323 INFO: Plan 0: ḡ=2, γE[v]=3.0, Q=5.0
+2026-06-01 18:08:02,593 INFO: Plan 1: ḡ=4, γE[v]=5.0, Q=9.0
+2026-06-01 18:08:17,838 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 18:08:22,145 INFO: Plan 0: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 18:08:26,577 INFO: Plan 0: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 18:08:30,534 INFO: Plan 0: ḡ=4, γE[v]=20.0, Q=24.0
+2026-06-01 18:08:30,755 INFO: Plan 1: ḡ=5, γE[v]=20.0, Q=25.0
+2026-06-01 18:08:30,755 INFO: Selected plan 1 with Q=25.0
+2026-06-01 18:08:34,220 INFO: Plan 0: ḡ=10, γE[v]=7.5, Q=17.5
+2026-06-01 18:08:53,539 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 18:08:53,963 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 18:08:56,802 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 18:09:01,005 INFO: Plan 0: ḡ=2, γE[v]=0.0, Q=2.0
+2026-06-01 18:09:08,201 INFO: Plan 0: ḡ=0, γE[v]=10.0, Q=10.0
+2026-06-01 18:09:15,428 INFO: Plan 0: ḡ=2, γE[v]=2.5, Q=4.5
+2026-06-01 18:09:19,329 INFO: Plan 0: ḡ=12, γE[v]=14.0, Q=26.0
+2026-06-01 18:09:22,217 INFO: Plan 0: ḡ=5, γE[v]=10.0, Q=15.0
+2026-06-01 18:09:38,731 INFO: Plan 0: ḡ=0, γE[v]=2.5, Q=2.5
+2026-06-01 18:09:41,965 INFO: Plan 0: ḡ=5, γE[v]=7.5, Q=12.5
+2026-06-01 18:09:45,440 INFO: Plan 0: ḡ=2, γE[v]=7.5, Q=9.5
+  [82/93] starlette.routing seed=42: {'divhints_random': 4, 'divhints_oracle': 6, 'cov_qvalue': 4, 'cov_qvalue_calib': 6}
+2026-06-01 18:10:00,955 INFO: Plan 0: ḡ=4, γE[v]=5.0, Q=9.0
+2026-06-01 18:10:00,980 INFO: Plan 1: ḡ=5, γE[v]=20.0, Q=25.0
+2026-06-01 18:10:01,028 INFO: Plan 2: ḡ=4, γE[v]=20.0, Q=24.0
+2026-06-01 18:10:01,028 INFO: Selected plan 1 with Q=25.0
+2026-06-01 18:10:01,289 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+  [83/93] werkzeug.wsgi seed=42: {'divhints_random': 13, 'divhints_oracle': 13, 'cov_qvalue': 13, 'cov_qvalue_calib': 13}
+2026-06-01 18:10:21,657 INFO: Plan 0: ḡ=10, γE[v]=15.0, Q=25.0
+2026-06-01 18:10:21,971 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 18:10:27,959 INFO: Plan 1: ḡ=4, γE[v]=5.0, Q=9.0
+2026-06-01 18:10:28,588 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 18:10:38,536 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 18:10:50,505 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 18:10:53,422 INFO: Plan 0: ḡ=12, γE[v]=15.0, Q=27.0
+2026-06-01 18:11:04,092 INFO: Plan 0: ḡ=2, γE[v]=4.0, Q=6.0
+2026-06-01 18:11:05,115 INFO: Plan 0: ḡ=2, γE[v]=0.0, Q=2.0
+2026-06-01 18:11:05,537 INFO: Plan 1: ḡ=4, γE[v]=15.0, Q=19.0
+  [84/93] starlette.testclient seed=42: {'divhints_random': 4, 'divhints_oracle': 4, 'cov_qvalue': 4, 'cov_qvalue_calib': 4}
+  [85/93] starlette.datastructures seed=42: {'divhints_random': 30, 'divhints_oracle': 51, 'cov_qvalue': 49, 'cov_qvalue_calib': 46}
+2026-06-01 18:11:32,172 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 18:11:32,440 INFO: Plan 0: ḡ=5, γE[v]=5.0, Q=10.0
+2026-06-01 18:11:33,998 INFO: Plan 1: ḡ=5, γE[v]=20.0, Q=25.0
+2026-06-01 18:11:34,111 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 18:11:58,163 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+  [86/93] starlette.responses seed=42: {'divhints_random': 24, 'divhints_oracle': 34, 'cov_qvalue': 25, 'cov_qvalue_calib': 25}
+2026-06-01 18:12:21,166 INFO: Plan 0: ḡ=2, γE[v]=2.0, Q=4.0
+2026-06-01 18:12:21,314 INFO: Plan 2: ḡ=4, γE[v]=20.0, Q=24.0
+2026-06-01 18:12:21,323 INFO: Plan 1: ḡ=2, γE[v]=1.0, Q=3.0
+2026-06-01 18:12:44,443 INFO: Plan 0: ḡ=4, γE[v]=12.5, Q=16.5
+2026-06-01 18:13:08,036 INFO: Plan 0: ḡ=4, γE[v]=5.0, Q=9.0
+2026-06-01 18:13:30,066 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 18:13:30,124 INFO: Plan 2: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 18:13:30,156 INFO: Plan 1: ḡ=1, γE[v]=5.0, Q=6.0
+2026-06-01 18:13:30,156 INFO: Selected plan 0 with Q=7.0
+2026-06-01 18:13:32,067 INFO: Plan 0: ḡ=4, γE[v]=3.0, Q=7.0
+2026-06-01 18:13:42,907 INFO: Plan 2: ḡ=1, γE[v]=0.0, Q=1.0
+2026-06-01 18:13:42,934 INFO: Plan 1: ḡ=3, γE[v]=7.5, Q=10.5
+2026-06-01 18:13:43,077 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 18:13:43,078 INFO: Selected plan 1 with Q=10.5
+2026-06-01 18:13:46,644 INFO: Plan 0: ḡ=4, γE[v]=5.0, Q=9.0
+2026-06-01 18:13:55,378 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 18:13:55,436 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 18:13:55,436 INFO: Selected plan 0 with Q=7.0
+2026-06-01 18:14:01,344 INFO: Plan 0: ḡ=1, γE[v]=1.5, Q=2.5
+2026-06-01 18:14:22,433 INFO: Plan 1: ḡ=1, γE[v]=0.0, Q=1.0
+2026-06-01 18:14:23,009 INFO: Plan 0: ḡ=1, γE[v]=1.0, Q=2.0
+2026-06-01 18:14:23,009 INFO: Selected plan 0 with Q=2.0
+  [87/93] starlette.requests seed=42: {'divhints_random': 35, 'divhints_oracle': 35, 'cov_qvalue': 35, 'cov_qvalue_calib': 35}
+2026-06-01 18:14:53,888 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 18:14:54,069 INFO: Plan 0: ḡ=8, γE[v]=0.0, Q=8.0
+2026-06-01 18:14:54,069 INFO: Selected plan 0 with Q=8.0
+2026-06-01 18:15:07,931 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 18:15:08,116 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 18:15:08,116 INFO: Selected plan 0 with Q=7.0
+2026-06-01 18:15:53,842 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 18:15:53,850 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 18:15:53,850 INFO: Selected plan 0 with Q=7.0
+2026-06-01 18:16:05,448 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 18:16:05,659 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 18:16:05,659 INFO: Selected plan 0 with Q=7.0
+2026-06-01 18:16:20,177 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 18:16:20,305 INFO: Plan 2: ḡ=1, γE[v]=2.5, Q=3.5
+2026-06-01 18:16:20,395 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 18:16:38,516 INFO: Plan 1: ḡ=2, γE[v]=6.0, Q=8.0
+2026-06-01 18:16:38,693 INFO: Plan 2: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 18:16:38,984 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 18:16:56,067 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 18:16:56,158 INFO: Plan 2: ḡ=1, γE[v]=0.0, Q=1.0
+2026-06-01 18:16:56,168 INFO: Plan 0: ḡ=1, γE[v]=17.5, Q=18.5
+2026-06-01 18:17:15,961 INFO: Plan 0: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 18:17:16,072 INFO: Plan 1: ḡ=1, γE[v]=5.0, Q=6.0
+2026-06-01 18:17:16,073 INFO: Selected plan 1 with Q=6.0
+2026-06-01 18:17:17,263 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 18:17:17,385 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 18:17:19,697 INFO: Plan 1: ḡ=1, γE[v]=10.0, Q=11.0
+2026-06-01 18:17:19,719 INFO: Plan 0: ḡ=1, γE[v]=7.5, Q=8.5
+2026-06-01 18:17:19,719 INFO: Selected plan 1 with Q=11.0
+2026-06-01 18:17:33,792 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 18:17:33,898 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 18:17:44,992 INFO: Plan 0: ḡ=0, γE[v]=7.5, Q=7.5
+2026-06-01 18:17:45,038 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 18:17:45,038 INFO: Selected plan 0 with Q=7.5
+2026-06-01 18:17:49,430 INFO: Plan 2: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 18:17:49,741 INFO: Plan 0: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 18:17:49,891 INFO: Plan 1: ḡ=2, γE[v]=6.0, Q=8.0
+2026-06-01 18:17:49,891 INFO: Selected plan 1 with Q=8.0
+2026-06-01 18:17:54,216 INFO: Plan 1: ḡ=2, γE[v]=6.0, Q=8.0
+2026-06-01 18:17:54,592 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 18:18:04,503 INFO: Plan 1: ḡ=5, γE[v]=17.5, Q=22.5
+2026-06-01 18:18:04,536 INFO: Plan 0: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 18:18:04,536 INFO: Selected plan 1 with Q=22.5
+2026-06-01 18:18:09,914 INFO: Plan 1: ḡ=2, γE[v]=7.5, Q=9.5
+2026-06-01 18:18:10,454 INFO: Plan 0: ḡ=0, γE[v]=25.0, Q=25.0
+2026-06-01 18:18:10,454 INFO: Selected plan 0 with Q=25.0
+2026-06-01 18:18:21,571 INFO: Plan 0: ḡ=1, γE[v]=22.5, Q=23.5
+2026-06-01 18:18:21,881 INFO: Plan 1: ḡ=0, γE[v]=20.0, Q=20.0
+2026-06-01 18:18:21,882 INFO: Selected plan 0 with Q=23.5
+2026-06-01 18:18:23,043 INFO: Plan 2: ḡ=10, γE[v]=15.0, Q=25.0
+2026-06-01 18:18:23,104 INFO: Plan 0: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 18:18:23,165 INFO: Plan 1: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 18:18:23,165 INFO: Selected plan 2 with Q=25.0
+2026-06-01 18:18:24,006 INFO: Plan 0: ḡ=1, γE[v]=7.5, Q=8.5
+2026-06-01 18:18:24,083 INFO: Plan 1: ḡ=1, γE[v]=7.5, Q=8.5
+2026-06-01 18:18:24,192 INFO: Plan 2: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 18:18:24,192 INFO: Selected plan 0 with Q=8.5
+2026-06-01 18:18:25,587 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 18:18:43,915 INFO: Plan 0: ḡ=0, γE[v]=2.5, Q=2.5
+2026-06-01 18:18:44,013 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 18:18:44,014 INFO: Selected plan 1 with Q=7.0
+2026-06-01 18:18:45,565 INFO: Plan 0: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 18:18:45,602 INFO: Plan 1: ḡ=0, γE[v]=25.0, Q=25.0
+2026-06-01 18:18:45,602 INFO: Selected plan 1 with Q=25.0
+2026-06-01 18:18:48,069 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 18:18:58,863 INFO: Plan 1: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 18:18:59,044 INFO: Plan 0: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 18:18:59,045 INFO: Selected plan 0 with Q=5.0
+2026-06-01 18:19:01,445 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 18:19:15,610 INFO: Plan 1: ḡ=0, γE[v]=10.0, Q=10.0
+2026-06-01 18:19:15,634 INFO: Plan 0: ḡ=0, γE[v]=25.0, Q=25.0
+2026-06-01 18:19:15,634 INFO: Selected plan 0 with Q=25.0
+2026-06-01 18:19:16,738 INFO: Plan 1: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 18:19:16,828 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 18:19:16,828 INFO: Selected plan 1 with Q=5.0
+2026-06-01 18:19:27,730 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 18:19:28,356 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 18:19:40,905 INFO: Plan 0: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 18:19:41,031 INFO: Plan 2: ḡ=12, γE[v]=14.0, Q=26.0
+2026-06-01 18:19:41,050 INFO: Plan 1: ḡ=0, γE[v]=25.0, Q=25.0
+2026-06-01 18:19:41,050 INFO: Selected plan 2 with Q=26.0
+2026-06-01 18:19:50,368 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 18:19:50,499 INFO: Plan 1: ḡ=1, γE[v]=25.0, Q=26.0
+2026-06-01 18:19:50,572 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 18:19:50,573 INFO: Selected plan 1 with Q=26.0
+2026-06-01 18:19:51,515 INFO: Plan 1: ḡ=1, γE[v]=7.5, Q=8.5
+2026-06-01 18:19:51,727 INFO: Plan 0: ḡ=2, γE[v]=6.0, Q=8.0
+2026-06-01 18:19:52,500 INFO: Plan 2: ḡ=2, γE[v]=9.0, Q=11.0
+2026-06-01 18:19:58,265 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 18:19:58,487 INFO: Plan 0: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 18:19:58,488 INFO: Selected plan 0 with Q=5.0
+2026-06-01 18:20:04,346 INFO: Plan 2: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 18:20:04,403 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 18:20:04,573 INFO: Plan 0: ḡ=5, γE[v]=22.5, Q=27.5
+2026-06-01 18:20:22,823 INFO: Plan 1: ḡ=5, γE[v]=10.0, Q=15.0
+2026-06-01 18:20:22,838 INFO: Plan 0: ḡ=0, γE[v]=25.0, Q=25.0
+2026-06-01 18:20:22,839 INFO: Selected plan 0 with Q=25.0
+2026-06-01 18:20:29,934 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 18:20:30,125 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 18:20:35,198 INFO: Plan 0: ḡ=1, γE[v]=6.0, Q=7.0
+2026-06-01 18:20:35,858 INFO: Plan 0: ḡ=0, γE[v]=10.0, Q=10.0
+2026-06-01 18:20:35,919 INFO: Plan 1: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 18:20:35,920 INFO: Selected plan 0 with Q=10.0
+2026-06-01 18:20:38,038 INFO: Plan 0: ḡ=1, γE[v]=5.0, Q=6.0
+2026-06-01 18:20:45,624 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 18:20:45,700 INFO: Plan 2: ḡ=1, γE[v]=1.0, Q=2.0
+2026-06-01 18:20:45,774 INFO: Plan 1: ḡ=8, γE[v]=0.0, Q=8.0
+2026-06-01 18:20:48,915 INFO: Plan 2: ḡ=0, γE[v]=25.0, Q=25.0
+2026-06-01 18:20:48,916 INFO: Plan 0: ḡ=1, γE[v]=20.0, Q=21.0
+2026-06-01 18:20:48,962 INFO: Plan 1: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 18:20:49,418 INFO: Plan 0: ḡ=1, γE[v]=5.0, Q=6.0
+2026-06-01 18:20:49,645 INFO: Plan 1: ḡ=0, γE[v]=10.0, Q=10.0
+2026-06-01 18:20:49,660 INFO: Plan 0: ḡ=0, γE[v]=7.5, Q=7.5
+2026-06-01 18:21:07,502 INFO: Plan 0: ḡ=1, γE[v]=10.0, Q=11.0
+2026-06-01 18:21:07,780 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 18:21:08,603 INFO: Plan 1: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 18:21:08,678 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 18:21:09,294 INFO: Plan 0: ḡ=1, γE[v]=20.0, Q=21.0
+  [88/93] starlette.formparsers seed=42: {'divhints_random': 2, 'divhints_oracle': 2, 'cov_qvalue': 2, 'cov_qvalue_calib': 2}
+2026-06-01 18:21:14,261 INFO: Plan 0: ḡ=5, γE[v]=7.5, Q=12.5
+2026-06-01 18:21:14,321 INFO: Plan 1: ḡ=1, γE[v]=7.5, Q=8.5
+2026-06-01 18:21:15,270 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 18:21:15,587 INFO: Plan 1: ḡ=2, γE[v]=2.0, Q=4.0
+2026-06-01 18:21:21,434 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 18:21:21,450 INFO: Plan 0: ḡ=1, γE[v]=5.0, Q=6.0
+2026-06-01 18:21:26,043 INFO: Plan 0: ḡ=2, γE[v]=20.0, Q=22.0
+2026-06-01 18:21:33,835 INFO: Plan 2: ḡ=6, γE[v]=12.5, Q=18.5
+2026-06-01 18:21:34,032 INFO: Plan 1: ḡ=0, γE[v]=22.5, Q=22.5
+2026-06-01 18:21:34,109 INFO: Plan 0: ḡ=2, γE[v]=9.0, Q=11.0
+2026-06-01 18:21:39,089 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 18:21:48,053 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 18:21:48,280 INFO: Plan 0: ḡ=5, γE[v]=12.5, Q=17.5
+2026-06-01 18:21:50,869 INFO: Plan 0: ḡ=5, γE[v]=12.5, Q=17.5
+2026-06-01 18:21:50,916 INFO: Plan 1: ḡ=1, γE[v]=7.5, Q=8.5
+2026-06-01 18:21:52,822 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 18:21:53,076 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 18:22:06,399 INFO: Plan 0: ḡ=12, γE[v]=14.0, Q=26.0
+2026-06-01 18:22:06,644 INFO: Plan 0: ḡ=5, γE[v]=7.5, Q=12.5
+2026-06-01 18:22:08,297 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 18:22:10,296 INFO: Plan 0: ḡ=6, γE[v]=15.0, Q=21.0
+2026-06-01 18:22:24,221 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 18:22:24,825 INFO: Plan 0: ḡ=4, γE[v]=12.5, Q=16.5
+2026-06-01 18:22:30,075 INFO: Plan 0: ḡ=1, γE[v]=2.0, Q=3.0
+2026-06-01 18:22:32,912 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 18:22:33,198 INFO: Plan 1: ḡ=6, γE[v]=6.0, Q=12.0
+2026-06-01 18:22:42,127 INFO: Plan 0: ḡ=2, γE[v]=10.0, Q=12.0
+2026-06-01 18:22:42,344 INFO: Plan 1: ḡ=0, γE[v]=25.0, Q=25.0
+2026-06-01 18:22:42,520 INFO: Plan 0: ḡ=2, γE[v]=7.5, Q=9.5
+2026-06-01 18:22:57,153 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 18:22:58,633 INFO: Plan 1: ḡ=1, γE[v]=7.5, Q=8.5
+2026-06-01 18:22:58,833 INFO: Plan 2: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 18:22:58,862 INFO: Plan 0: ḡ=2, γE[v]=12.5, Q=14.5
+2026-06-01 18:22:59,792 INFO: Plan 0: ḡ=0, γE[v]=7.5, Q=7.5
+2026-06-01 18:23:11,935 INFO: Plan 1: ḡ=2, γE[v]=7.5, Q=9.5
+2026-06-01 18:23:12,145 INFO: Plan 0: ḡ=1, γE[v]=10.0, Q=11.0
+2026-06-01 18:23:17,251 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 18:23:17,264 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 18:23:20,087 INFO: Plan 0: ḡ=12, γE[v]=12.5, Q=24.5
+2026-06-01 18:23:27,854 INFO: Plan 0: ḡ=2, γE[v]=7.5, Q=9.5
+2026-06-01 18:23:32,286 INFO: Plan 0: ḡ=2, γE[v]=5.0, Q=7.0
+2026-06-01 18:23:40,326 INFO: Plan 0: ḡ=1, γE[v]=7.5, Q=8.5
+2026-06-01 18:23:40,867 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 18:23:47,108 INFO: Plan 0: ḡ=5, γE[v]=7.5, Q=12.5
+2026-06-01 18:23:49,586 INFO: Plan 0: ḡ=12, γE[v]=17.5, Q=29.5
+2026-06-01 18:23:52,737 INFO: Plan 0: ḡ=1, γE[v]=7.5, Q=8.5
+2026-06-01 18:23:52,951 INFO: Plan 1: ḡ=1, γE[v]=5.0, Q=6.0
+2026-06-01 18:23:58,547 INFO: Plan 0: ḡ=2, γE[v]=9.0, Q=11.0
+  [89/93] starlette.staticfiles seed=42: {'divhints_random': 37, 'divhints_oracle': 22, 'cov_qvalue': 37, 'cov_qvalue_calib': 36}
+  [90/93] starlette.middleware.base seed=42: {'divhints_random': 27, 'divhints_oracle': 5, 'cov_qvalue': 26, 'cov_qvalue_calib': 33}
+2026-06-01 18:24:10,775 INFO: Plan 0: ḡ=1, γE[v]=22.5, Q=23.5
+2026-06-01 18:24:11,034 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0
+2026-06-01 18:24:12,484 INFO: Plan 0: ḡ=10, γE[v]=17.5, Q=27.5
+2026-06-01 18:24:25,244 INFO: Plan 0: ḡ=2, γE[v]=1.0, Q=3.0
+2026-06-01 18:24:26,615 INFO: Plan 0: ḡ=0, γE[v]=5.0, Q=5.0
+2026-06-01 18:24:26,783 INFO: Plan 1: ḡ=0, γE[v]=10.0, Q=10.0
+2026-06-01 18:24:30,203 INFO: Plan 0: ḡ=5, γE[v]=17.5, Q=22.5
+  [91/93] starlette.applications seed=42: {'divhints_random': 6, 'divhints_oracle': 8, 'cov_qvalue': 6, 'cov_qvalue_calib': 8}
+2026-06-01 18:24:50,691 INFO: Plan 0: ḡ=0, γE[v]=7.5, Q=7.5
+2026-06-01 18:24:55,869 INFO: Plan 0: ḡ=3, γE[v]=5.0, Q=8.0
+  [92/93] starlette.templating seed=42: {'divhints_random': 24, 'divhints_oracle': 24, 'cov_qvalue': 18, 'cov_qvalue_calib': 18}
+2026-06-01 18:25:04,296 INFO: Plan 1: ḡ=1, γE[v]=0.0, Q=1.0
+2026-06-01 18:25:04,458 INFO: Plan 0: ḡ=5, γE[v]=10.0, Q=15.0
+  [93/93] starlette.middleware.errors seed=42: {'divhints_random': 38, 'divhints_oracle': 48, 'cov_qvalue': 36, 'cov_qvalue_calib': 20}
+
+======================================================================
+RESULTS
+======================================================================
+
+Module                              seed  divhints_ra  divhints_or   cov_qvalue  cov_qvalue_
+--------------------------------------------------------------------------------------------
+click.types                           42            9            9           31            9
+click.decorators                      42           36           36           36           35
+click.termui                          42           12            7            7           22
+click.core                            42          210          312          152          223
+click.testing                         42           34           37           34           37
+click.shell_completion                42           11           11            9           30
+click.parser                          42           46           50           21           51
+click.utils                           42           14           21           16           14
+click.formatting                      42           31           31           31           31
+click.exceptions                      42           10           14           14           14
+requests.utils                        42           41           63           41           60
+requests.auth                         42           49           49           49           49
+requests.cookies                      42            8            8            8            8
+requests.sessions                     42           19           30           23           29
+requests.models                       42          114          112          122          125
+requests.adapters                     42           73           62           62           71
+flask.helpers                         42            2            9           10            9
+flask.ctx                             42           58           58           56           58
+flask.sessions                        42            4            4            4            4
+flask.cli                             42           77           78           78           78
+flask.app                             42          183           90          172           82
+flask.config                          42           52           50           45           30
+flask.testing                         42           17            9            9            8
+flask.json.tag                        42           24           25           25           24
+flask.templating                      42           46           16           49            7
+rich.text                             42           28           30           28           30
+rich.progress                         42          129          166          171          176
+rich.pretty                           42            9           71            9            9
+flask.json.provider                   42           43           46           44           46
+rich.table                            42          189          188          203          154
+rich.console                          42          272          290          251          242
+rich.syntax                           42           98          102           98           97
+rich.markdown                         42           86           84           65           92
+rich.segment                          42           60           60           60           60
+rich.color                            42           64           69           65           60
+jinja2.compiler                       42          112           35          105           82
+rich.layout                           42           17           64           62           62
+rich.style                            42           97          109          104           97
+rich.traceback                        42           71           72           71           85
+jinja2.filters                        42          129          139          138          138
+jinja2.environment                    42           86           97           82           96
+jinja2.nodes                          42           10           11           10           11
+jinja2.runtime                        42           66           66           65           66
+jinja2.utils                          42           11           11           11           11
+jinja2.ext                            42           54           82            4           82
+jinja2.loaders                        42           24           25           24           55
+jinja2.lexer                          42           97          107          101          103
+jinja2.parser                         42           13           13          103          114
+jinja2.bccache                        42            5            5            5            5
+jinja2.sandbox                        42           59           77           59           80
+httpx._models                         42          104          172          112          180
+httpx._client                         42          135          131          128          159
+httpx._main                           42           79           80           69           80
+httpx._urlparse                       42           44           66           35           66
+httpx._urls                           42           62           73           69           64
+httpx._api                            42            6           12           11            6
+httpx._utils                          42           22           23           20           22
+httpx._transports.default             42           10           17            5           12
+httpx._auth                           42           55           53           51            4
+pydantic.types                        42          152          154          129          142
+httpx._config                         42           18           24           19           28
+pydantic.json_schema                  42          274          290          250          260
+pydantic.main                         42          174          202          151          217
+pydantic.config                       42            1            1            1            1
+pydantic.fields                       42           88           79           89          102
+pydantic.networks                     42           34           35           34           35
+pydantic.functional_validators        42           36           36           36           36
+pydantic.color                        42           85           93           93           96
+pydantic.functional_serializers       42           22           22           22           22
+pydantic.type_adapter                 42           18           18           17           18
+werkzeug.http                         42           59           62           61          100
+werkzeug.serving                      42           30           19            8            9
+werkzeug.datastructures.structures    42           23           13           12           13
+werkzeug.routing.rules                42           16           16           16           16
+werkzeug.routing.map                  42           96          102           97          102
+werkzeug.sansio.response              42           68           71           55           64
+werkzeug.exceptions                   42           30           28           28           31
+werkzeug.wrappers.response            42           59           62           65           59
+werkzeug.utils                        42           16           15           16           16
+werkzeug.wrappers.request             42           58           63           61           58
+werkzeug.local                        42           20           34           24           31
+starlette.routing                     42            4            6            4            6
+werkzeug.wsgi                         42           13           13           13           13
+starlette.testclient                  42            4            4            4            4
+starlette.datastructures              42           30           51           49           46
+starlette.responses                   42           24           34           25           25
+starlette.requests                    42           35           35           35           35
+starlette.formparsers                 42            2            2            2            2
+starlette.staticfiles                 42           37           22           37           36
+starlette.middleware.base             42           27            5           26           33
+starlette.applications                42            6            8            6            8
+starlette.templating                  42           24           24           18           18
+starlette.middleware.errors           42           38           48           36           20
+
+======================================================================
+STATISTICS
+======================================================================
+
+Per-strategy means (n=93):
+  divhints_random      branches=  55.3 ± 5.8  lines=159.2  pass_rate=36%
+  divhints_oracle      branches=  59.4 ± 6.4  lines=168.4  pass_rate=80%
+  cov_qvalue           branches=  54.6 ± 5.5  lines=156.6  pass_rate=38%
+  cov_qvalue_calib     branches=  58.7 ± 5.9  lines=169.5  pass_rate=79%
+
+cov_qvalue vs divhints_random (Exp 1): Δ=-0.7 ± 1.7  W=31 L=32 T=30  d=-0.04  p=0.6730 
+
+divhints_oracle vs divhints_random (Exp 1 ceiling): Δ=+4.1 ± 2.2  W=51 L=19 T=23  d=0.19  p=0.0712 
+
+divhints_oracle vs cov_qvalue (Exp 1 headroom): Δ=+4.8 ± 2.9  W=55 L=14 T=24  d=0.17  p=0.0969 
+
+Per-repo means:
+
+  click (10 runs):
+    divhints_random      mean=41.3
+    divhints_oracle      mean=52.8
+    cov_qvalue           mean=35.1
+    cov_qvalue_calib     mean=46.6
+
+  flask (10 runs):
+    divhints_random      mean=50.6
+    divhints_oracle      mean=38.5
+    cov_qvalue           mean=49.2
+    cov_qvalue_calib     mean=34.6
+
+  httpx (10 runs):
+    divhints_random      mean=53.5
+    divhints_oracle      mean=65.1
+    cov_qvalue           mean=51.9
+    cov_qvalue_calib     mean=62.1
+
+  jinja2 (12 runs):
+    divhints_random      mean=55.5
+    divhints_oracle      mean=55.7
+    cov_qvalue           mean=58.9
+    cov_qvalue_calib     mean=70.2
+
+  pydantic (10 runs):
+    divhints_random      mean=88.4
+    divhints_oracle      mean=93.0
+    cov_qvalue           mean=82.2
+    cov_qvalue_calib     mean=92.9
+
+  requests (6 runs):
+    divhints_random      mean=50.7
+    divhints_oracle      mean=54.0
+    cov_qvalue           mean=50.8
+    cov_qvalue_calib     mean=57.0
+
+  rich (12 runs):
+    divhints_random      mean=93.3
+    divhints_oracle      mean=108.8
+    cov_qvalue           mean=98.9
+    cov_qvalue_calib     mean=97.0
+
+  starlette (11 runs):
+    divhints_random      mean=21.0
+    divhints_oracle      mean=21.7
+    cov_qvalue           mean=22.0
+    cov_qvalue_calib     mean=21.2
+
+  werkzeug (12 runs):
+    divhints_random      mean=40.7
+    divhints_oracle      mean=41.5
+    cov_qvalue           mean=38.0
+    cov_qvalue_calib     mean=42.7
+
+Cost: $19.5362 | Time: 9860s (164.3m)
+Saved to /share/edc/home/aamayuelasfernandez/qcurious-tester/results/repo_explore_bench/exp_calib_gemini.json

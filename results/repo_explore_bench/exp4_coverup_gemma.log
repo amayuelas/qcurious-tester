@@ -1,0 +1,115 @@
+2026-05-28 11:48:37,406 INFO: RepoExploreBench: 93 targets across 9 repos
+======================================================================
+Exp 4 — external baseline: coverup
+  Targets: 93  search-time: 60s  parallel: 8
+======================================================================
+  [1/93] click.testing                    branches=98   lines=318   75 passed in 0.41s
+  [2/93] click.decorators                 branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [3/93] click.utils                      branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [4/93] click.termui                     branches=16   lines=60    2 passed in 0.03s
+  [5/93] click.shell_completion           branches=53   lines=199   77 passed in 0.39s
+  [6/93] click.parser                     branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [7/93] click.types                      branches=30   lines=198   10 passed in 0.08s
+  [8/93] click.formatting                 branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [9/93] click.exceptions                 branches=1    lines=66    4 passed in 0.04s
+  [10/93] click.core                       branches=0    lines=0     docker_timeout
+  [11/93] requests.utils                   branches=192  lines=436   201 passed, 10 warnings in 0.91s
+  [12/93] requests.models                  branches=198  lines=437   163 passed in 0.84s
+  [13/93] requests.cookies                 branches=102  lines=222   113 passed in 0.74s
+  [14/93] requests.auth                    branches=55   lines=177   45 passed in 0.33s
+  [15/93] requests.sessions                branches=60   lines=176   72 passed in 0.51s
+  [16/93] flask.helpers                    branches=41   lines=116   58 passed in 0.44s
+  [17/93] flask.sessions                   branches=17   lines=111   46 passed in 0.34s
+  [18/93] flask.app                        branches=157  lines=367   124 passed in 0.88s
+  [19/93] flask.ctx                        branches=32   lines=151   9 failed, 43 passed in 0.52s
+  [20/93] requests.adapters                branches=41   lines=139   2 failed, 42 passed in 0.42s
+  [21/93] flask.cli                        branches=178  lines=355   101 passed in 0.75s
+  [22/93] flask.json.tag                   branches=21   lines=126   48 passed in 0.41s
+  [23/93] flask.config                     branches=34   lines=81    33 passed in 0.27s
+  [24/93] flask.json.provider              branches=16   lines=68    33 passed in 0.27s
+  [25/93] flask.testing                    branches=31   lines=100   36 passed in 0.36s
+  [26/93] flask.templating                 branches=32   lines=113   40 passed in 0.39s
+  [27/93] rich.pretty                      branches=81   lines=266   67 passed in 0.40s
+  [28/93] rich.syntax                      branches=18   lines=90    2 passed in 0.04s
+  [29/93] rich.style                       branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [30/93] rich.markdown                    branches=81   lines=336   73 passed in 0.52s
+  [31/93] rich.table                       branches=104  lines=297   4 passed in 0.08s
+  [32/93] rich.console                     branches=0    lines=0     docker_timeout
+  [33/93] rich.progress                    branches=0    lines=0     docker_timeout
+  [34/93] rich.text                        branches=0    lines=0     docker_timeout
+  [35/93] rich.traceback                   branches=60   lines=177   29 passed in 0.26s
+  [36/93] rich.segment                     branches=59   lines=88    2 passed in 0.03s
+  [37/93] rich.layout                      branches=70   lines=203   68 passed in 0.49s
+  [38/93] rich.color                       branches=26   lines=73    5 passed in 0.06s
+  [39/93] jinja2.compiler                  branches=0    lines=0     docker_timeout
+  [40/93] jinja2.filters                   branches=0    lines=0     docker_timeout
+  [41/93] jinja2.environment               branches=0    lines=0     docker_timeout
+  [42/93] jinja2.nodes                     branches=0    lines=0     docker_timeout
+  [43/93] jinja2.runtime                   branches=0    lines=0     docker_timeout
+  [44/93] jinja2.ext                       branches=78   lines=213   60 passed in 0.42s
+  [45/93] jinja2.parser                    branches=0    lines=0     docker_timeout
+  [46/93] jinja2.lexer                     branches=0    lines=0     docker_timeout
+  [47/93] jinja2.loaders                   branches=25   lines=78    3 passed in 0.05s
+  [48/93] jinja2.utils                     branches=9    lines=112   5 passed in 0.06s
+  [49/93] jinja2.sandbox                   branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [50/93] jinja2.bccache                   branches=1    lines=16    1 failed, 1 passed in 0.13s
+  [51/93] httpx._urls                      branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [52/93] httpx._urlparse                  branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [53/93] httpx._api                       branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [54/93] httpx._main                      branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [55/93] httpx._client                    branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [56/93] httpx._utils                     branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [57/93] httpx._transports.default        branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [58/93] httpx._models                    branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [59/93] httpx._config                    branches=7    lines=42    2 passed in 0.10s
+  [60/93] httpx._auth                      branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [61/93] pydantic.config                  branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [62/93] pydantic.fields                  branches=121  lines=317   4 passed, 1 warning in 0.14s
+  [63/93] pydantic.main                    branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [64/93] pydantic.types                   branches=0    lines=0     docker_timeout
+  [65/93] pydantic.json_schema             branches=0    lines=0     docker_timeout
+  [66/93] pydantic.networks                branches=0    lines=0     docker_timeout
+  [67/93] pydantic.functional_validators   branches=52   lines=123   6 passed in 0.16s
+  [68/93] pydantic.color                   branches=0    lines=0     docker_timeout
+  [69/93] pydantic.type_adapter            branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [70/93] pydantic.functional_serializers  branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [71/93] werkzeug.http                    branches=173  lines=330   155 passed in 0.84s
+  [72/93] werkzeug.serving                 branches=58   lines=205   6 failed, 63 passed in 1.23s
+  [73/93] werkzeug.datastructures.structures branches=193  lines=470   1 failed, 292 passed in 1.74s
+  [74/93] werkzeug.routing.map             branches=126  lines=271   68 passed in 0.44s
+  [75/93] werkzeug.routing.rules           branches=161  lines=376   96 passed in 0.65s
+  [76/93] werkzeug.exceptions              branches=48   lines=268   151 passed, 1 skipped in 0.74s
+  [77/93] werkzeug.wrappers.response       branches=114  lines=251   120 passed in 0.63s
+  [78/93] werkzeug.sansio.response         branches=111  lines=244   96 passed, 1 warning in 0.46s
+  [79/93] werkzeug.wrappers.request        branches=78   lines=172   71 passed in 0.40s
+  [80/93] werkzeug.local                   branches=65   lines=277   75 passed in 0.41s
+  [81/93] werkzeug.utils                   branches=58   lines=161   60 passed in 0.34s
+  [82/93] starlette.testclient             branches=50   lines=256   52 passed, 1 skipped, 3 warnings in 8.36s
+  [83/93] werkzeug.wsgi                    branches=81   lines=210   88 passed in 0.40s
+  [84/93] starlette.routing                branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [85/93] starlette.applications           branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [86/93] starlette.requests               branches=29   lines=68    2 passed in 0.03s
+  [87/93] starlette.responses              branches=10   lines=76    4 passed in 0.04s
+  [88/93] starlette.formparsers            branches=2    lines=48    4 passed in 0.04s
+  [89/93] starlette.datastructures         branches=30   lines=139   3 passed in 0.03s
+  [90/93] starlette.middleware.errors      branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [91/93] starlette.staticfiles            branches=46   lines=122   47 passed in 0.33s
+  [92/93] starlette.templating             branches=35   lines=94    33 passed, 3 warnings in 0.29s
+  [93/93] starlette.middleware.base        branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+
+======================================================================
+RESULTS (coverup)
+======================================================================
+  mean branches: 39.4  (n=93)
+    click        mean=19.8 (n=10)
+    flask        mean=55.9 (n=10)
+    httpx        mean=0.7 (n=10)
+    jinja2       mean=9.4 (n=12)
+    pydantic     mean=17.3 (n=10)
+    requests     mean=108.0 (n=6)
+    rich         mean=41.6 (n=12)
+    starlette    mean=18.4 (n=11)
+    werkzeug     mean=105.5 (n=12)
+
+  Time: 6639s (110.7m)
+Saved to /share/edc/home/aamayuelasfernandez/qcurious-tester/results/repo_explore_bench/exp4_coverup_gemma.json

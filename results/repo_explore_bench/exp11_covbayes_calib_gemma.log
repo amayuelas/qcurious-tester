@@ -1,0 +1,340 @@
+2026-05-29 11:02:57,691 INFO: RepoExploreBench: 93 targets across 9 repos
+======================================================================
+RepoExploreBench v2.0
+  Targets: 93 files across 9 repos
+  Strategies: ['cov_bayes_calib']
+  Seeds: [42]
+  Exec budget: 24 per run
+  Total runs: 93
+======================================================================
+  Connectivity: OK
+
+  Fetching source code...
+    click.core: 114085 chars
+    click.types: 36390 chars
+    click.termui: 28323 chars
+    click.utils: 20295 chars
+    click.shell_completion: 18459 chars
+    click.decorators: 18718 chars
+    click.parser: 19066 chars
+    click.testing: 16083 chars
+    click.formatting: 9705 chars
+    click.exceptions: 9272 chars
+    requests.utils: 33447 chars
+    requests.models: 35222 chars
+    requests.sessions: 30372 chars
+    requests.cookies: 18559 chars
+    requests.adapters: 19552 chars
+    requests.auth: 10186 chars
+    flask.app: 59200 chars
+    flask.cli: 33820 chars
+    flask.helpers: 22991 chars
+    flask.ctx: 14840 chars
+    flask.sessions: 14168 chars
+    flask.config: 12855 chars
+    flask.json.tag: 8870 chars
+    flask.testing: 10016 chars
+    flask.templating: 7537 chars
+    flask.json.provider: 7639 chars
+    rich.console: 99096 chars
+    rich.progress: 59691 chars
+    rich.text: 47302 chars
+    rich.table: 39643 chars
+    rich.pretty: 35811 chars
+    rich.syntax: 35364 chars
+    rich.markdown: 26159 chars
+    rich.style: 27072 chars
+    rich.traceback: 29466 chars
+    rich.segment: 24209 chars
+    rich.color: 18220 chars
+    rich.layout: 13939 chars
+    jinja2.compiler: 72198 chars
+    jinja2.filters: 53861 chars
+    jinja2.environment: 61252 chars
+    jinja2.nodes: 34549 chars
+    jinja2.runtime: 33405 chars
+    jinja2.parser: 39735 chars
+    jinja2.ext: 31843 chars
+    jinja2.lexer: 29725 chars
+    jinja2.utils: 23932 chars
+    jinja2.loaders: 23084 chars
+    jinja2.sandbox: 14583 chars
+    jinja2.bccache: 14060 chars
+    httpx._client: 67489 chars
+    httpx._models: 42302 chars
+    httpx._urls: 21747 chars
+    httpx._main: 15634 chars
+    httpx._urlparse: 17719 chars
+    httpx._api: 12927 chars
+    httpx._utils: 13857 chars
+    httpx._transports.default: 13289 chars
+    httpx._config: 12203 chars
+    httpx._auth: 11829 chars
+    pydantic.types: 89470 chars
+    pydantic.json_schema: 102806 chars
+    pydantic.main: 65891 chars
+    pydantic.fields: 45929 chars
+    pydantic.config: 29138 chars
+    pydantic.networks: 21214 chars
+    pydantic.functional_validators: 23599 chars
+    pydantic.color: 21492 chars
+    pydantic.type_adapter: 18033 chars
+    pydantic.functional_serializers: 14619 chars
+    werkzeug.http: 43362 chars
+    werkzeug.serving: 39331 chars
+    werkzeug.datastructures.structures: 31760 chars
+    werkzeug.routing.map: 36349 chars
+    werkzeug.routing.rules: 31894 chars
+    werkzeug.exceptions: 26061 chars
+    werkzeug.wrappers.response: 32586 chars
+    werkzeug.sansio.response: 27646 chars
+    werkzeug.utils: 24653 chars
+    werkzeug.wrappers.request: 24619 chars
+    werkzeug.local: 22002 chars
+    werkzeug.wsgi: 20893 chars
+    starlette.routing: 35752 chars
+    starlette.testclient: 29843 chars
+    starlette.datastructures: 23348 chars
+    starlette.responses: 12650 chars
+    starlette.requests: 11196 chars
+    starlette.formparsers: 10433 chars
+    starlette.applications: 10922 chars
+    starlette.middleware.errors: 7937 chars
+    starlette.staticfiles: 8723 chars
+    starlette.templating: 8984 chars
+    starlette.middleware.base: 8794 chars
+  Fetched 93/93 modules
+
+Running 93 targets with 16 workers...
+  [1/93] click.types seed=42: {'cov_bayes_calib': 10}
+  [2/93] click.formatting seed=42: {'cov_bayes_calib': 28}
+  [3/93] requests.auth seed=42: {'cov_bayes_calib': 47}
+  [4/93] click.testing seed=42: {'cov_bayes_calib': 37}
+  [5/93] click.utils seed=42: {'cov_bayes_calib': 21}
+  [6/93] click.parser seed=42: {'cov_bayes_calib': 22}
+  [7/93] click.exceptions seed=42: {'cov_bayes_calib': 13}
+  [8/93] requests.sessions seed=42: {'cov_bayes_calib': 13}
+  [9/93] requests.adapters seed=42: {'cov_bayes_calib': 54}
+  [10/93] click.termui seed=42: {'cov_bayes_calib': 13}
+  [11/93] click.decorators seed=42: {'cov_bayes_calib': 23}
+  [12/93] click.core seed=42: {'cov_bayes_calib': 86}
+  [13/93] requests.utils seed=42: {'cov_bayes_calib': 5}
+  [14/93] click.shell_completion seed=42: {'cov_bayes_calib': 10}
+  [15/93] requests.models seed=42: {'cov_bayes_calib': 28}
+  [16/93] requests.cookies seed=42: {'cov_bayes_calib': 8}
+  [17/93] flask.helpers seed=42: {'cov_bayes_calib': 10}
+  [18/93] flask.config seed=42: {'cov_bayes_calib': 31}
+  [19/93] flask.cli seed=42: {'cov_bayes_calib': 75}
+  [20/93] flask.ctx seed=42: {'cov_bayes_calib': 59}
+  [21/93] flask.app seed=42: {'cov_bayes_calib': 141}
+  [22/93] flask.testing seed=42: {'cov_bayes_calib': 9}
+  [23/93] flask.sessions seed=42: {'cov_bayes_calib': 4}
+  [24/93] flask.templating seed=42: {'cov_bayes_calib': 47}
+  [25/93] flask.json.provider seed=42: {'cov_bayes_calib': 41}
+  [26/93] rich.table seed=42: {'cov_bayes_calib': 27}
+  [27/93] rich.text seed=42: {'cov_bayes_calib': 30}
+  [28/93] rich.console seed=42: {'cov_bayes_calib': 187}
+  [29/93] rich.pretty seed=42: {'cov_bayes_calib': 68}
+  [30/93] flask.json.tag seed=42: {'cov_bayes_calib': 6}
+  [31/93] rich.syntax seed=42: {'cov_bayes_calib': 62}
+  [32/93] rich.progress seed=42: {'cov_bayes_calib': 54}
+  [33/93] rich.markdown seed=42: {'cov_bayes_calib': 18}
+  [34/93] rich.traceback seed=42: {'cov_bayes_calib': 69}
+  [35/93] rich.color seed=42: {'cov_bayes_calib': 26}
+  [36/93] rich.style seed=42: {'cov_bayes_calib': 72}
+  [37/93] jinja2.filters seed=42: {'cov_bayes_calib': 128}
+  [38/93] rich.segment seed=42: {'cov_bayes_calib': 60}
+  [39/93] jinja2.ext seed=42: {'cov_bayes_calib': 4}
+  [40/93] rich.layout seed=42: {'cov_bayes_calib': 17}
+  [41/93] jinja2.nodes seed=42: {'cov_bayes_calib': 10}
+  [42/93] jinja2.environment seed=42: {'cov_bayes_calib': 73}
+  [43/93] jinja2.runtime seed=42: {'cov_bayes_calib': 73}
+  [44/93] jinja2.loaders seed=42: {'cov_bayes_calib': 24}
+  [45/93] jinja2.utils seed=42: {'cov_bayes_calib': 11}
+  [46/93] jinja2.lexer seed=42: {'cov_bayes_calib': 9}
+  [47/93] jinja2.parser seed=42: {'cov_bayes_calib': 13}
+  [48/93] jinja2.compiler seed=42: {'cov_bayes_calib': 29}
+  [49/93] jinja2.bccache seed=42: {'cov_bayes_calib': 5}
+  [50/93] jinja2.sandbox seed=42: {'cov_bayes_calib': 59}
+  [51/93] httpx._models seed=42: {'cov_bayes_calib': 105}
+  [52/93] httpx._urls seed=42: {'cov_bayes_calib': 41}
+  [53/93] httpx._transports.default seed=42: {'cov_bayes_calib': 6}
+  [54/93] httpx._urlparse seed=42: {'cov_bayes_calib': 28}
+  [55/93] httpx._config seed=42: {'cov_bayes_calib': 25}
+  [56/93] httpx._utils seed=42: {'cov_bayes_calib': 25}
+  [57/93] httpx._client seed=42: {'cov_bayes_calib': 137}
+  [58/93] httpx._main seed=42: {'cov_bayes_calib': 81}
+  [59/93] httpx._auth seed=42: {'cov_bayes_calib': 53}
+  [60/93] httpx._api seed=42: {'cov_bayes_calib': 6}
+  [61/93] pydantic.main seed=42: {'cov_bayes_calib': 160}
+  [62/93] pydantic.fields seed=42: {'cov_bayes_calib': 80}
+  [63/93] pydantic.types seed=42: {'cov_bayes_calib': 132}
+  [64/93] pydantic.json_schema seed=42: {'cov_bayes_calib': 278}
+  [65/93] pydantic.config seed=42: {'cov_bayes_calib': 1}
+  [66/93] pydantic.networks seed=42: {'cov_bayes_calib': 35}
+  [67/93] pydantic.functional_validators seed=42: {'cov_bayes_calib': 36}
+  [68/93] pydantic.type_adapter seed=42: {'cov_bayes_calib': 17}
+  [69/93] pydantic.functional_serializers seed=42: {'cov_bayes_calib': 22}
+  [70/93] werkzeug.exceptions seed=42: {'cov_bayes_calib': 17}
+  [71/93] werkzeug.routing.map seed=42: {'cov_bayes_calib': 55}
+  [72/93] werkzeug.http seed=42: {'cov_bayes_calib': 22}
+  [73/93] werkzeug.serving seed=42: {'cov_bayes_calib': 16}
+  [74/93] werkzeug.datastructures.structures seed=42: {'cov_bayes_calib': 13}
+  [75/93] pydantic.color seed=42: {'cov_bayes_calib': 17}
+  [76/93] werkzeug.wrappers.response seed=42: {'cov_bayes_calib': 55}
+  [77/93] werkzeug.utils seed=42: {'cov_bayes_calib': 15}
+  [78/93] werkzeug.routing.rules seed=42: {'cov_bayes_calib': 16}
+  [79/93] werkzeug.sansio.response seed=42: {'cov_bayes_calib': 66}
+  [80/93] werkzeug.wrappers.request seed=42: {'cov_bayes_calib': 56}
+  [81/93] werkzeug.local seed=42: {'cov_bayes_calib': 32}
+  [82/93] starlette.routing seed=42: {'cov_bayes_calib': 6}
+  [83/93] starlette.requests seed=42: {'cov_bayes_calib': 35}
+  [84/93] werkzeug.wsgi seed=42: {'cov_bayes_calib': 13}
+  [85/93] starlette.responses seed=42: {'cov_bayes_calib': 25}
+  [86/93] starlette.formparsers seed=42: {'cov_bayes_calib': 2}
+  [87/93] starlette.datastructures seed=42: {'cov_bayes_calib': 51}
+  [88/93] starlette.staticfiles seed=42: {'cov_bayes_calib': 11}
+  [89/93] starlette.templating seed=42: {'cov_bayes_calib': 19}
+  [90/93] starlette.applications seed=42: {'cov_bayes_calib': 6}
+  [91/93] starlette.middleware.base seed=42: {'cov_bayes_calib': 8}
+  [92/93] starlette.middleware.errors seed=42: {'cov_bayes_calib': 37}
+  [93/93] starlette.testclient seed=42: {'cov_bayes_calib': 4}
+
+======================================================================
+RESULTS
+======================================================================
+
+Module                              seed  cov_bayes_c
+-----------------------------------------------------
+click.types                           42           10
+click.formatting                      42           28
+requests.auth                         42           47
+click.testing                         42           37
+click.utils                           42           21
+click.parser                          42           22
+click.exceptions                      42           13
+requests.sessions                     42           13
+requests.adapters                     42           54
+click.termui                          42           13
+click.decorators                      42           23
+click.core                            42           86
+requests.utils                        42            5
+click.shell_completion                42           10
+requests.models                       42           28
+requests.cookies                      42            8
+flask.helpers                         42           10
+flask.config                          42           31
+flask.cli                             42           75
+flask.ctx                             42           59
+flask.app                             42          141
+flask.testing                         42            9
+flask.sessions                        42            4
+flask.templating                      42           47
+flask.json.provider                   42           41
+rich.table                            42           27
+rich.text                             42           30
+rich.console                          42          187
+rich.pretty                           42           68
+flask.json.tag                        42            6
+rich.syntax                           42           62
+rich.progress                         42           54
+rich.markdown                         42           18
+rich.traceback                        42           69
+rich.color                            42           26
+rich.style                            42           72
+jinja2.filters                        42          128
+rich.segment                          42           60
+jinja2.ext                            42            4
+rich.layout                           42           17
+jinja2.nodes                          42           10
+jinja2.environment                    42           73
+jinja2.runtime                        42           73
+jinja2.loaders                        42           24
+jinja2.utils                          42           11
+jinja2.lexer                          42            9
+jinja2.parser                         42           13
+jinja2.compiler                       42           29
+jinja2.bccache                        42            5
+jinja2.sandbox                        42           59
+httpx._models                         42          105
+httpx._urls                           42           41
+httpx._transports.default             42            6
+httpx._urlparse                       42           28
+httpx._config                         42           25
+httpx._utils                          42           25
+httpx._client                         42          137
+httpx._main                           42           81
+httpx._auth                           42           53
+httpx._api                            42            6
+pydantic.main                         42          160
+pydantic.fields                       42           80
+pydantic.types                        42          132
+pydantic.json_schema                  42          278
+pydantic.config                       42            1
+pydantic.networks                     42           35
+pydantic.functional_validators        42           36
+pydantic.type_adapter                 42           17
+pydantic.functional_serializers       42           22
+werkzeug.exceptions                   42           17
+werkzeug.routing.map                  42           55
+werkzeug.http                         42           22
+werkzeug.serving                      42           16
+werkzeug.datastructures.structures    42           13
+pydantic.color                        42           17
+werkzeug.wrappers.response            42           55
+werkzeug.utils                        42           15
+werkzeug.routing.rules                42           16
+werkzeug.sansio.response              42           66
+werkzeug.wrappers.request             42           56
+werkzeug.local                        42           32
+starlette.routing                     42            6
+starlette.requests                    42           35
+werkzeug.wsgi                         42           13
+starlette.responses                   42           25
+starlette.formparsers                 42            2
+starlette.datastructures              42           51
+starlette.staticfiles                 42           11
+starlette.templating                  42           19
+starlette.applications                42            6
+starlette.middleware.base             42            8
+starlette.middleware.errors           42           37
+starlette.testclient                  42            4
+
+======================================================================
+STATISTICS
+======================================================================
+
+Per-strategy means (n=93):
+  cov_bayes_calib      branches=  41.2 ± 4.7  lines=131.2  pass_rate=78%
+
+Per-repo means:
+
+  click (10 runs):
+    cov_bayes_calib      mean=26.3
+
+  flask (10 runs):
+    cov_bayes_calib      mean=42.3
+
+  httpx (10 runs):
+    cov_bayes_calib      mean=50.7
+
+  jinja2 (12 runs):
+    cov_bayes_calib      mean=36.5
+
+  pydantic (10 runs):
+    cov_bayes_calib      mean=77.8
+
+  requests (6 runs):
+    cov_bayes_calib      mean=25.8
+
+  rich (12 runs):
+    cov_bayes_calib      mean=57.5
+
+  starlette (11 runs):
+    cov_bayes_calib      mean=18.5
+
+  werkzeug (12 runs):
+    cov_bayes_calib      mean=31.3
+
+Cost: $0.0000 | Time: 3526s (58.8m)
+Saved to /share/edc/home/aamayuelasfernandez/qcurious-tester/results/repo_explore_bench/exp11_covbayes_calib_gemma.json

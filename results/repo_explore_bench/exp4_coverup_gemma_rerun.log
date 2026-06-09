@@ -1,0 +1,32 @@
+2026-05-28 13:40:14,595 INFO: RepoExploreBench: 93 targets across 9 repos
+======================================================================
+Exp 4 — external baseline: coverup
+  Targets: 15  search-time: 60s  parallel: 4
+======================================================================
+  [1/15] rich.text                        branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [2/15] rich.progress                    branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [3/15] rich.console                     branches=58   lines=258   6 passed in 0.08s
+  [4/15] click.core                       branches=52   lines=249   2 passed in 0.03s
+  [5/15] jinja2.filters                   branches=139  lines=200   12 passed in 0.13s
+  [6/15] jinja2.environment               branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [7/15] jinja2.nodes                     branches=21   lines=405   10 passed in 0.11s
+  [8/15] jinja2.compiler                  branches=33   lines=217   5 passed in 0.06s
+  [9/15] jinja2.runtime                   branches=66   lines=191   4 passed in 0.06s
+  [10/15] jinja2.parser                    branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [11/15] jinja2.lexer                     branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [12/15] pydantic.types                   branches=109  lines=365   5 passed in 0.16s
+  [13/15] pydantic.color                   branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [14/15] pydantic.networks                branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [15/15] pydantic.json_schema             branches=37   lines=205   2 passed in 0.09s
+
+======================================================================
+RESULTS (coverup)
+======================================================================
+  mean branches: 34.3  (n=15)
+    click        mean=52.0 (n=1)
+    jinja2       mean=37.0 (n=7)
+    pydantic     mean=36.5 (n=4)
+    rich         mean=19.3 (n=3)
+
+  Time: 3290s (54.8m)
+Saved to /share/edc/home/aamayuelasfernandez/qcurious-tester/results/repo_explore_bench/exp4_coverup_gemma_rerun.json

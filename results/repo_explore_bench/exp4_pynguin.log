@@ -1,0 +1,115 @@
+2026-05-27 17:06:07,565 INFO: RepoExploreBench: 93 targets across 9 repos
+======================================================================
+Exp 4 — external baseline: pynguin
+  Targets: 93  search-time: 60s  parallel: 1
+======================================================================
+  [1/93] click.core                       branches=225  lines=627   14 passed, 15 xfailed in 2.47s
+  [2/93] click.types                      branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [3/93] click.termui                     branches=81   lines=171   17 passed, 30 xfailed, 1 warning in 2.40s
+  [4/93] click.utils                      branches=60   lines=186   24 passed, 14 xfailed in 0.54s
+  [5/93] click.shell_completion           branches=13   lines=117   7 passed, 7 xfailed in 0.27s
+  [6/93] click.decorators                 branches=63   lines=159   22 passed, 12 xfailed in 2.36s
+  [7/93] click.parser                     branches=35   lines=112   6 passed, 11 xfailed, 2 warnings in 0.35s
+  [8/93] click.testing                    branches=48   lines=188   1 failed, 8 passed, 8 xfailed in 0.33s
+  [9/93] click.formatting                 branches=53   lines=112   14 passed, 12 xfailed in 0.58s
+  [10/93] click.exceptions                 branches=48   lines=151   26 passed, 15 xfailed in 0.53s
+  [11/93] requests.utils                   branches=80   lines=246   40 passed, 16 xfailed, 1 warning in 0.87s
+  [12/93] requests.models                  branches=80   lines=249   1 failed, 17 passed, 23 xfailed in 1.28s
+  [13/93] requests.sessions                branches=34   lines=128   5 passed, 16 xfailed in 1.35s
+  [14/93] requests.cookies                 branches=45   lines=156   22 passed, 8 xfailed in 0.45s
+  [15/93] requests.adapters                branches=18   lines=105   4 passed, 15 xfailed in 0.56s
+  [16/93] requests.auth                    branches=11   lines=75    4 passed, 6 xfailed, 6 warnings in 0.24s
+  [17/93] flask.app                        branches=36   lines=195   10 passed, 13 xfailed in 0.96s
+  [18/93] flask.cli                        branches=105  lines=202   11 passed, 14 xfailed in 0.77s
+  [19/93] flask.helpers                    branches=13   lines=75    4 passed, 12 xfailed in 0.64s
+  [20/93] flask.ctx                        branches=7    lines=84    5 passed, 14 xfailed in 0.45s
+  [21/93] flask.sessions                   branches=5    lines=83    5 passed, 9 xfailed in 0.34s
+  [22/93] flask.config                     branches=32   lines=91    17 passed, 10 xfailed in 0.41s
+  [23/93] flask.json.tag                   branches=23   lines=129   10 passed, 16 xfailed in 0.58s
+  [24/93] flask.testing                    branches=12   lines=65    6 passed, 9 xfailed in 0.49s
+  [25/93] flask.templating                 branches=1    lines=39    1 passed, 5 xfailed in 0.31s
+  [26/93] flask.json.provider              branches=11   lines=60    1 passed, 9 xfailed in 0.35s
+  [27/93] rich.console                     branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [28/93] rich.progress                    branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [29/93] rich.text                        branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [30/93] rich.table                       branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [31/93] rich.pretty                      branches=78   lines=257   22 passed, 2 xfailed in 0.74s
+  [32/93] rich.syntax                      branches=51   lines=198   11 passed, 12 xfailed in 1.16s
+  [33/93] rich.markdown                    branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [34/93] rich.style                       branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [35/93] rich.traceback                   branches=26   lines=113   6 passed, 2 xfailed in 0.20s
+  [36/93] rich.segment                     branches=66   lines=101   4 passed, 1 xfailed in 0.11s
+  [37/93] rich.color                       branches=26   lines=75    3 passed, 3 xfailed in 0.12s
+  [38/93] rich.layout                      branches=33   lines=118   13 passed, 6 xfailed in 0.28s
+  [39/93] jinja2.compiler                  branches=50   lines=268   10 passed, 11 xfailed in 1.10s
+  [40/93] jinja2.filters                   branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [41/93] jinja2.environment               branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [42/93] jinja2.nodes                     branches=57   lines=472   10 passed, 18 xfailed in 0.94s
+  [43/93] jinja2.runtime                   branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [44/93] jinja2.parser                    branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [45/93] jinja2.ext                       branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [46/93] jinja2.lexer                     branches=28   lines=176   14 passed, 5 xfailed in 0.27s
+  [47/93] jinja2.utils                     branches=88   lines=261   29 passed, 12 xfailed in 1.15s
+  [48/93] jinja2.loaders                   branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [49/93] jinja2.sandbox                   branches=20   lines=106   11 passed, 9 xfailed in 0.35s
+  [50/93] jinja2.bccache                   branches=19   lines=119   9 passed, 9 xfailed in 0.27s
+  [51/93] httpx._client                    branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [52/93] httpx._models                    branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [53/93] httpx._urls                      branches=80   lines=166   23 passed, 10 xfailed in 0.54s
+  [54/93] httpx._main                      branches=69   lines=114   5 passed, 8 xfailed in 0.50s
+  [55/93] httpx._urlparse                  branches=93   lines=157   17 passed, 11 xfailed in 0.48s
+  [56/93] httpx._api                       branches=6    lines=29    
+  [57/93] httpx._utils                     branches=21   lines=72    16 passed, 11 xfailed in 0.33s
+  [58/93] httpx._transports.default        branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [59/93] httpx._config                    branches=13   lines=91    16 passed, 8 xfailed, 3 warnings in 0.42s
+  [60/93] httpx._auth                      branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [61/93] pydantic.types                   branches=114  lines=395   1 failed, 22 passed, 5 xfailed, 1 warning in 0.69s
+  [62/93] pydantic.json_schema             branches=79   lines=340   11 passed, 37 xfailed in 3.96s
+  [63/93] pydantic.main                    branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [64/93] pydantic.fields                  branches=164  lines=396   1 failed, 23 passed, 3 xfailed in 0.43s
+  [65/93] pydantic.config                  branches=15   lines=135   4 passed, 1 xfailed in 0.14s
+  [66/93] pydantic.networks                branches=97   lines=262   
+  [67/93] pydantic.functional_validators   branches=62   lines=134   3 failed, 4 passed, 1 xfailed in 0.17s
+  [68/93] pydantic.color                   branches=43   lines=121   7 passed, 15 xfailed, 5 warnings in 0.64s
+  [69/93] pydantic.type_adapter            branches=36   lines=128   2 failed, 5 passed, 8 xfailed in 1.18s
+  [70/93] pydantic.functional_serializers  branches=31   lines=61    2 failed, 4 passed in 0.12s
+  [71/93] werkzeug.http                    branches=147  lines=283   39 passed, 23 xfailed in 1.25s
+  [72/93] werkzeug.serving                 branches=42   lines=163   5 passed, 20 xfailed in 1.34s
+  [73/93] werkzeug.datastructures.structures branches=81   lines=301   35 passed, 19 xfailed, 1 warning in 1.32s
+  [74/93] werkzeug.routing.map             branches=76   lines=197   17 passed, 23 xfailed in 1.32s
+  [75/93] werkzeug.routing.rules           branches=23   lines=126   8 passed, 4 xfailed in 0.19s
+  [76/93] werkzeug.exceptions              branches=45   lines=265   25 passed, 8 xfailed in 0.34s
+  [77/93] werkzeug.wrappers.response       branches=81   lines=193   24 passed, 15 xfailed in 0.75s
+  [78/93] werkzeug.sansio.response         branches=65   lines=154   8 passed, 6 xfailed in 0.37s
+  [79/93] werkzeug.utils                   branches=39   lines=134   1 failed, 6 passed, 14 xfailed in 0.43s
+  [80/93] werkzeug.wrappers.request        branches=52   lines=109   7 passed, 8 xfailed in 0.37s
+  [81/93] werkzeug.local                   branches=65   lines=268   2 failed, 16 passed, 18 xfailed in 0.87s
+  [82/93] werkzeug.wsgi                    branches=54   lines=163   26 passed, 21 xfailed in 0.81s
+  [83/93] starlette.routing                branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [84/93] starlette.testclient             branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [85/93] starlette.datastructures         branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [86/93] starlette.responses              branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [87/93] starlette.requests               branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [88/93] starlette.formparsers            branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [89/93] starlette.applications           branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [90/93] starlette.middleware.errors      branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [91/93] starlette.staticfiles            branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [92/93] starlette.templating             branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [93/93] starlette.middleware.base        branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+
+======================================================================
+RESULTS (pynguin)
+======================================================================
+  mean branches: 36.3  (n=93)
+    click        mean=62.6 (n=10)
+    flask        mean=24.5 (n=10)
+    httpx        mean=28.2 (n=10)
+    jinja2       mean=21.8 (n=12)
+    pydantic     mean=64.1 (n=10)
+    requests     mean=44.7 (n=6)
+    rich         mean=23.3 (n=12)
+    starlette    mean=0.0 (n=11)
+    werkzeug     mean=64.2 (n=12)
+
+  Time: 7478s (124.6m)
+Saved to /share/edc/home/aamayuelasfernandez/qcurious-tester/results/repo_explore_bench/exp4_pynguin.json
