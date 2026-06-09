@@ -30,3 +30,6 @@ data/
 # plans
 plans/
 paper/
+
+# rebuttal texts (reviews, replies, etc.)
+results/rebuttal/
