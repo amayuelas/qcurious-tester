@@ -1,0 +1,4 @@
+FROM curiositybench-baselines:latest
+COPY synthbench /usr/local/lib/python3.11/site-packages/synthbench
+ENV PYNGUIN_DANGER_AWARE=1
+WORKDIR /opt
