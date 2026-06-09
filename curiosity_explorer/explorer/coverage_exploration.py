@@ -21,6 +21,7 @@ import random
 import re
 from concurrent.futures import ThreadPoolExecutor
 
+import config
 from ..llm import generate_with_model, batch_generate
 
 log = logging.getLogger(__name__)
@@ -31,42 +32,83 @@ class CoverageMap:
 
     def __init__(self):
         self.covered_branches = set()   # branches we've confirmed are reachable
+        self.n_covered = 0              # cumulative count (used when only counts are available)
         self.total_branches = 0         # total branches in the program (if known)
         self.test_to_branches = {}      # which test covered which branches
         self.step_coverage = []         # coverage at each step
+        # Summary-content ablation (Exp 7): which fields coverage_summary() renders.
+        #   "full"      — count + rate/stagnation + most-informative exemplars (default)
+        #   "stats"     — count + rate/stagnation only (no exemplars)
+        #   "exemplars" — most-informative exemplars only (no aggregate statistics)
+        #   "none"      — nothing (source + history only)
+        # Isolates whether the actionable signal is the aggregate statistics or
+        # the exemplar pointers, per Reviewer c8fs's follow-up.
+        self.map_mode = "full"
+        # Optional override applied ONLY to the Q-value scorer's summary (None =
+        # fall back to map_mode). Lets the scorer's summary be ablated while
+        # generation is held fixed, separating the field's selection role from
+        # its generation role — the within-round-constant test.
+        self.score_map_mode = None
 
     def update(self, test_code, branches_hit, new_branches):
-        """Bayesian update: incorporate observation from running a test."""
-        self.covered_branches.update(branches_hit)
-        self.test_to_branches[test_code[:80]] = len(branches_hit)
-        self.step_coverage.append(len(self.covered_branches))
+        """Bayesian update: incorporate observation from running a test.
 
-    def coverage_summary(self):
-        """Format the posterior for the LLM prompt."""
-        n = len(self.covered_branches)
+        `branches_hit` may be the actual set of branch keys the test reached
+        (preferred — gives an exact deduplicated posterior), or empty when the
+        runner only reports counts. `new_branches` is the count of newly
+        discovered branches reported by the runner; it is the authoritative
+        signal when `branches_hit` is unavailable.
+        """
+        if branches_hit:
+            self.covered_branches.update(branches_hit)
+            self.n_covered = len(self.covered_branches)
+        else:
+            # Runner handed us only a count — accumulate it.
+            self.n_covered += new_branches
+        self.test_to_branches[test_code[:80]] = new_branches
+        self.step_coverage.append(self.n_covered)
+
+    def coverage_summary(self, mode=None):
+        """Format the posterior for the LLM prompt.
+
+        `mode` (defaults to self.map_mode) selects which fields are rendered —
+        see __init__ for the summary-content ablation. Passing it explicitly
+        lets a caller (e.g. the Q-value scorer) override the global mode to
+        isolate a field's role in selection independently of generation.
+        """
+        mode = mode or self.map_mode
+        if mode == "none":
+            return ""
+
+        include_stats = mode in ("full", "stats")
+        include_exemplars = mode in ("full", "exemplars")
+
+        n = self.n_covered
         parts = [f"COVERAGE MAP (Bayesian posterior — what you know about the program):"]
-        parts.append(f"  Branches discovered: {n}")
-        if self.total_branches:
-            parts.append(f"  Estimated total branches: {self.total_branches}")
-            parts.append(f"  Coverage: {100*n/self.total_branches:.0f}%")
 
-        # Learning progress (coverage growth rate)
-        if len(self.step_coverage) >= 2:
-            recent_growth = self.step_coverage[-1] - self.step_coverage[-2]
-            avg_growth = self.step_coverage[-1] / len(self.step_coverage)
-            parts.append(f"  Last step discovered: {recent_growth} new branches")
-            parts.append(f"  Average per step: {avg_growth:.1f} branches")
+        if include_stats:
+            parts.append(f"  Branches discovered: {n}")
+            if self.total_branches:
+                parts.append(f"  Estimated total branches: {self.total_branches}")
+                parts.append(f"  Coverage: {100*n/self.total_branches:.0f}%")
 
-            if recent_growth == 0 and len(self.step_coverage) >= 3:
-                stagnant = sum(1 for i in range(max(0, len(self.step_coverage)-3),
-                                                 len(self.step_coverage))
-                               if i > 0 and self.step_coverage[i] == self.step_coverage[i-1])
-                if stagnant >= 2:
-                    parts.append(f"  WARNING: Coverage has stagnated for {stagnant} steps")
-                    parts.append(f"  You may need a fundamentally different approach")
+            # Learning progress (coverage growth rate)
+            if len(self.step_coverage) >= 2:
+                recent_growth = self.step_coverage[-1] - self.step_coverage[-2]
+                avg_growth = self.step_coverage[-1] / len(self.step_coverage)
+                parts.append(f"  Last step discovered: {recent_growth} new branches")
+                parts.append(f"  Average per step: {avg_growth:.1f} branches")
+
+                if recent_growth == 0 and len(self.step_coverage) >= 3:
+                    stagnant = sum(1 for i in range(max(0, len(self.step_coverage)-3),
+                                                     len(self.step_coverage))
+                                   if i > 0 and self.step_coverage[i] == self.step_coverage[i-1])
+                    if stagnant >= 2:
+                        parts.append(f"  WARNING: Coverage has stagnated for {stagnant} steps")
+                        parts.append(f"  You may need a fundamentally different approach")
 
         # Which tests were most informative
-        if self.test_to_branches:
+        if include_exemplars and self.test_to_branches:
             best = sorted(self.test_to_branches.items(), key=lambda x: -x[1])[:3]
             parts.append(f"  Most informative tests:")
             for test, count in best:
@@ -171,7 +213,7 @@ Format your response as:
 """
 
     # Generate one plan (not K plans — the plan is the unit)
-    response = generate_with_model("gemini-3-flash-preview", prompt,
+    response = generate_with_model(config.MODEL, prompt,
                                     temperature=0.7, max_tokens=1500)
 
     # Parse multiple test scripts from the plan
@@ -214,6 +256,21 @@ def generate_coverage_qvalue(source, module_name, test_history, coverage_map,
     best_plan = _score_and_select_plan(plans, source, module_name,
                                         coverage_map, gamma=gamma)
     return best_plan
+
+
+def generate_divhints_random(source, module_name, test_history, coverage_map,
+                             K=3, plan_length=3):
+    """Experiment 1: identical generation to generate_coverage_qvalue, but
+    select a plan uniformly at random instead of by Q-value. Isolates the
+    Q-value selection mechanism from the diversity-hinted generation pipeline.
+    """
+    plans = _generate_k_plans(source, module_name, test_history, coverage_map,
+                              K=K, plan_length=plan_length)
+
+    if not plans:
+        return generate_coverage_greedy(source, module_name, test_history,
+                                        coverage_map, K)
+    return random.choice(plans)
 
 
 def _generate_k_plans(source, module_name, test_history, coverage_map,
@@ -328,8 +385,8 @@ Evaluate this plan by answering TWO questions with just numbers:
 Format: immediate, future
 Example: 15, 25"""
 
-        resp = generate_with_model("gemini-3-flash-preview", prompt,
-                                    temperature=0.3, max_tokens=50)
+        resp = generate_with_model(config.MODEL, prompt,
+                                    temperature=0.3, max_tokens=256)
         immediate, future = _parse_scores(resp)
         q = immediate + gamma * future
         log.info(f"Plan {plan_idx}: ḡ={immediate}, γE[v]={gamma*future:.1f}, Q={q:.1f}")
@@ -410,8 +467,8 @@ Answer TWO questions with just numbers:
 Format: immediate, future
 Example: 5, 12"""
 
-        resp = generate_with_model("gemini-3-flash-preview", prompt,
-                                    temperature=0.3, max_tokens=50)
+        resp = generate_with_model(config.MODEL, prompt,
+                                    temperature=0.3, max_tokens=256)
         immediate, future = _parse_scores(resp)
         return immediate + gamma * future
 

@@ -220,6 +220,28 @@ class DockerCoverageRunner:
             "pass_rate": self._pass_count / total if total > 0 else 0.0,
         }
 
+    def snapshot(self):
+        """Capture mutable coverage state so it can be rolled back.
+
+        Used for counterfactual best-of-K (oracle) selection: trial-run each
+        candidate plan from the same state, then restore and commit the best.
+        """
+        return {
+            "branches": set(self.cumulative_branches),
+            "lines": set(self.cumulative_lines),
+            "test_count": self._test_count,
+            "pass_count": self._pass_count,
+            "fail_count": self._fail_count,
+        }
+
+    def restore(self, snap):
+        """Restore state previously captured with snapshot()."""
+        self.cumulative_branches = set(snap["branches"])
+        self.cumulative_lines = set(snap["lines"])
+        self._test_count = snap["test_count"]
+        self._pass_count = snap["pass_count"]
+        self._fail_count = snap["fail_count"]
+
     def reset(self):
         self.cumulative_branches = set()
         self.cumulative_lines = set()

@@ -1,0 +1,15 @@
+# External-baseline image for Experiment 4 (rebuttal).
+# Adds the test-generation tools on top of curiositybench so coverage of their
+# generated suites is measured against the SAME installed package versions our
+# strategies use. Generation tools run here; coverage is measured with the
+# same coverage.py 7.6.1 already in the base image.
+FROM curiositybench:latest
+
+RUN pip install --no-cache-dir \
+    pynguin \
+    coverup \
+    pytest
+
+# Pynguin refuses to run without this opt-in (it executes code under test).
+ENV PYNGUIN_DANGER_AWARE=1
+WORKDIR /opt

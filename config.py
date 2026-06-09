@@ -15,6 +15,10 @@ MISTRAL_API_KEY = os.environ.get("MISTRAL_API_KEY", "")
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "")
 FIREWORKS_API_BASE = "https://api.fireworks.ai/inference/v1"
 FIREWORKS_API_KEY = os.environ.get("FIREWORKS_API_KEY", "")
+# Local vLLM OpenAI-compatible server (no API rate limits). Used for any model
+# whose id starts with "google/" or contains "gemma".
+VLLM_API_BASE = os.environ.get("VLLM_API_BASE", "http://localhost:8000/v1")
+VLLM_API_KEY = os.environ.get("VLLM_API_KEY", "EMPTY")
 LOGPROB_MODEL = "accounts/fireworks/models/gpt-oss-120b"
 MODEL = os.environ.get("MODEL", "gemini-3-flash-preview")
 

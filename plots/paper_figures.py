@@ -157,9 +157,14 @@ def _plot_exploration_curves_single(data, bench, model_keys, filename,
 def fig_exploration_curves(data):
     """Generate exploration curves: separate images per benchmark."""
     # All models averaged — separate per benchmark (50% textwidth)
+    bench_titles = {
+        "repo_explore_bench": "RepoExploreBench",
+        "testgeneval": "TestGenEval Lite",
+    }
     for bench, short in [("repo_explore_bench", "reb"), ("testgeneval", "tge")]:
         _plot_exploration_curves_single(data, bench, list(MODELS.keys()),
-                                        f"fig1_exploration_curves_{short}")
+                                        f"fig1_exploration_curves_{short}",
+                                        title=bench_titles[bench])
 
     # Per model — separate per benchmark (33% textwidth for 3-column layout)
     for model_key, (model_name, _) in MODELS.items():

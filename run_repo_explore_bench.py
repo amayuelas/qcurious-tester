@@ -37,6 +37,10 @@ from curiosity_explorer.explorer.coverage_exploration import (
     CoverageMap, _parse_script, _parse_plan,
     generate_plans_for_exec_selection,
 )
+from curiosity_explorer.explorer.covbayes import (
+    module_functions, covered_quals, plan_expected_gain,
+    predict_plan_functions,
+)
 from curiosity_explorer.benchmarks.repo_explore_bench import (
     load_benchmark, get_benchmark_info, DEFAULT_SEEDS, DOCKER_IMAGE,
 )
@@ -50,6 +54,14 @@ EXEC_BUDGET = 24
 K = 3
 PLAN_LENGTH = 3
 GAMMA = 0.5
+# Summary-content ablation (Exp 7): set from --map-mode in main(), read by
+# run_strategy() when constructing each CoverageMap. Module-global so it reaches
+# the ThreadPool workers without threading through run_strategy's signature.
+MAP_MODE = "full"
+# Optional override applied ONLY to the Q-value scorer's summary (None = use
+# MAP_MODE). Holds generation fixed while ablating the scorer's summary, to
+# separate a field's selection role from its generation role.
+SCORE_MAP_MODE = None
 
 
 def parse_args():
@@ -63,7 +75,23 @@ def parse_args():
     p.add_argument("--gamma", type=float, default=GAMMA)
     p.add_argument("--parallel", type=int, default=4,
                    help="Number of targets to run in parallel")
+    p.add_argument("--per-strategy-cost", action="store_true",
+                   help="Record per-strategy tokens/calls (Exp 6). Requires "
+                        "--parallel 1 (uses the global cost counter).")
     p.add_argument("--output", default="repo_explore_bench_results.json")
+    p.add_argument("--map-mode", default="full",
+                   choices=["full", "stats", "exemplars", "none"],
+                   help="Summary-content ablation (Exp 7): which fields the "
+                        "coverage-state summary exposes in BOTH generation and "
+                        "Q-value scoring. full=count+rate+exemplars (default); "
+                        "stats=count+rate only; exemplars=most-informative tests "
+                        "only; none=source+history only.")
+    p.add_argument("--score-map-mode", default=None,
+                   choices=["full", "stats", "exemplars", "none"],
+                   help="Exp 7 refinement: override the summary mode for the "
+                        "Q-value SCORER only (generation stays at --map-mode). "
+                        "Default None = same as --map-mode. Use to hold "
+                        "generation fixed and ablate just the selection signal.")
     return p.parse_args()
 
 
@@ -151,8 +179,16 @@ Respond with ONLY executable Python code.
     return [_parse_script(r) for r in responses if _parse_script(r)]
 
 
-def gen_cov_qvalue(module, source, hist, cov_map, K, plan_length, gamma):
-    """Generate K plans, score by Q-value, return the best plan."""
+def gen_k_plans(module, source, hist, cov_map, K, plan_length, use_diversity=True):
+    """Generate K multi-step plans (generation only, no selection).
+
+    Shared by cov_qvalue, divhints_random, and cov_greedy_multistep so the
+    conditions use an identical generation pipeline. With use_diversity=True
+    each plan gets a distinct diversity hint (CovQValue's generator); with
+    use_diversity=False every plan gets the same neutral instruction, so the
+    diversity hint is the ONLY difference from the diverse pipeline. Returns a
+    list of plans, each a list of plan_length scripts.
+    """
     code_ctx = f"```python\n{source[:2500]}\n```" if source else ""
     cov_summary = cov_map.coverage_summary()
     history_str = ""
@@ -168,10 +204,11 @@ def gen_cov_qvalue(module, source, hist, cov_map, K, plan_length, gamma):
         "Focus on CONFIGURATION — different parameter combinations, options, flags.",
         "Focus on RARELY-USED features — optional arguments, deprecated paths.",
     ]
+    neutral_hint = "Target the most promising uncovered code paths."
 
     prompts = []
     for i in range(K):
-        hint = diversity_hints[i % len(diversity_hints)]
+        hint = diversity_hints[i % len(diversity_hints)] if use_diversity else neutral_hint
         prompt = f"""Module: {module}
 {code_ctx}
 
@@ -209,7 +246,12 @@ Format your response as:
 
     # Generate K plans
     responses = batch_generate(prompts, temperature=0.9, max_tokens=1500)
-    plans = [_parse_plan(r) for r in responses if _parse_plan(r)]
+    return [_parse_plan(r) for r in responses if _parse_plan(r)]
+
+
+def gen_cov_qvalue(module, source, hist, cov_map, K, plan_length, gamma):
+    """Generate K plans, score by Q-value, return the best plan."""
+    plans = gen_k_plans(module, source, hist, cov_map, K, plan_length)
 
     if not plans:
         return gen_cov_greedy(module, source, hist, cov_map, K)
@@ -220,10 +262,42 @@ Format your response as:
     return _score_and_select(plans, module, source, cov_map, gamma)
 
 
-def _score_and_select(plans, module, source, cov_map, gamma):
-    """Score plans by Q-value and return the best."""
+def gen_divhints_random(module, source, hist, cov_map, K, plan_length):
+    """Experiment 1: identical generation to cov_qvalue, but pick a plan
+    uniformly at random instead of by Q-value. Isolates the contribution of
+    the Q-value selection mechanism from the diversity-hinted generation."""
+    plans = gen_k_plans(module, source, hist, cov_map, K, plan_length)
+
+    if not plans:
+        return gen_cov_greedy(module, source, hist, cov_map, K)
+    return _random.choice(plans)
+
+
+def gen_cov_greedy_multistep(module, source, hist, cov_map, K, plan_length):
+    """Experiment 3: multi-step plan generation WITHOUT diversity hints,
+    selected at random. Identical to divhints_random except the diversity
+    hints are replaced by a neutral instruction — so it isolates the
+    contribution of multi-step planning from the diversity hints (and from the
+    Q-value selection). Bridges single-step cov_greedy and divhints_random."""
+    plans = gen_k_plans(module, source, hist, cov_map, K, plan_length,
+                        use_diversity=False)
+
+    if not plans:
+        return gen_cov_greedy(module, source, hist, cov_map, K)
+    return _random.choice(plans)
+
+
+def _score_plans(plans, module, source, cov_map, gamma):
+    """Score each plan by LLM-estimated Q-value.
+
+    Returns dict idx -> {"immediate": ĝ, "future": v̂, "q": ĝ + γ·v̂}. Shared by
+    cov_qvalue (selection) and cov_qvalue_calib (calibration logging) so both
+    use the identical scoring prompt — the calibration must describe the real
+    scorer, not a copy that can drift.
+    """
     code_ctx = f"```python\n{source[:2000]}\n```" if source else ""
-    cov_summary = cov_map.coverage_summary()
+    # Scorer-only summary override (Exp 7): None falls back to map_mode.
+    cov_summary = cov_map.coverage_summary(cov_map.score_map_mode)
 
     def score_plan(idx):
         plan = plans[idx]
@@ -246,13 +320,19 @@ Evaluate by answering TWO questions with just numbers:
 Format: immediate, future
 Example: 15, 25"""
 
-        resp = generate_with_model("gemini-3-flash-preview", prompt, 0.3, 50)
+        # Score with the active model (config.MODEL), not a hardcoded gemini —
+        # so single-model runs (e.g. a local vLLM gemma) score with the same
+        # model that generates, fixing the cross-model fairness caveat.
+        # max_tokens must clear a thinking-model's reasoning budget: at 50 the
+        # gemini-3-flash-preview scorer was truncated mid-thought and returned
+        # an empty string, silently parsing to 0 (the Exp-1 scorer bug).
+        resp = generate_with_model(config.MODEL, prompt, 0.3, 256)
         nums = re.findall(r'\d+', resp)
         imm = int(nums[0]) if len(nums) >= 1 else 0
         fut = int(nums[1]) if len(nums) >= 2 else 0
         q = imm + gamma * fut
         log.info(f"Plan {idx}: ḡ={imm}, γE[v]={gamma*fut:.1f}, Q={q:.1f}")
-        return q
+        return {"immediate": imm, "future": fut, "q": q}
 
     scores = {}
     with ThreadPoolExecutor(max_workers=len(plans)) as ex:
@@ -262,11 +342,96 @@ Example: 15, 25"""
             try:
                 scores[idx] = f.result()
             except Exception:
-                scores[idx] = 0
+                scores[idx] = {"immediate": 0, "future": 0, "q": 0}
+    return scores
 
-    best = max(scores, key=scores.get)
-    log.info(f"Selected plan {best} with Q={scores[best]:.1f}")
+
+def _score_and_select(plans, module, source, cov_map, gamma):
+    """Score plans by Q-value and return the best."""
+    scores = _score_plans(plans, module, source, cov_map, gamma)
+    best = max(scores, key=lambda i: scores[i]["q"])
+    log.info(f"Selected plan {best} with Q={scores[best]['q']:.1f}")
     return plans[best]
+
+
+def _score_plans_ranking(plans, module, source, cov_map):
+    """Score plans by LLM RANKING in one call (vs absolute scoring in _score_plans).
+
+    Motivated by LLM-as-judge literature: comparative ranking is significantly more
+    reliable than absolute numerical scoring on a 0–50 scale. One call per round
+    instead of K (also helps cost normalization in Exp 6).
+    """
+    K = len(plans)
+    if K == 1:
+        return {0: {"q": 1, "rank": 1}}
+
+    code_ctx = f"```python\n{source[:2000]}\n```" if source else ""
+    cov_summary = cov_map.coverage_summary(cov_map.score_map_mode)  # Exp 7 scorer override
+    labels = [chr(ord('A') + i) for i in range(K)]
+    label_list = ", ".join(labels)
+
+    plan_blocks = []
+    for label, plan in zip(labels, plans):
+        ps = ""
+        for i, s in enumerate(plan):
+            ps += f"\nStep {i+1}:\n```python\n{s[:200]}\n```\n"
+        plan_blocks.append(f"PLAN {label}:{ps}")
+    plans_section = "\n".join(plan_blocks)
+
+    prompt = f"""Module: {module}
+{code_ctx}
+
+{cov_summary}
+
+Consider these {K} test plans (each a sequence of {len(plans[0])} scripts):
+
+{plans_section}
+
+Which plan is MOST likely to discover the most new branches — counting BOTH
+immediate discovery AND additional branches its setup unlocks for future tests?
+
+Rank ALL {K} plans from BEST to WORST. Use the labels: {label_list}.
+Output ONLY the ranking on a single line, separated by spaces, best first."""
+
+    resp = generate_with_model(config.MODEL, prompt, 0.3, 256)
+
+    # Parse: find labels in order of appearance
+    label_set = set(labels)
+    found = []
+    for m in re.finditer(r'\b([A-Z])\b', resp):
+        c = m.group(1)
+        if c in label_set and c not in found:
+            found.append(c)
+        if len(found) == K:
+            break
+    # Fill any missing labels at the end (parse partial -> assume the rest are worst)
+    if len(found) < K:
+        for lbl in labels:
+            if lbl not in found:
+                found.append(lbl)
+
+    scores = {}
+    for rank, lbl in enumerate(found):
+        idx = labels.index(lbl)
+        scores[idx] = {"q": K - rank, "rank": rank + 1}
+    log.info(f"Ranking: {' '.join(found)} -> plan {labels.index(found[0])}")
+    return scores
+
+
+def _score_and_select_ranking(plans, module, source, cov_map):
+    scores = _score_plans_ranking(plans, module, source, cov_map)
+    best = max(scores, key=lambda i: scores[i]["q"])
+    return plans[best]
+
+
+def gen_cov_qvalue_rank(module, source, hist, cov_map, K, plan_length):
+    """Generate K plans, score by LLM ranking (1 call), return the best plan."""
+    plans = gen_k_plans(module, source, hist, cov_map, K, plan_length)
+    if not plans:
+        return gen_cov_greedy(module, source, hist, cov_map, K)
+    if len(plans) == 1:
+        return plans[0]
+    return _score_and_select_ranking(plans, module, source, cov_map)
 
 
 # ---------------------------------------------------------------------------
@@ -288,9 +453,19 @@ def run_strategy(target, strategy, seed, exec_budget, K, gamma, source):
 
     hist = []
     cov_map = CoverageMap()
+    cov_map.map_mode = MAP_MODE  # Exp 7: summary-content ablation
+    cov_map.score_map_mode = SCORE_MAP_MODE  # Exp 7: scorer-only override
     executions = 0
     branch_curve = []
     line_curve = []
+    calib_log = []  # per-round (predicted Q, realized gain) records for Exp 2
+    exp9_log = []   # per-round (predicted vs actually-covered functions) for Exp 9
+
+    # CovBayes (Exp 11): per-function reachability posterior Beta(alpha, beta).
+    cb_funcs = module_functions(source) if strategy in (
+        "cov_bayes", "cov_bayes_calib") else []
+    cb_quals = [f[0] for f in cb_funcs]
+    cb_post = {q: [1.0, 1.0] for q in cb_quals}
 
     while executions < exec_budget:
         # --- Generation ---
@@ -299,10 +474,225 @@ def run_strategy(target, strategy, seed, exec_budget, K, gamma, source):
         elif strategy == "cov_qvalue":
             scripts = gen_cov_qvalue(module, source, hist, cov_map,
                                       K, PLAN_LENGTH, gamma)
-        elif strategy == "cov_qvalue_exec":
+        elif strategy == "cov_qvalue_rank":
+            scripts = gen_cov_qvalue_rank(module, source, hist, cov_map,
+                                           K, PLAN_LENGTH)
+        elif strategy == "divhints_random":
+            scripts = gen_divhints_random(module, source, hist, cov_map,
+                                          K, PLAN_LENGTH)
+        elif strategy == "cov_greedy_multistep":
+            scripts = gen_cov_greedy_multistep(module, source, hist, cov_map,
+                                               K, PLAN_LENGTH)
+        elif strategy in ("cov_qvalue_exec", "divhints_oracle",
+                          "cov_qvalue_calib", "cov_bayes", "cov_bayes_calib"):
             scripts = None  # handled below
         else:
             scripts = gen_standard(module, source, hist, K)
+
+        # --- Oracle selection (Exp 1 ceiling): trial-run all K plans,
+        #     commit the one with the highest realized branch gain. The
+        #     K-1 discarded trials are free lookahead; only the committed
+        #     plan's steps count against the budget. ---
+        if strategy == "divhints_oracle":
+            plans = gen_k_plans(module, source, hist, cov_map, K, PLAN_LENGTH)
+            if not plans:
+                executions += 1
+                branch_curve.append(runner.get_cumulative_coverage())
+                line_curve.append(runner.get_cumulative_lines())
+                continue
+
+            snap = runner.snapshot()
+            best_plan, best_gain = None, -1
+            for plan in plans:
+                runner.restore(snap)
+                for step in plan:
+                    runner.run_test(step)
+                gain = runner.get_cumulative_coverage() - len(snap["branches"])
+                if gain > best_gain:
+                    best_gain, best_plan = gain, plan
+
+            # Commit the winner: restore pre-round state, re-run within budget
+            runner.restore(snap)
+            for step in best_plan:
+                if executions >= exec_budget:
+                    break
+                result = runner.run_test(step)
+                hist.append((step, result))
+                cov_map.update(step, set(), result.new_branches)
+                executions += 1
+                branch_curve.append(runner.get_cumulative_coverage())
+                line_curve.append(runner.get_cumulative_lines())
+            continue
+
+        # --- Q-value calibration logging (Exp 2): identical to cov_qvalue
+        #     (commits argmax-Q plan, counts only its steps against budget),
+        #     but additionally scores ALL K plans and trial-runs ALL K from a
+        #     snapshot to record each candidate's realized branch gain. Yields
+        #     paired (predicted ĝ/v̂/Q, realized gain) per candidate per round
+        #     so the offline analysis can measure scorer calibration and
+        #     selection accuracy. Trial runs are free lookahead (rolled back). ---
+        if strategy == "cov_qvalue_calib":
+            plans = gen_k_plans(module, source, hist, cov_map, K, PLAN_LENGTH)
+            if not plans:
+                executions += 1
+                branch_curve.append(runner.get_cumulative_coverage())
+                line_curve.append(runner.get_cumulative_lines())
+                continue
+
+            scores = _score_plans(plans, module, source, cov_map, gamma)
+
+            snap = runner.snapshot()
+            base_branches = len(snap["branches"])
+            candidates = []
+            for idx, plan in enumerate(plans):
+                runner.restore(snap)
+                for step in plan:
+                    runner.run_test(step)
+                realized = runner.get_cumulative_coverage() - base_branches
+                candidates.append({
+                    "predicted_immediate": scores[idx]["immediate"],
+                    "predicted_future": scores[idx]["future"],
+                    "predicted_q": scores[idx]["q"],
+                    "realized_gain": realized,
+                    "n_steps": len(plan),
+                })
+
+            selected_idx = max(range(len(plans)),
+                               key=lambda i: scores[i]["q"])
+
+            # Commit argmax-Q (matches cov_qvalue), counting steps vs budget
+            runner.restore(snap)
+            committed_gain = 0
+            for step in plans[selected_idx]:
+                if executions >= exec_budget:
+                    break
+                result = runner.run_test(step)
+                hist.append((step, result))
+                cov_map.update(step, set(), result.new_branches)
+                committed_gain += result.new_branches
+                executions += 1
+                branch_curve.append(runner.get_cumulative_coverage())
+                line_curve.append(runner.get_cumulative_lines())
+
+            calib_log.append({
+                "round": len(calib_log),
+                "base_branches": base_branches,
+                "selected_idx": selected_idx,
+                "committed_gain": committed_gain,
+                "candidates": candidates,
+            })
+            continue
+
+        # --- CovBayes (Exp 11): closed-form-IG selection over a per-function
+        #     Beta posterior. Same generation as cov_qvalue; the LLM only
+        #     predicts which functions a plan exercises, the math does the rest. ---
+        if strategy == "cov_bayes":
+            plans = gen_k_plans(module, source, hist, cov_map, K, PLAN_LENGTH)
+            if not plans:
+                executions += 1
+                branch_curve.append(runner.get_cumulative_coverage())
+                line_curve.append(runner.get_cumulative_lines())
+                continue
+
+            covered = covered_quals(runner.cumulative_lines, cb_funcs)
+            uncovered = [q for q in cb_quals if q not in covered]
+
+            if not uncovered or not cb_quals:
+                # nothing to model (all covered, or source unparsed) -> random pick
+                best_plan, best_preds = _random.choice(plans), {}
+            else:
+                best_ig, best_plan, best_preds = -1.0, plans[0], {}
+                for plan in plans:
+                    qf = predict_plan_functions(module, source, plan,
+                                                set(uncovered), config.MODEL)
+                    score = plan_expected_gain(cb_post, uncovered, qf)
+                    log.info(f"CovBayes plan score={score:.2f} "
+                             f"(predicts {len(qf)} uncovered fns)")
+                    if score > best_ig:
+                        best_ig, best_plan, best_preds = score, plan, qf
+
+            for step in best_plan:
+                if executions >= exec_budget:
+                    break
+                result = runner.run_test(step)
+                hist.append((step, result))
+                cov_map.update(step, set(), result.new_branches)
+                executions += 1
+                branch_curve.append(runner.get_cumulative_coverage())
+                line_curve.append(runner.get_cumulative_lines())
+
+            # conjugate update: newly covered fns -> alpha+1; predicted but
+            # still-uncovered -> beta+1.
+            new_cov = covered_quals(runner.cumulative_lines, cb_funcs)
+            for q in cb_quals:
+                if q in new_cov and q not in covered:
+                    cb_post[q][0] += 1.0
+                elif q in best_preds and q not in new_cov:
+                    cb_post[q][1] += 1.0
+            # Exp 9: log the committed plan's per-function predictions vs the
+            # functions it actually newly covered, with the coverage-map size,
+            # to test whether prediction quality improves as exploration proceeds.
+            exp9_log.append({
+                "round": len(exp9_log),
+                "n_covered_before": len(covered),
+                "n_uncovered_before": len(uncovered),
+                "predicted": {f: round(q, 3) for f, q in best_preds.items()},
+                "newly_covered": sorted(new_cov - covered),
+            })
+            continue
+
+        # --- CovBayes calibration (isolates SELECTION from generation variance):
+        #     score all K by CovBayes AND trial-run all K from a snapshot to get
+        #     each plan's realized gain, log the pairs, commit argmax-CovBayes.
+        #     Lets us measure whether argmax-CovBayes picks the best-of-K plan
+        #     above 1/K chance — the clean test the cross-run comparison can't give. ---
+        if strategy == "cov_bayes_calib":
+            plans = gen_k_plans(module, source, hist, cov_map, K, PLAN_LENGTH)
+            if not plans:
+                executions += 1
+                branch_curve.append(runner.get_cumulative_coverage())
+                line_curve.append(runner.get_cumulative_lines())
+                continue
+            covered = covered_quals(runner.cumulative_lines, cb_funcs)
+            uncovered = [q for q in cb_quals if q not in covered]
+
+            snap = runner.snapshot()
+            base = len(snap["branches"])
+            cands = []
+            preds_per_plan = []
+            for plan in plans:
+                qf = (predict_plan_functions(module, source, plan, set(uncovered),
+                                             config.MODEL) if uncovered else {})
+                cb_score = plan_expected_gain(cb_post, uncovered, qf) if uncovered else 0.0
+                preds_per_plan.append(qf)
+                runner.restore(snap)
+                for step in plan:
+                    runner.run_test(step)
+                realized = runner.get_cumulative_coverage() - base
+                cands.append({"cb_score": cb_score, "realized_gain": realized,
+                              "n_pred": len(qf), "n_steps": len(plan)})
+
+            sel = max(range(len(plans)), key=lambda i: cands[i]["cb_score"])
+            runner.restore(snap)
+            for step in plans[sel]:
+                if executions >= exec_budget:
+                    break
+                result = runner.run_test(step)
+                hist.append((step, result))
+                cov_map.update(step, set(), result.new_branches)
+                executions += 1
+                branch_curve.append(runner.get_cumulative_coverage())
+                line_curve.append(runner.get_cumulative_lines())
+
+            new_cov = covered_quals(runner.cumulative_lines, cb_funcs)
+            for q in cb_quals:
+                if q in new_cov and q not in covered:
+                    cb_post[q][0] += 1.0
+                elif q in preds_per_plan[sel] and q not in new_cov:
+                    cb_post[q][1] += 1.0
+            calib_log.append({"round": len(calib_log), "selected_idx": sel,
+                              "candidates": cands})
+            continue
 
         # --- Execution-based Q-value selection ---
         if strategy == "cov_qvalue_exec":
@@ -352,7 +742,8 @@ def run_strategy(target, strategy, seed, exec_budget, K, gamma, source):
             continue
 
         # --- Standard execution ---
-        if strategy == "cov_qvalue":
+        if strategy in ("cov_qvalue", "cov_qvalue_rank", "divhints_random",
+                        "cov_greedy_multistep"):
             for plan_script in scripts:
                 if executions >= exec_budget:
                     break
@@ -393,7 +784,7 @@ def run_strategy(target, strategy, seed, exec_budget, K, gamma, source):
             "passed": result.passed,
         })
 
-    return {
+    result = {
         "final": stats["branches"],
         "final_lines": stats["lines"],
         "pass_rate": stats["pass_rate"],
@@ -403,6 +794,11 @@ def run_strategy(target, strategy, seed, exec_budget, K, gamma, source):
         "line_curve": line_curve,
         "trace": trace,
     }
+    if calib_log:
+        result["calib"] = calib_log
+    if exp9_log:
+        result["exp9"] = exp9_log
+    return result
 
 
 # ---------------------------------------------------------------------------
@@ -458,20 +854,34 @@ def analyze_results(all_results, strategies):
                 "cohens_d": cohens_d, "n": len(deltas),
             }
 
-    # Pairwise: cov_qvalue vs cov_greedy
-    if "cov_qvalue" in strategies and "cov_greedy" in strategies:
+    # Pairwise paired comparisons
+    for a, b, key in [
+        ("cov_qvalue", "cov_greedy", "qvalue_vs_greedy"),
+        ("cov_qvalue", "divhints_random", "qvalue_vs_divhints_random"),
+        ("divhints_oracle", "divhints_random", "oracle_vs_divhints_random"),
+        ("divhints_oracle", "cov_qvalue", "oracle_vs_qvalue"),
+        ("divhints_random", "cov_greedy_multistep", "diversity_increment"),
+        ("cov_greedy_multistep", "cov_greedy", "multistep_increment"),
+    ]:
+        if a not in strategies or b not in strategies:
+            continue
         deltas = []
         for r in all_results:
-            if "cov_qvalue" in r["strategies"] and "cov_greedy" in r["strategies"]:
-                d = (r["strategies"]["cov_qvalue"]["final"] -
-                     r["strategies"]["cov_greedy"]["final"])
-                deltas.append(d)
+            if a in r["strategies"] and b in r["strategies"]:
+                deltas.append(r["strategies"][a]["final"] -
+                              r["strategies"][b]["final"])
         if len(deltas) >= 2 and statistics.stdev(deltas) > 0:
+            sd = statistics.stdev(deltas)
+            md = statistics.mean(deltas)
             t_stat, p_val = sp_stats.ttest_1samp(deltas, 0)
-            analysis["qvalue_vs_greedy"] = {
-                "mean_delta": statistics.mean(deltas),
-                "se": statistics.stdev(deltas) / len(deltas)**0.5,
+            analysis[key] = {
+                "mean_delta": md,
+                "se": sd / len(deltas)**0.5,
+                "wins": sum(1 for d in deltas if d > 0),
+                "losses": sum(1 for d in deltas if d < 0),
+                "ties": sum(1 for d in deltas if d == 0),
                 "t_stat": t_stat, "p_value": p_val,
+                "cohens_d": md / sd,
                 "n": len(deltas),
             }
 
@@ -483,7 +893,10 @@ def analyze_results(all_results, strategies):
 # ---------------------------------------------------------------------------
 
 def main():
+    global MAP_MODE, SCORE_MAP_MODE
     args = parse_args()
+    MAP_MODE = args.map_mode
+    SCORE_MAP_MODE = args.score_map_mode
     reset_cost()
 
     targets = load_benchmark(repos=args.repos, max_targets=args.max_targets)
@@ -499,6 +912,9 @@ def main():
     print(f"  Strategies: {strategies}", flush=True)
     print(f"  Seeds: {seeds}", flush=True)
     print(f"  Exec budget: {args.exec_budget} per run", flush=True)
+    print(f"  Map mode: {args.map_mode}"
+          + (f" (scorer: {args.score_map_mode})" if args.score_map_mode else ""),
+          flush=True)
     print(f"  Total runs: {total_runs}", flush=True)
     print("=" * 70, flush=True)
 
@@ -533,9 +949,18 @@ def main():
             "strategies": {},
         }
         for strategy in strategies:
+            # Per-strategy token/call accounting (Exp 6). Uses the global cost
+            # counter, so it's only correct with --parallel 1.
+            if args.per_strategy_cost:
+                reset_cost()
             result = run_strategy(target, strategy, seed,
                                    args.exec_budget, args.K, args.gamma,
                                    source)
+            if args.per_strategy_cost:
+                c = get_cost()
+                result["cost"] = {k: c[k] for k in
+                                  ("api_calls", "input_tokens", "output_tokens",
+                                   "total_tokens", "total_cost_usd")}
             run_result["strategies"][strategy] = result
         completed[0] += 1
         finals = {s: run_result["strategies"][s]["final"] for s in strategies}
@@ -612,12 +1037,26 @@ def main():
                   f"W={a['wins']} L={a['losses']} T={a['ties']}  "
                   f"p={a['p_value']:.4f} d={a['cohens_d']:.2f} {sig}", flush=True)
 
-    if "qvalue_vs_greedy" in analysis:
-        a = analysis["qvalue_vs_greedy"]
-        sig = "*" if a["p_value"] < 0.05 else ""
-        print(f"\ncov_qvalue vs cov_greedy: "
-              f"Δ={a['mean_delta']:>+.1f} ± {a['se']:.1f}  "
-              f"p={a['p_value']:.4f} {sig}", flush=True)
+    for key, label in [("qvalue_vs_greedy", "cov_qvalue vs cov_greedy"),
+                       ("qvalue_vs_divhints_random",
+                        "cov_qvalue vs divhints_random (Exp 1)"),
+                       ("oracle_vs_divhints_random",
+                        "divhints_oracle vs divhints_random (Exp 1 ceiling)"),
+                       ("oracle_vs_qvalue",
+                        "divhints_oracle vs cov_qvalue (Exp 1 headroom)"),
+                       ("diversity_increment",
+                        "divhints_random vs cov_greedy_multistep (+diversity, Exp 3)"),
+                       ("multistep_increment",
+                        "cov_greedy_multistep vs cov_greedy (+multistep, Exp 3)")]:
+        if key in analysis:
+            a = analysis[key]
+            sig = "***" if a["p_value"] < 0.001 else ("**" if a["p_value"] < 0.01
+                    else ("*" if a["p_value"] < 0.05 else ""))
+            extra = (f"  W={a['wins']} L={a['losses']} T={a['ties']}  "
+                     f"d={a['cohens_d']:.2f}" if "wins" in a else "")
+            print(f"\n{label}: "
+                  f"Δ={a['mean_delta']:>+.1f} ± {a['se']:.1f}{extra}  "
+                  f"p={a['p_value']:.4f} {sig}", flush=True)
 
     # --- Per-repo breakdown ---
     print(f"\nPer-repo means:", flush=True)
@@ -643,7 +1082,8 @@ def main():
             "config": {
                 "strategies": strategies, "seeds": seeds,
                 "exec_budget": args.exec_budget, "K": args.K,
-                "gamma": args.gamma,
+                "gamma": args.gamma, "map_mode": args.map_mode,
+                "score_map_mode": args.score_map_mode,
             },
             "results": all_results,
             "analysis": {k: v for k, v in analysis.items()

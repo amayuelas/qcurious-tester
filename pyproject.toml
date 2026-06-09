@@ -1,5 +1,5 @@
 [project]
-name = "inference-curiosity"
+name = "qcurious-tester"
 version = "0.1.0"
 description = "Curiosity-guided inference-time code exploration"
 requires-python = ">=3.10"

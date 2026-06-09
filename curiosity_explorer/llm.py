@@ -2,10 +2,22 @@
 
 import hashlib
 import logging
+import random
 import sys
+import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 import config
+
+# Transient API failures (rate limits, server hiccups, timeouts) that are worth
+# retrying with backoff rather than silently returning "" — an empty response
+# parses to a zero score and can corrupt Q-value selection. Matched as substrings
+# of the exception text (provider-agnostic across the OpenAI-compatible clients).
+_RETRYABLE = ("429", "rate", "limit", "quota", "resource_exhausted", "overloaded",
+              "timeout", "timed out", "temporarily", "503", "502", "500",
+              "unavailable", "connection")
+_MAX_RETRIES = 5      # attempts after the first try
+_BACKOFF_BASE = 2.0   # seconds; exponential with full jitter, capped at 60s
 
 try:
     from openai import OpenAI
@@ -31,6 +43,9 @@ def _client_for_model(model: str) -> OpenAI:
                       api_key=config.MISTRAL_API_KEY)
     elif model.startswith("gpt"):
         return OpenAI(api_key=config.OPENAI_API_KEY)
+    elif model.startswith("google/") or "gemma" in model.lower():
+        return OpenAI(base_url=config.VLLM_API_BASE,
+                      api_key=config.VLLM_API_KEY)
     else:
         return OpenAI(base_url=config.GEMINI_API_BASE,
                       api_key=config.GEMINI_API_KEY)
@@ -108,30 +123,46 @@ def generate_with_model(model: str, prompt: str, temperature: float = 0.7,
             _cache_hits += 1
             return _cache[key]
 
-    try:
-        cli = _get_client(model)
-        # OpenAI gpt-5+ models require max_completion_tokens
-        if model.startswith("gpt"):
-            tok_param = {"max_completion_tokens": max_tokens}
-        else:
-            tok_param = {"max_tokens": max_tokens}
-        response = cli.chat.completions.create(
-            model=model,
-            messages=[{"role": "user", "content": prompt}],
-            temperature=temperature,
-            **tok_param,
-        )
-        msg = response.choices[0].message
-        text = msg.content or getattr(msg, "reasoning_content", None) or ""
-        result = text.strip()
+    # OpenAI gpt-5+ models require max_completion_tokens
+    if model.startswith("gpt"):
+        tok_param = {"max_completion_tokens": max_tokens}
+    else:
+        tok_param = {"max_tokens": max_tokens}
 
-        # Track token usage
-        input_toks = (response.usage.prompt_tokens or 0) if response.usage else 0
-        output_toks = (response.usage.completion_tokens or 0) if response.usage else 0
-        _track_usage(model, input_toks, output_toks)
+    result = None
+    for attempt in range(_MAX_RETRIES + 1):
+        try:
+            cli = _get_client(model)
+            response = cli.chat.completions.create(
+                model=model,
+                messages=[{"role": "user", "content": prompt}],
+                temperature=temperature,
+                **tok_param,
+            )
+            msg = response.choices[0].message
+            text = msg.content or getattr(msg, "reasoning_content", None) or ""
+            result = text.strip()
 
-    except Exception as e:
-        log.warning(f"API error ({model}): {e}")
+            # Track token usage
+            input_toks = (response.usage.prompt_tokens or 0) if response.usage else 0
+            output_toks = (response.usage.completion_tokens or 0) if response.usage else 0
+            _track_usage(model, input_toks, output_toks)
+            break
+
+        except Exception as e:
+            transient = any(t in str(e).lower() for t in _RETRYABLE)
+            if transient and attempt < _MAX_RETRIES:
+                # Exponential backoff with full jitter, capped at 60s.
+                delay = min(_BACKOFF_BASE * (2 ** attempt), 60.0)
+                delay = random.uniform(0, delay)
+                log.warning(f"Transient API error ({model}), retry "
+                            f"{attempt+1}/{_MAX_RETRIES} in {delay:.1f}s: {e}")
+                time.sleep(delay)
+                continue
+            log.warning(f"API error ({model}): {e}")
+            return ""
+
+    if result is None:
         return ""
 
     if use_cache and temperature == 0:

@@ -26,3 +26,7 @@ data/
 
 # Temp files
 /tmp/
+
+# plans
+plans/
+paper/

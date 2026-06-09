@@ -30,7 +30,8 @@ import config
 from curiosity_explorer.llm import generate_with_model, batch_generate, get_cost, reset_cost
 from curiosity_explorer.runner.docker_coverage import DockerCoverageRunner
 from curiosity_explorer.explorer.coverage_exploration import (
-    CoverageMap, generate_coverage_greedy, generate_coverage_qvalue, _parse_script,
+    CoverageMap, generate_coverage_greedy, generate_coverage_qvalue,
+    generate_divhints_random, _parse_script,
 )
 from curiosity_explorer.benchmarks.testgeneval_config import (
     load_testgeneval_examples, get_repo_config,
@@ -130,6 +131,14 @@ def gen_cov_qvalue(module, code, hist, cov_map, K, gamma, prompt_note=""):
     return gen_standard(module, code, hist, K, prompt_note)
 
 
+def gen_divhints_random(module, code, hist, cov_map, K, prompt_note=""):
+    """Experiment 1: cov_qvalue generation pipeline, random plan selection."""
+    if code:
+        return generate_divhints_random(code, module, hist, cov_map,
+                                        K=K, plan_length=PLAN_LENGTH)
+    return gen_standard(module, code, hist, K, prompt_note)
+
+
 # ---------------------------------------------------------------------------
 # Strategy runner
 # ---------------------------------------------------------------------------
@@ -184,6 +193,8 @@ def run_strategy(example, strategy, seed, exec_budget, K, gamma):
             scripts = gen_cov_greedy(module, code, hist, cov_map, K, prompt_note)
         elif strategy == "cov_qvalue":
             scripts = gen_cov_qvalue(module, code, hist, cov_map, K, gamma, prompt_note)
+        elif strategy == "divhints_random":
+            scripts = gen_divhints_random(module, code, hist, cov_map, K, prompt_note)
         else:
             scripts = gen_standard(module, code, hist, K, prompt_note)
 
@@ -194,7 +205,7 @@ def run_strategy(example, strategy, seed, exec_budget, K, gamma):
             continue
 
         # --- Execution ---
-        if strategy == "cov_qvalue":
+        if strategy in ("cov_qvalue", "divhints_random"):
             for plan_script in scripts:
                 if executions >= exec_budget:
                     break
@@ -292,6 +303,33 @@ def analyze_results(all_results, strategies):
                 "wins": wins, "losses": losses, "ties": ties,
                 "t_stat": t_stat, "p_value": p_val,
                 "cohens_d": cohens_d, "n": len(deltas),
+            }
+
+    # Pairwise paired comparisons
+    for a, b, key in [
+        ("cov_qvalue", "cov_greedy", "qvalue_vs_greedy"),
+        ("cov_qvalue", "divhints_random", "qvalue_vs_divhints_random"),
+    ]:
+        if a not in strategies or b not in strategies:
+            continue
+        deltas = []
+        for r in all_results:
+            if a in r["strategies"] and b in r["strategies"]:
+                deltas.append(r["strategies"][a]["final"] -
+                              r["strategies"][b]["final"])
+        if len(deltas) >= 2 and statistics.stdev(deltas) > 0:
+            sd = statistics.stdev(deltas)
+            md = statistics.mean(deltas)
+            t_stat, p_val = sp_stats.ttest_1samp(deltas, 0)
+            analysis[key] = {
+                "mean_delta": md,
+                "se": sd / len(deltas)**0.5,
+                "wins": sum(1 for d in deltas if d > 0),
+                "losses": sum(1 for d in deltas if d < 0),
+                "ties": sum(1 for d in deltas if d == 0),
+                "t_stat": t_stat, "p_value": p_val,
+                "cohens_d": md / sd,
+                "n": len(deltas),
             }
 
     return analysis
@@ -418,6 +456,17 @@ def main():
             sig = "***" if a["p_value"] < 0.001 else ("**" if a["p_value"] < 0.01
                     else ("*" if a["p_value"] < 0.05 else ""))
             print(f"  {s:<20} Δ={a['mean_delta']:>+6.1f} ± {a['se']:.1f}  "
+                  f"W={a['wins']} L={a['losses']} T={a['ties']}  "
+                  f"p={a['p_value']:.4f} d={a['cohens_d']:.2f} {sig}", flush=True)
+
+    for key, label in [("qvalue_vs_greedy", "cov_qvalue vs cov_greedy"),
+                       ("qvalue_vs_divhints_random",
+                        "cov_qvalue vs divhints_random (Exp 1)")]:
+        if key in analysis:
+            a = analysis[key]
+            sig = "***" if a["p_value"] < 0.001 else ("**" if a["p_value"] < 0.01
+                    else ("*" if a["p_value"] < 0.05 else ""))
+            print(f"\n{label}: Δ={a['mean_delta']:>+.1f} ± {a['se']:.1f}  "
                   f"W={a['wins']} L={a['losses']} T={a['ties']}  "
                   f"p={a['p_value']:.4f} d={a['cohens_d']:.2f} {sig}", flush=True)
 
