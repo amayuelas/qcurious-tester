@@ -26,6 +26,9 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "scripts", "active"))
 from gen_synth_corridor import gen_corridor_source  # noqa: E402
+from gen_hidden_corridor import (  # noqa: E402
+    gen_hidden_corridor_source, god_scripts,
+)
 
 import config  # noqa: E402
 from curiosity_explorer.runner.docker_coverage import DockerCoverageRunner  # noqa: E402
@@ -37,8 +40,17 @@ ALL_DEPTHS = [2, 4, 6, 8]
 STRATEGIES = ["random", "greedy", "cov_greedy", "divhints_random", "cov_qvalue"]
 
 
+HIDDEN = False   # set from --hidden: use the hidden-key corridors
+SALT = "qc2026"
+
+
 def module_name(d):
-    return f"synthbench.corridor_d{d}"
+    return f"synthbench.corridor_{'h' if HIDDEN else 'd'}{d}"
+
+
+def source_for(d, k, m):
+    return (gen_hidden_corridor_source(d, k, m, SALT) if HIDDEN
+            else gen_corridor_source(d, k, m))
 
 
 def build_image(depths, k, m):
@@ -47,8 +59,9 @@ def build_image(depths, k, m):
     os.makedirs(pkg, exist_ok=True)
     open(os.path.join(pkg, "__init__.py"), "w").close()
     for d in depths:
-        with open(os.path.join(pkg, f"corridor_d{d}.py"), "w") as f:
-            f.write(gen_corridor_source(d, k, m))
+        prefix = "h" if HIDDEN else "d"
+        with open(os.path.join(pkg, f"corridor_{prefix}{d}.py"), "w") as f:
+            f.write(source_for(d, k, m))
     # site-packages path is fixed in the curiosity image (py3.11)
     dockerfile = (
         "FROM curiositybench:latest\n"
@@ -87,13 +100,27 @@ def god_test(d, k, m):
 def ceiling(d, k, m):
     runner = DockerCoverageRunner(image=IMAGE, source_module=module_name(d),
                                   setup_code="", working_dir="/opt", env={})
+    if HIDDEN:
+        # one advance per process: the ceiling needs a sequence of scripts,
+        # run through a single runner (and so a single container).
+        out = 0
+        for script in god_scripts(module_name(d), d, k, m, SALT):
+            res = runner.run_test(script)
+            out = res.cumulative_branches
+        runner.cleanup()
+        return out
     res = runner.run_test(god_test(d, k, m))
+    runner.cleanup()
     return res.cumulative_branches
 
 
 def parse_args():
     p = argparse.ArgumentParser()
     p.add_argument("--build", action="store_true", help="(re)build the synth image")
+    p.add_argument("--hidden", action="store_true",
+                   help="hidden-key corridors (keys revealed only at runtime, "
+                        "one stage advance per process) — needs DOCKER_MODE=exec")
+    p.add_argument("--salt", default=SALT)
     p.add_argument("--depths", nargs="+", type=int, default=ALL_DEPTHS)
     p.add_argument("--k", type=int, default=20, help="terminal branches")
     p.add_argument("--m", type=int, default=6, help="distractors")
@@ -108,7 +135,12 @@ def parse_args():
 
 
 def main():
+    global HIDDEN, SALT
     args = parse_args()
+    HIDDEN, SALT = args.hidden, args.salt
+    if HIDDEN and os.environ.get("DOCKER_MODE", "exec") != "exec":
+        sys.exit("--hidden needs DOCKER_MODE=exec (stage must persist "
+                 "between test executions)")
     if args.build:
         build_image(args.depths, args.k, args.m)
 
@@ -117,7 +149,7 @@ def main():
     for d in args.depths:
         print(f"  depth {d}: {ceil[d]} total branches", flush=True)
 
-    sources = {d: gen_corridor_source(d, args.k, args.m) for d in args.depths}
+    sources = {d: source_for(d, args.k, args.m) for d in args.depths}
     jobs = [(d, s, seed) for d in args.depths for s in args.strategies
             for seed in args.seeds]
     print(f"\nRunning {len(jobs)} (depth×strategy×seed) jobs on {config.MODEL} "
@@ -131,20 +163,36 @@ def main():
                   "env": {}}
         r = run_strategy(target, strat, seed, args.exec_budget, args.K,
                          args.gamma, sources[d])
-        return d, strat, r["final"]
+        # keep enough of the trace to tell a real 0 from an infrastructure failure
+        excs = [t["exception"] for t in r["trace"] if t["exception"]]
+        diag = {"seed": seed, "final": r["final"], "n_tests": len(r["trace"]),
+                "pass": r["pass_count"], "fail": r["fail_count"],
+                "exceptions": sorted(set(str(e)[:60] for e in excs))[:5]}
+        if r["final"] == 0:
+            print(f"  WARNING zero coverage: depth {d} {strat} seed {seed}: {diag}",
+                  flush=True)
+        return d, strat, r["final"], diag
 
     with ThreadPoolExecutor(max_workers=args.parallel) as ex:
         futs = [ex.submit(run_one, *j) for j in jobs]
+        diags = {}
         for f in as_completed(futs):
-            d, strat, final = f.result()
+            d, strat, final, diag = f.result()
             results.setdefault((d, strat), []).append(final)
+            diags.setdefault(f"{d}/{strat}", []).append(diag)
+    # the god test is a lower bound on the ceiling (it can miss a branch);
+    # never report more than 100%
+    for d in args.depths:
+        best = max((v for (dd, _s), vals in results.items() if dd == d
+                    for v in vals), default=0)
+        ceil[d] = max(ceil[d], best)
 
     # ---- Report: mean branches + % of ceiling, per depth × strategy ----
     print(f"\n{'='*70}\nExp 10 LLM condition — branches (mean over seeds) / % of ceiling")
     print(f"{'='*70}")
     hdr = f"  {'depth':>5} {'ceil':>5}  " + "".join(f"{s[:11]:>13}" for s in args.strategies)
     print(hdr)
-    out = {"config": vars(args), "ceiling": ceil, "by_depth": {}}
+    out = {"config": vars(args), "ceiling": ceil, "by_depth": {}, "diags": diags}
     for d in args.depths:
         row = f"  {d:>5} {ceil[d]:>5}  "
         out["by_depth"][d] = {"ceiling": ceil[d], "strategies": {}}

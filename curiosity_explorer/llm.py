@@ -38,7 +38,8 @@ def _client_for_model(model: str) -> OpenAI:
     if model.startswith("accounts/fireworks/"):
         return OpenAI(base_url=config.FIREWORKS_API_BASE,
                       api_key=config.FIREWORKS_API_KEY)
-    elif model.startswith("mistral"):
+    elif model.startswith("mistral") or "glm" in model.lower():
+        # Mistral's API also serves Z.ai GLM models (e.g. "zai-glm-5-3").
         return OpenAI(base_url=config.MISTRAL_API_BASE,
                       api_key=config.MISTRAL_API_KEY)
     elif model.startswith("gpt"):
@@ -83,6 +84,40 @@ _total_api_calls = 0
 _per_model_usage: dict[str, dict] = {}
 
 
+def _extract_text(msg) -> str:
+    """Return the visible answer text of a chat completion message.
+
+    Mistral's API returns reasoning models' (e.g. GLM) content as a list of
+    chunks — {"type": "thinking", ...} followed by {"type": "text", "text": ...};
+    only the text chunks are the answer.
+    """
+    content = msg.content
+    if isinstance(content, list):
+        parts = []
+        for chunk in content:
+            if isinstance(chunk, dict):
+                ctype, ctext = chunk.get("type"), chunk.get("text")
+            else:
+                ctype, ctext = getattr(chunk, "type", None), getattr(chunk, "text", None)
+            if ctype == "text" and ctext:
+                parts.append(ctext)
+        content = "".join(parts)
+    return content or getattr(msg, "reasoning_content", None) or ""
+
+
+def _request_params(model: str, max_tokens: int) -> dict:
+    """Token-limit and per-model extra params for a chat completion call."""
+    params = dict(config.MODEL_EXTRA_PARAMS.get(model, {}))
+    if "reasoning_effort" in params:
+        max_tokens += config.THINKING_TOKEN_ALLOWANCE
+    # OpenAI gpt-5+ models require max_completion_tokens
+    if model.startswith("gpt"):
+        params["max_completion_tokens"] = max_tokens
+    else:
+        params["max_tokens"] = max_tokens
+    return params
+
+
 def _cache_key(prompt: str, temperature: float, max_tokens: int,
                model: str = "") -> str:
     h = hashlib.sha256(prompt.encode()).hexdigest()[:16]
@@ -123,11 +158,7 @@ def generate_with_model(model: str, prompt: str, temperature: float = 0.7,
             _cache_hits += 1
             return _cache[key]
 
-    # OpenAI gpt-5+ models require max_completion_tokens
-    if model.startswith("gpt"):
-        tok_param = {"max_completion_tokens": max_tokens}
-    else:
-        tok_param = {"max_tokens": max_tokens}
+    tok_param = _request_params(model, max_tokens)
 
     result = None
     for attempt in range(_MAX_RETRIES + 1):
@@ -140,8 +171,7 @@ def generate_with_model(model: str, prompt: str, temperature: float = 0.7,
                 **tok_param,
             )
             msg = response.choices[0].message
-            text = msg.content or getattr(msg, "reasoning_content", None) or ""
-            result = text.strip()
+            result = _extract_text(msg).strip()
 
             # Track token usage
             input_toks = (response.usage.prompt_tokens or 0) if response.usage else 0
@@ -222,8 +252,7 @@ def generate_with_logprobs(model: str, prompt: str, temperature: float = 0.3,
         )
 
         msg = response.choices[0].message
-        text = (msg.content or getattr(msg, "reasoning_content", None)
-                or "").strip()
+        text = _extract_text(msg).strip()
 
         # Track usage
         input_toks = (response.usage.prompt_tokens or 0) if response.usage else 0

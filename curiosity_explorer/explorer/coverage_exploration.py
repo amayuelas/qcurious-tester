@@ -489,6 +489,10 @@ Example: 5, 12"""
 def _parse_scores(resp):
     """Parse 'immediate, future' from LLM response."""
     numbers = re.findall(r'\d+', resp)
+    if len(numbers) < 2:
+        # Still scored (as 0 / partial), but logged so the per-run failure
+        # rate of the scorer can be checked.
+        log.warning(f"SCORE_PARSE_FAIL: {resp[:80]!r}")
     if len(numbers) >= 2:
         return int(numbers[0]), int(numbers[1])
     elif len(numbers) == 1:

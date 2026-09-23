@@ -31,16 +31,27 @@ from curiosity_explorer.llm import generate_with_model, batch_generate, get_cost
 from curiosity_explorer.runner.docker_coverage import DockerCoverageRunner
 from curiosity_explorer.explorer.coverage_exploration import (
     CoverageMap, generate_coverage_greedy, generate_coverage_qvalue,
-    generate_divhints_random, _parse_script,
+    generate_divhints_random, generate_plans_for_exec_selection, _parse_script,
 )
 from curiosity_explorer.benchmarks.testgeneval_config import (
     load_testgeneval_examples, get_repo_config,
+)
+from curiosity_explorer.explorer.covbayes import (
+    module_functions, covered_quals, plan_expected_gain, predict_plan_functions,
+)
+from run_repo_explore_bench import (
+    METHOD, gen_k_plans, target_hints, _score_plans_by_functions,
+    uncovered_functions, _rescore_with_posterior,
 )
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s: %(message)s")
 logging.getLogger("httpx").setLevel(logging.WARNING)
 log = logging.getLogger(__name__)
 
+# The full method (targeting + function-grounded scorer) and CovBayes reuse
+# RepoExploreBench's implementations; only the coverage->function mapping
+# differs, since TestGenEval measures a whole package (see covered_in_target).
+NEW_METHOD = METHOD  # frozen method, defined in run_repo_explore_bench
 ALL_STRATEGIES = ["random", "greedy", "cov_greedy", "cov_qvalue"]
 EXEC_BUDGET = 24
 K = 3
@@ -131,6 +142,24 @@ def gen_cov_qvalue(module, code, hist, cov_map, K, gamma, prompt_note=""):
     return gen_standard(module, code, hist, K, prompt_note)
 
 
+def gen_cov_qvalue_plans(module, code, hist, cov_map, K, prompt_note=""):
+    """K diverse multi-step plans, no selection (shared by cov_bayes)."""
+    if code:
+        return gen_k_plans(module, code, hist, cov_map, K, PLAN_LENGTH,
+                           prompt_note=prompt_note)
+    scripts = gen_standard(module, code, hist, K, prompt_note)
+    return [[s] for s in scripts] if scripts else []
+
+
+def gen_exec_plans(module, code, hist, cov_map, K, prompt_note=""):
+    """K diverse plans for execution-based selection (cov_qvalue_exec)."""
+    if code:
+        return generate_plans_for_exec_selection(code, module, hist, cov_map,
+                                                 K=K, plan_length=PLAN_LENGTH)
+    scripts = gen_standard(module, code, hist, K, prompt_note)
+    return [[s] for s in scripts] if scripts else []
+
+
 def gen_divhints_random(module, code, hist, cov_map, K, prompt_note=""):
     """Experiment 1: cov_qvalue generation pipeline, random plan selection."""
     if code:
@@ -187,7 +216,141 @@ def run_strategy(example, strategy, seed, exec_budget, K, gamma):
     branch_curve = []
     line_curve = []
 
+    def covered_in_target():
+        """Covered lines restricted to the target file.
+
+        RepoExploreBench tracks one module, but here --source is a whole
+        package, so cumulative_lines spans many files; covered_quals must only
+        see the target file's lines or every qualname looks covered.
+        """
+        if not target_file:
+            return runner.cumulative_lines
+        return {(f, ln) for (f, ln) in runner.cumulative_lines
+                if target_file in f}
+
+    def execute(script):
+        nonlocal executions
+        result = runner.run_test(script)
+        hist.append((script, result))
+        cov_map.update(script, set(), result.new_branches)
+        executions += 1
+        branch_curve.append(runner.get_cumulative_coverage())
+        line_curve.append(runner.get_cumulative_lines())
+        return result
+
+    strategy = {"covqvalue2": NEW_METHOD, "cov_qvalue_v2": NEW_METHOD}.get(
+        strategy, strategy)
+    funcs = module_functions(code) if code and strategy in (
+        NEW_METHOD, "cov_bayes") else []
+    cb_post = {f[0]: [1.0, 1.0] for f in funcs}
+    fn_post = {f[0]: [1.0, 1.0] for f in funcs}  # Bayesian valuation posterior
+
     while executions < exec_budget:
+        # --- Full method: plans targeted at still-uncovered functions, scored
+        #     by the function-grounded Q-value (see run_repo_explore_bench). ---
+        if strategy == NEW_METHOD and funcs:
+            # remaining unexecuted code per function, restricted to the
+            # target file (coverage spans the whole package here)
+            # touched/untouched map (the frozen default; see run_repo_explore_bench)
+            uncovered = [list(f) for f in
+                         uncovered_functions(runner, funcs, file_filter=target_file,
+                                             touch_rule=True)]
+            left = {f[0] for f in uncovered}
+            covered_fn = {f[0] for f in funcs if f[0] not in left}
+            targets = target_hints(code, funcs, covered_in_target(), K,
+                                   uncovered=uncovered)
+            plans = gen_k_plans(module, code, hist, cov_map, K, PLAN_LENGTH,
+                                targets=targets, prompt_note=prompt_note)
+            if not plans:
+                executions += 1
+                branch_curve.append(runner.get_cumulative_coverage())
+                line_curve.append(runner.get_cumulative_lines())
+                continue
+            if len(plans) > 1 and uncovered:
+                scores = _score_plans_by_functions(
+                    plans, module, uncovered, gamma, with_future=True,
+                    tight=True, covered=covered_fn)
+                scores = _rescore_with_posterior(scores, uncovered, fn_post, gamma)
+                best_q = max(scores[i]["q"] for i in range(len(plans)))
+                sel = _random.choice([i for i in range(len(plans))
+                                      if scores[i]["q"] == best_q])
+            else:
+                sel = 0
+            committed = [execute(step) for step in plans[sel]
+                         if executions < exec_budget]
+            # conjugate update of the reachability posterior
+            left = {f[0] for f in uncovered_functions(runner, funcs,
+                                                      file_filter=target_file,
+                                                      touch_rule=True)}
+            pred = set(scores[sel].get("executes") or ())
+            pred |= set(scores[sel].get("enables") or ())
+            for f in pred:
+                if f in fn_post:
+                    fn_post[f][0 if f not in left else 1] += 1.0
+            continue
+
+        # --- CovBayes: closed-form Bayesian selection over a per-function
+        #     reachability posterior (Exp 11). ---
+        if strategy == "cov_bayes" and funcs:
+            covered_fn = covered_quals(covered_in_target(), funcs)
+            uncovered = [f[0] for f in funcs if f[0] not in covered_fn]
+            plans = gen_cov_qvalue_plans(module, code, hist, cov_map, K,
+                                         prompt_note)
+            if not plans:
+                executions += 1
+                branch_curve.append(runner.get_cumulative_coverage())
+                line_curve.append(runner.get_cumulative_lines())
+                continue
+            if uncovered:
+                best, best_score, best_preds = plans[0], -1.0, {}
+                for plan in plans:
+                    qf = predict_plan_functions(module, code, plan,
+                                                set(uncovered), config.MODEL)
+                    sc = plan_expected_gain(cb_post, uncovered, qf)
+                    if sc > best_score:
+                        best, best_score, best_preds = plan, sc, qf
+            else:
+                best, best_preds = _random.choice(plans), {}
+            for step in best:
+                if executions >= exec_budget:
+                    break
+                execute(step)
+            new_cov = covered_quals(covered_in_target(), funcs)
+            for q in cb_post:
+                if q in new_cov and q not in covered_fn:
+                    cb_post[q][0] += 1.0
+                elif q in best_preds and q not in new_cov:
+                    cb_post[q][1] += 1.0
+            continue
+
+        # --- Execution-based Q-value selection (ported from
+        #     run_repo_explore_bench.py): execute step 1 of each of the K
+        #     plans, observe real coverage, then finish the plan whose step 1
+        #     found the most new branches. All executions count against the
+        #     budget. ---
+        if strategy == "cov_qvalue_exec":
+            plans = gen_exec_plans(module, code, hist, cov_map, K, prompt_note)
+            if not plans:
+                executions += 1
+                branch_curve.append(runner.get_cumulative_coverage())
+                line_curve.append(runner.get_cumulative_lines())
+                continue
+
+            step1_results = []
+            for plan in plans:
+                if executions >= exec_budget:
+                    break
+                result = execute(plan[0])
+                step1_results.append((plan, result.new_branches))
+
+            if step1_results:
+                best_plan, _ = max(step1_results, key=lambda x: x[1])
+                for plan_script in best_plan[1:]:
+                    if executions >= exec_budget:
+                        break
+                    execute(plan_script)
+            continue
+
         # --- Generation ---
         if strategy == "cov_greedy":
             scripts = gen_cov_greedy(module, code, hist, cov_map, K, prompt_note)
@@ -228,6 +391,7 @@ def run_strategy(example, strategy, seed, exec_budget, K, gamma):
             line_curve.append(runner.get_cumulative_lines())
 
     stats = runner.get_stats()
+    runner.cleanup()  # exec mode: remove the long-lived container now
 
     # Serialize execution trace
     trace = []

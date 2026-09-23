@@ -49,6 +49,20 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s: %(mes
 logging.getLogger("httpx").setLevel(logging.WARNING)
 log = logging.getLogger(__name__)
 
+# The frozen method for the resubmission: posterior-targeted generation
+# (target_hints) + function-grounded LLM perception (EXECUTES/ENABLES) +
+# Bayesian valuation of that perception (_rescore_with_posterior), on the
+# touched/untouched coverage map. Paired pilots behind each piece:
+#   +targeting        +52.6 branches (p<0.001, n=27)   pilot_fbtgt_gemma
+#   +function scorer  +22.8 (p=0.007, n=27)            pilot_remaining_gemma
+#   +Bayesian value   -4.5 (p=0.99, n=25) on this map  pilot_bayes_oldmap_gemma
+#     adopted for fidelity to q = g + gamma*E[v(h')]: v is the value of the
+#     resulting posterior state (>0 at every decision) rather than an unlock
+#     increment, which was 0 in ~70% of decisions and left gamma inert.
+METHOD = "cov_qvalue_tgt_fnt_bayes"
+STRATEGY_ALIASES = {"covqvalue2": METHOD, "cov_qvalue_v2": METHOD,
+                    "covqvalue2_calib": METHOD + "_calib"}
+
 ALL_STRATEGIES = ["random", "greedy", "cov_greedy", "cov_qvalue"]
 EXEC_BUDGET = 24
 K = 3
@@ -67,6 +81,9 @@ SCORE_MAP_MODE = None
 def parse_args():
     p = argparse.ArgumentParser(description="RepoExploreBench runner")
     p.add_argument("--max-targets", type=int, default=None)
+    p.add_argument("--per-repo", type=int, default=None,
+                   help="keep only the first N targets of each repo "
+                        "(benchmark order) — a stratified subset for pilots")
     p.add_argument("--repos", nargs="+", default=None)
     p.add_argument("--strategies", nargs="+", default=ALL_STRATEGIES)
     p.add_argument("--seeds", nargs="+", type=int, default=[42])
@@ -179,7 +196,76 @@ Respond with ONLY executable Python code.
     return [_parse_script(r) for r in responses if _parse_script(r)]
 
 
-def gen_k_plans(module, source, hist, cov_map, K, plan_length, use_diversity=True):
+def target_hints(source, funcs, covered_lines, K, max_names=6,
+                 max_snippet_chars=1500, follow=None, setup_code="",
+                 uncovered=None):
+    """Per-plan hints that split the still-uncovered functions across K plans.
+
+    Uncovered = no body line executed yet (covbayes.covered_quals). Functions
+    are kept in source order and cut into K contiguous chunks, so a chunk tends
+    to stay within one class (its setup corridor). Each hint names its chunk and
+    includes the chunk's code, since the plan prompt only shows the first 2500
+    chars of the module. Returns K hints; None where there is nothing to target
+    (the caller falls back to the generic diversity hint).
+
+    Follow-through (the "_ft" variant): `follow` names the functions the
+    previously committed plan was predicted to ENABLE and `setup_code` is that
+    plan's setup that actually ran. Those functions (if still uncovered) form
+    chunk 0, whose hint hands over the working setup, so the future value the
+    scorer credited is collected next round instead of left to chance.
+    """
+    if uncovered is None:
+        covered = covered_quals(covered_lines, funcs)
+        uncovered = [f for f in funcs if f[0] not in covered]
+    if not uncovered:
+        return [None] * K
+    follow = set(follow or ())
+    pri = [f for f in uncovered if f[0] in follow]
+    rest = [f for f in uncovered if f[0] not in follow]
+    chunks = [pri] if pri else []
+    n = min(K - len(chunks), len(rest))
+    if n > 0:
+        size = -(-len(rest) // n)  # ceil
+        chunks += [rest[i * size:(i + 1) * size] for i in range(n)]
+
+    lines = source.splitlines()
+    hints = []
+    for chunk in chunks:
+        chunk = chunk[:max_names]
+        snippets, used = [], 0
+        for f in chunk:
+            qual, body_start, end = f[:3]
+            # walk back from the body to the `def` line (decorators excluded)
+            name = qual.rsplit(".", 1)[-1]
+            start = body_start - 1
+            while start > 0 and f"def {name}" not in lines[start - 1]:
+                start -= 1
+            snippet = "\n".join(lines[max(start - 1, 0):min(end, body_start + 8)])
+            if used + len(snippet) > max_snippet_chars:
+                break
+            snippets.append(snippet)
+            used += len(snippet)
+        names = ", ".join(f"{f[0]} ({_fn_size(f)} lines unexecuted)" for f in chunk)
+        code = "\n```python\n" + "\n\n".join(snippets) + "\n```" if snippets else ""
+        if pri and not hints:
+            log.info(f"FOLLOW_THROUGH: {len(pri)} unlocked fn(s) -> chunk 0 "
+                     f"({names[:80]}); setup {len(setup_code)} chars")
+            hints.append(
+                f"FOLLOW THROUGH: the setup below ran successfully last round and "
+                f"unlocked these functions, which still have unexecuted code: "
+                f"{names}. Reuse that setup as-is (copy it into each step, do not "
+                f"re-derive it) and call them.{code}\n"
+                f"Working setup from last round:\n```python\n"
+                f"{setup_code[:1500]}\n```")
+        else:
+            hints.append(f"TARGET these functions, which still have UNEXECUTED "
+                         f"code: {names}. Plan the setup and inputs needed to "
+                         f"reach their unexecuted parts and call them.{code}")
+    return hints + [None] * (K - len(hints))
+
+
+def gen_k_plans(module, source, hist, cov_map, K, plan_length, use_diversity=True,
+                targets=None, prompt_note=""):
     """Generate K multi-step plans (generation only, no selection).
 
     Shared by cov_qvalue, divhints_random, and cov_greedy_multistep so the
@@ -187,7 +273,10 @@ def gen_k_plans(module, source, hist, cov_map, K, plan_length, use_diversity=Tru
     each plan gets a distinct diversity hint (CovQValue's generator); with
     use_diversity=False every plan gets the same neutral instruction, so the
     diversity hint is the ONLY difference from the diverse pipeline. Returns a
-    list of plans, each a list of plan_length scripts.
+    list of plans, each a list of plan_length scripts. `targets` (from
+    target_hints) replaces plan i's diversity hint with its target chunk
+    wherever targets[i] is not None. `prompt_note` is appended verbatim (used
+    by TestGenEval for per-repo notes, e.g. "Django is already configured").
     """
     code_ctx = f"```python\n{source[:2500]}\n```" if source else ""
     cov_summary = cov_map.coverage_summary()
@@ -209,6 +298,8 @@ def gen_k_plans(module, source, hist, cov_map, K, plan_length, use_diversity=Tru
     prompts = []
     for i in range(K):
         hint = diversity_hints[i % len(diversity_hints)] if use_diversity else neutral_hint
+        if targets and targets[i]:
+            hint = targets[i]
         prompt = f"""Module: {module}
 {code_ctx}
 
@@ -219,6 +310,7 @@ Previous tests:
 
 PLAN a sequence of {plan_length} test scripts that TOGETHER will reach
 UNCOVERED code paths. {hint}
+{prompt_note}
 
 Think about what setup is needed:
 Step 1: What basic setup/import is needed to reach deeper code?
@@ -287,17 +379,28 @@ def gen_cov_greedy_multistep(module, source, hist, cov_map, K, plan_length):
     return _random.choice(plans)
 
 
-def _score_plans(plans, module, source, cov_map, gamma):
+def _score_plans(plans, module, source, cov_map, gamma, feedback=None):
     """Score each plan by LLM-estimated Q-value.
 
     Returns dict idx -> {"immediate": ĝ, "future": v̂, "q": ĝ + γ·v̂}. Shared by
     cov_qvalue (selection) and cov_qvalue_calib (calibration logging) so both
     use the identical scoring prompt — the calibration must describe the real
     scorer, not a copy that can drift.
+
+    `feedback` is a list of (predicted immediate gain, realized gain) for the
+    plans committed earlier on this module; the most recent ones are shown to
+    the scorer so it can correct its own bias (the "_fb" variants).
     """
     code_ctx = f"```python\n{source[:2000]}\n```" if source else ""
     # Scorer-only summary override (Exp 7): None falls back to map_mode.
     cov_summary = cov_map.coverage_summary(cov_map.score_map_mode)
+    fb_str = ""
+    if feedback:
+        pairs = "\n".join(f"  predicted {p} -> actual {a}"
+                          for p, a in feedback[-5:])
+        fb_str = (f"\nYOUR PAST IMMEDIATE-GAIN ESTIMATES on this module vs what "
+                  f"the executed plans actually discovered:\n{pairs}\n"
+                  f"Calibrate this estimate against that record.\n")
 
     def score_plan(idx):
         plan = plans[idx]
@@ -313,6 +416,7 @@ def _score_plans(plans, module, source, cov_map, gamma):
 Consider this TEST PLAN (a sequence of {len(plan)} scripts):
 {plan_str}
 
+{fb_str}
 Evaluate by answering TWO questions with just numbers:
 1. IMMEDIATE GAIN: Total NEW branches this plan discovers? (0-50)
 2. FUTURE VALUE: Additional branches reachable AFTER this plan? (0-50)
@@ -328,6 +432,10 @@ Example: 15, 25"""
         # an empty string, silently parsing to 0 (the Exp-1 scorer bug).
         resp = generate_with_model(config.MODEL, prompt, 0.3, 256)
         nums = re.findall(r'\d+', resp)
+        if len(nums) < 2:
+            # Unparseable (often empty/truncated) response — still scored as
+            # 0, but logged so the failure rate can be checked per run.
+            log.warning(f"SCORE_PARSE_FAIL plan {idx}: {resp[:80]!r}")
         imm = int(nums[0]) if len(nums) >= 1 else 0
         fut = int(nums[1]) if len(nums) >= 2 else 0
         q = imm + gamma * fut
@@ -344,6 +452,177 @@ Example: 15, 25"""
             except Exception:
                 scores[idx] = {"immediate": 0, "future": 0, "q": 0}
     return scores
+
+
+def _fn_size(f):
+    """Weight of a function: its remaining unexecuted lines when known
+    (4th element, from uncovered_functions), else its full body size."""
+    if len(f) > 3:
+        return max(int(f[3]), 1)
+    _q, start, end = f[:3]
+    return max(end - start + 1, 1)
+
+
+def uncovered_functions(runner, funcs, file_filter=None, touch_rule=False):
+    """[(qual, body_start, end, remaining_lines)] for functions with unexecuted
+    code left, from coverage.py's per-function regions (runner.func_regions).
+
+    A function touched only via an early return (e.g. a locked corridor stage)
+    keeps its remaining mass and stays a target; a fully executed one drops
+    out. Before the first coverage report (no regions yet) every function is
+    uncovered with its full size — the same as the old touched/untouched rule.
+    """
+    remaining = {} if touch_rule else runner.remaining_by_function(file_filter)
+    if not remaining:
+        covered = covered_quals(runner.cumulative_lines, funcs)
+        return [(q, b, e, e - b + 1) for q, b, e in funcs if q not in covered]
+    out = []
+    for q, b, e in funcs:
+        if q in remaining:
+            ml = remaining[q][0]
+            if ml > 0:
+                out.append((q, b, e, ml))
+        else:
+            # region unknown to coverage (e.g. never imported): keep as target
+            if q not in covered_quals(runner.cumulative_lines, funcs):
+                out.append((q, b, e, e - b + 1))
+    return out
+
+
+def _score_plans_by_functions(plans, module, uncovered, gamma, with_future,
+                              tight=False, covered=()):
+    """Function-grounded Q-value (the "_fn" / "_fnv" variants).
+
+    Instead of guessing a branch count, the LLM names which still-uncovered
+    functions a plan will EXECUTE (and, with_future, which it ENABLES: builds
+    the objects/state a follow-up test needs to reach them). Scores are the
+    total size in lines of the named functions, so both terms are in the same
+    units: q = g + gamma * v. Offline on logged pools this raised top-1
+    selection accuracy from 39% to 54% (scripts/active/eval_scorers_offline.py,
+    scorer B2).
+
+    tight=True ("_fnt") constrains ENABLES to genuinely gated, newly unlocked
+    functions: each must come with the specific thing it needs from this plan
+    ("name <- reason"; unjustified lines are dropped), setup already done by
+    earlier tests (the `covered` functions) doesn't count, and at most 10 count.
+    """
+    by_name = {f[0]: f for f in uncovered}
+    items = sorted(uncovered, key=lambda f: -_fn_size(f))[:80]
+    listing = "\n".join(f"  {f[0]} ({_fn_size(f)} lines unexecuted)" for f in items)
+
+    def names_in(text):
+        return {n for n in by_name
+                if re.search(rf"(?<![\w.]){re.escape(n)}(?![\w])", text)}
+
+    def score_plan(idx):
+        plan_str = "".join(f"\nStep {i+1}:\n```python\n{st}\n```\n"
+                           for i, st in enumerate(plans[idx]))
+        if tight:
+            done = ", ".join(sorted(covered)[:60]) or "none"
+            task = f"""FUNCTIONS ALREADY EXECUTED BY EARLIER TESTS (their setup is already known):
+  {done}
+
+Answer in exactly two sections, using ONLY names from the NOT-YET-EXECUTED list:
+EXECUTES:
+<functions this plan will actually execute, directly or indirectly; one per line>
+ENABLES:
+<at most 10 functions this plan does NOT execute, which a test could NOT easily
+call without first doing something this plan does for the first time (building a
+specific object, reaching a configured state, finding valid inputs). Setup that
+earlier tests already did does not count. One per line, formatted as:
+function_name <- what it needs from this plan>
+Write NONE for an empty section."""
+        elif with_future:
+            task = """Answer in exactly two sections, using ONLY names from the list:
+EXECUTES:
+<functions this plan will actually execute, directly or indirectly; one per line>
+ENABLES:
+<functions it does NOT execute but whose prerequisites (objects, state,
+configuration) it sets up, so a follow-up test could easily reach them>
+Write NONE for an empty section."""
+        else:
+            task = """Which of the listed functions will this plan actually execute (directly or
+indirectly)? Answer with ONLY the function names from the list, one per line.
+If none, answer NONE."""
+        prompt = f"""Module: {module}
+
+FUNCTIONS WITH CODE NO TEST HAS EXECUTED YET:
+{listing}
+
+TEST PLAN (scripts run in order):
+{plan_str}
+
+{task}"""
+        resp = generate_with_model(config.MODEL, prompt, 0.3, 512)
+        if with_future and "ENABLES" in resp:
+            exec_part, enable_part = resp.split("ENABLES", 1)
+        else:
+            exec_part, enable_part = resp, ""
+        executes = names_in(exec_part)
+        if tight:
+            enables = set()
+            for line in enable_part.splitlines():
+                if "<-" not in line or len(enables) >= 10:
+                    continue
+                enables |= names_in(line.split("<-", 1)[0]) - executes
+        else:
+            enables = names_in(enable_part) - executes
+        imm = sum(_fn_size(by_name[n]) for n in executes)
+        fut = sum(_fn_size(by_name[n]) for n in enables)
+        q = imm + gamma * fut
+        log.info(f"Plan {idx}: ḡ={imm}, γE[v]={gamma*fut:.1f}, Q={q:.1f} (fn)")
+        return {"immediate": imm, "future": fut, "q": q,
+                "executes": sorted(executes), "enables": sorted(enables)}
+
+    with ThreadPoolExecutor(max_workers=len(plans)) as ex:
+        return dict(enumerate(ex.map(score_plan, range(len(plans)))))
+
+
+# Probability that a function the plan ENABLES (but does not execute) becomes
+# reachable, over and above the base rate. From the measured conversion of
+# predicted-enabled functions (21.2% within one round vs 13.4% for other
+# uncovered functions, n=15k predictions, scripts/active/analyze_future_conversion.py):
+#   delta = (0.212 - 0.134) / (1 - 0.134)
+UNLOCK_BUMP = 0.09
+
+
+def _rescore_with_posterior(scores, uncovered, post, gamma):
+    """Bayesian valuation of the LLM's perception (the "_bayes" variant).
+
+    Turns the scorer's EXECUTES/ENABLES sets into the paper's Q-value over the
+    coverage posterior, q(a|h) = g(a|h) + gamma * E[v(h')]:
+
+        g(a)   = sum_{f in EXECUTES(a)}      p_f * size_f
+        v(a)   = sum_{f uncovered after a}   p'_f * size_f
+                 with p'_f = p_f + (1 - p_f) * UNLOCK_BUMP for f in ENABLES(a)
+
+    p_f = alpha_f / (alpha_f + beta_f) is the per-function reachability
+    posterior (covbayes), updated conjugately from what execution reveals.
+    Unlike the increment form (size of newly unlocked functions), v here is the
+    VALUE OF THE RESULTING STATE and is positive whenever uncovered code
+    remains, so gamma weights something at every decision rather than in the
+    ~30% of rounds where a plan happens to unlock a new function.
+    """
+    size = {f[0]: _fn_size(f) for f in uncovered}
+    p = {q: post[q][0] / (post[q][0] + post[q][1]) for q in size if q in post}
+    out = {}
+    for idx, sc in scores.items():
+        ex = {f for f in (sc.get("executes") or ()) if f in size}
+        en = {f for f in (sc.get("enables") or ()) if f in size} - ex
+        imm = sum(p.get(f, 0.5) * size[f] for f in ex)
+        fut = 0.0
+        for f, sz in size.items():
+            if f in ex:
+                continue
+            pf = p.get(f, 0.5)
+            if f in en:
+                pf = pf + (1 - pf) * UNLOCK_BUMP
+            fut += pf * sz
+        out[idx] = {**sc, "immediate": round(imm, 2), "future": round(fut, 2),
+                    "q": round(imm + gamma * fut, 2)}
+        log.info(f"Plan {idx}: ḡ={imm:.1f}, γE[v]={gamma*fut:.1f}, "
+                 f"Q={out[idx]['q']:.1f} (bayes)")
+    return out
 
 
 def _score_and_select(plans, module, source, cov_map, gamma):
@@ -440,6 +719,7 @@ def gen_cov_qvalue_rank(module, source, hist, cov_map, K, plan_length):
 
 def run_strategy(target, strategy, seed, exec_budget, K, gamma, source):
     """Run one strategy on one target. Returns {final, curve}."""
+    strategy = STRATEGY_ALIASES.get(strategy, strategy)
     _random.seed(seed)
     module = target["module"]
 
@@ -465,6 +745,42 @@ def run_strategy(target, strategy, seed, exec_budget, K, gamma, source):
     cb_funcs = module_functions(source) if strategy in (
         "cov_bayes", "cov_bayes_calib") else []
     cb_quals = [f[0] for f in cb_funcs]
+
+    # CovQValue variants: cov_qvalue[_fb][_tgt][_calib]. _fb feeds the scorer
+    # its past (predicted, actual) gains; _tgt targets each plan at a chunk of
+    # uncovered functions; _calib also trial-runs all K plans from a snapshot
+    # (rolled back, free) to log selection accuracy vs the within-pool oracle.
+    qv_parts = strategy.split("_")[2:] if strategy.startswith("cov_qvalue_") else []
+    # "_g<digits>" overrides gamma for this strategy, so several gammas can
+    # run as paired variants in one run: g0=0, g025=0.25, g05=0.5, g1=1.0.
+    g_parts = [p for p in qv_parts if re.fullmatch(r"g\d+", p)]
+    if g_parts:
+        digits = g_parts[0][1:]
+        gamma = float("0." + digits[1:]) if digits.startswith("0") and len(digits) > 1 \
+            else float(digits)
+    qv_flags = [p for p in qv_parts if p not in g_parts]
+    is_qv_variant = bool(qv_parts) and set(qv_flags) <= {
+        "fb", "tgt", "calib", "fn", "fnv", "fnt", "ft", "rem", "bayes"}
+    qv_bayes = "bayes" in qv_parts  # Bayesian valuation of the LLM perception
+    # Coverage-map granularity. Default: a function counts as covered once any
+    # of its lines has run. "_rem" instead keeps a function targeted while any
+    # line remains unexecuted; that is what the hidden-key corridor needs (the
+    # scorer goes blind without it) but it costs 16 branches on real code
+    # (p=0.015, n=27, pilot_mapcompare_gemma), where it keeps re-targeting
+    # large, mostly-covered functions.
+    qv_rem = "rem" in qv_parts
+    qv_ft = "ft" in qv_parts  # follow-through targeting (needs tgt + fnv/fnt)
+    ft_enables, ft_setup = set(), ""  # from the last committed plan
+    qv_fb, qv_tgt, qv_calib = ("fb" in qv_parts, "tgt" in qv_parts,
+                               "calib" in qv_parts)
+    # _fn / _fnv: function-grounded scorer (see _score_plans_by_functions)
+    qv_fnt = "fnt" in qv_parts  # tightened future term
+    qv_fn = "fn" in qv_parts or "fnv" in qv_parts or qv_fnt or qv_bayes
+    qv_fnv = "fnv" in qv_parts or qv_fnt or qv_bayes
+    qv_fnt = qv_fnt or qv_bayes  # _bayes uses the tightened EXECUTES/ENABLES prompt
+    tgt_funcs = module_functions(source) if (qv_tgt or qv_fn) else []
+    fn_post = {f[0]: [1.0, 1.0] for f in tgt_funcs}  # _bayes reachability posterior
+    score_feedback = []  # (predicted immediate, realized) for committed plans
     cb_post = {q: [1.0, 1.0] for q in cb_quals}
 
     while executions < exec_budget:
@@ -484,7 +800,7 @@ def run_strategy(target, strategy, seed, exec_budget, K, gamma, source):
             scripts = gen_cov_greedy_multistep(module, source, hist, cov_map,
                                                K, PLAN_LENGTH)
         elif strategy in ("cov_qvalue_exec", "divhints_oracle",
-                          "cov_qvalue_calib", "cov_bayes", "cov_bayes_calib"):
+                          "cov_bayes", "cov_bayes_calib") or is_qv_variant:
             scripts = None  # handled below
         else:
             scripts = gen_standard(module, source, hist, K)
@@ -531,56 +847,114 @@ def run_strategy(target, strategy, seed, exec_budget, K, gamma, source):
         #     paired (predicted ĝ/v̂/Q, realized gain) per candidate per round
         #     so the offline analysis can measure scorer calibration and
         #     selection accuracy. Trial runs are free lookahead (rolled back). ---
-        if strategy == "cov_qvalue_calib":
-            plans = gen_k_plans(module, source, hist, cov_map, K, PLAN_LENGTH)
+        if is_qv_variant:
+            uncovered_now = (uncovered_functions(runner, tgt_funcs,
+                                                 touch_rule=not qv_rem)
+                             if tgt_funcs else [])
+            targets = (target_hints(source, tgt_funcs, runner.cumulative_lines, K,
+                                    follow=ft_enables if qv_ft else None,
+                                    setup_code=ft_setup, uncovered=uncovered_now)
+                       if qv_tgt and tgt_funcs else None)
+            if qv_calib:
+                round_uncovered = [list(f) for f in uncovered_now]
+                round_cov_summary = cov_map.coverage_summary(cov_map.score_map_mode)
+            plans = gen_k_plans(module, source, hist, cov_map, K, PLAN_LENGTH,
+                                targets=targets)
             if not plans:
                 executions += 1
                 branch_curve.append(runner.get_cumulative_coverage())
                 line_curve.append(runner.get_cumulative_lines())
                 continue
 
-            scores = _score_plans(plans, module, source, cov_map, gamma)
+            if len(plans) <= 1:
+                scores = {0: {"immediate": 0, "future": 0, "q": 0}}
+            elif qv_fn:
+                left = {f[0] for f in uncovered_now}
+                covered_fn = {f[0] for f in tgt_funcs if f[0] not in left}
+                scores = _score_plans_by_functions(
+                    plans, module, [list(f) for f in uncovered_now],
+                    gamma, with_future=qv_fnv, tight=qv_fnt, covered=covered_fn)
+                if qv_bayes:
+                    scores = _rescore_with_posterior(
+                        scores, uncovered_now, fn_post, gamma)
+            else:
+                scores = _score_plans(plans, module, source, cov_map, gamma,
+                                      feedback=score_feedback if qv_fb else None)
 
             snap = runner.snapshot()
             base_branches = len(snap["branches"])
             candidates = []
-            for idx, plan in enumerate(plans):
-                runner.restore(snap)
-                for step in plan:
-                    runner.run_test(step)
-                realized = runner.get_cumulative_coverage() - base_branches
-                candidates.append({
-                    "predicted_immediate": scores[idx]["immediate"],
-                    "predicted_future": scores[idx]["future"],
-                    "predicted_q": scores[idx]["q"],
-                    "realized_gain": realized,
-                    "n_steps": len(plan),
-                })
+            if qv_calib:
+                for idx, plan in enumerate(plans):
+                    runner.restore(snap)
+                    for step in plan:
+                        runner.run_test(step)
+                    realized = runner.get_cumulative_coverage() - base_branches
+                    candidates.append({
+                        "predicted_immediate": scores[idx]["immediate"],
+                        "predicted_future": scores[idx]["future"],
+                        "predicted_q": scores[idx]["q"],
+                        "realized_gain": realized,
+                        "n_steps": len(plan),
+                        "targeted": bool(targets and targets[idx]),
+                        # full plan, so scorers can be re-evaluated offline
+                        # on this exact pool (scripts/active/eval_scorers_offline.py)
+                        "plan": plan,
+                        # function-scorer predictions (for the conversion-rate
+                        # check of the future term)
+                        "executes": scores[idx].get("executes"),
+                        "enables": scores[idx].get("enables"),
+                    })
 
-            selected_idx = max(range(len(plans)),
-                               key=lambda i: scores[i]["q"])
+            # argmax-Q with uniformly random tie-breaking: plain max() always
+            # took plan 0 on ties (~15% of rounds), and plan 0 always gets the
+            # same generic diversity hint.
+            best_q = max(scores[i]["q"] for i in range(len(plans)))
+            selected_idx = _random.choice(
+                [i for i in range(len(plans)) if scores[i]["q"] == best_q])
 
             # Commit argmax-Q (matches cov_qvalue), counting steps vs budget
             runner.restore(snap)
             committed_gain = 0
+            committed = []
             for step in plans[selected_idx]:
                 if executions >= exec_budget:
                     break
                 result = runner.run_test(step)
                 hist.append((step, result))
+                committed.append((step, result))
                 cov_map.update(step, set(), result.new_branches)
                 committed_gain += result.new_branches
                 executions += 1
                 branch_curve.append(runner.get_cumulative_coverage())
                 line_curve.append(runner.get_cumulative_lines())
 
-            calib_log.append({
-                "round": len(calib_log),
-                "base_branches": base_branches,
-                "selected_idx": selected_idx,
-                "committed_gain": committed_gain,
-                "candidates": candidates,
-            })
+            if qv_bayes:
+                # conjugate update: predicted functions that got covered raise
+                # alpha, those still uncovered raise beta.
+                left = {f[0] for f in uncovered_functions(runner, tgt_funcs)}
+                pred = set(scores[selected_idx].get("executes") or ())
+                pred |= set(scores[selected_idx].get("enables") or ())
+                for f in pred:
+                    if f in fn_post:
+                        fn_post[f][0 if f not in left else 1] += 1.0
+            score_feedback.append((scores[selected_idx]["immediate"],
+                                   committed_gain))
+            if qv_ft:
+                ft_enables = set(scores[selected_idx].get("enables") or ())
+                ft_setup = "\n\n".join(step for step, res in committed
+                                        if res.passed)
+            if qv_calib:
+                calib_log.append({
+                    "round": len(calib_log),
+                    "base_branches": base_branches,
+                    "selected_idx": selected_idx,
+                    "committed_gain": committed_gain,
+                    "candidates": candidates,
+                    # scorer inputs at decision time, for offline re-scoring
+                    "cov_summary": round_cov_summary,
+                    "uncovered": round_uncovered,
+                })
             continue
 
         # --- CovBayes (Exp 11): closed-form-IG selection over a per-function
@@ -771,6 +1145,7 @@ def run_strategy(target, strategy, seed, exec_budget, K, gamma, source):
             line_curve.append(runner.get_cumulative_lines())
 
     stats = runner.get_stats()
+    runner.cleanup()  # exec mode: remove the long-lived container now
 
     # Serialize execution trace
     trace = []
@@ -900,6 +1275,11 @@ def main():
     reset_cost()
 
     targets = load_benchmark(repos=args.repos, max_targets=args.max_targets)
+    if args.per_repo:
+        seen = {}
+        targets = [t for t in targets
+                   if seen.setdefault(t["repo"], 0) < args.per_repo
+                   and not seen.update({t["repo"]: seen[t["repo"]] + 1})]
     bench_info = get_benchmark_info()
     strategies = args.strategies
     seeds = args.seeds

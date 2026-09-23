@@ -4,13 +4,88 @@ For TestGenEval: runs generated test scripts inside SWE-bench Docker
 containers with coverage.py tracking branch coverage on the target file.
 """
 
+import atexit
 import json
 import logging
+import os
+import signal
 import subprocess
 import tempfile
-import os
+import threading
+import time
+import uuid
 
 log = logging.getLogger(__name__)
+
+# Resource caps for each test container. LLM-generated tests can loop forever
+# or allocate unboundedly; without caps, a few of them in parallel exhaust host
+# RAM and the OOM killer takes down co-located services (e.g. the vLLM server).
+# Swap equals memory, which disables swap for the container.
+DOCKER_MEMORY = os.environ.get("DOCKER_MEMORY", "4g")
+DOCKER_CPUS = os.environ.get("DOCKER_CPUS", "2")
+DOCKER_PIDS = os.environ.get("DOCKER_PIDS", "512")
+
+# "run": a fresh `docker run --rm` container per test (original behaviour).
+# Default "exec": validated identical to "run" on 216 replayed tests across all
+# 9 RepoExploreBench repos (scripts/active/validate_docker_exec_mode.py), 10x faster.
+# "exec": one long-lived container per runner, each test via `docker exec`.
+# Container start costs ~5 s on a busy daemon versus ~1-2 s for the test
+# itself, so exec mode is several times faster. Tests of one runner then share
+# the container's filesystem; timeouts still get a fresh container.
+DOCKER_MODE = os.environ.get("DOCKER_MODE", "exec")
+
+# Every container this process starts carries this label, so leftovers can be
+# killed at exit (or by hand: docker ps -q --filter label=qcurious.owner=<pid>).
+_OWNER_LABEL = f"qcurious.owner={os.getpid()}"
+
+# Set on shutdown: run_test refuses to start new containers.
+_shutting_down = threading.Event()
+
+
+def _kill_container(name: str):
+    subprocess.run(["docker", "kill", name], capture_output=True, timeout=30)
+
+
+def _kill_own_containers():
+    """Stop launching, kill in-flight `docker run` clients, then our containers.
+
+    Order matters: a `docker run` client that outlives this process still
+    creates its container, so the clients die first. The label sweep runs twice
+    to catch a create request the daemon had already accepted.
+    """
+    _shutting_down.set()
+    try:
+        subprocess.run(["pkill", "-KILL", "-P", str(os.getpid()), "-x", "docker"],
+                       capture_output=True, timeout=30)
+        for attempt in range(2):
+            ids = subprocess.run(
+                ["docker", "ps", "-q", "--filter", f"label={_OWNER_LABEL}"],
+                capture_output=True, text=True, timeout=30).stdout.split()
+            if ids:
+                subprocess.run(["docker", "kill", *ids], capture_output=True,
+                               timeout=60)
+            if attempt == 0:
+                time.sleep(2)
+    except Exception as e:
+        log.warning(f"Container cleanup failed: {e}")
+
+
+atexit.register(_kill_own_containers)
+
+
+def _on_sigterm(signum, frame):
+    # Kill our containers, then exit at once. Raising SystemExit is not enough:
+    # the interpreter waits for ThreadPoolExecutor workers at shutdown, and they
+    # keep starting new containers until their jobs drain.
+    _kill_own_containers()
+    os._exit(128 + signum)
+
+
+if signal.getsignal(signal.SIGTERM) is signal.SIG_DFL:
+    try:
+        signal.signal(signal.SIGTERM, _on_sigterm)
+    except ValueError:  # not in main thread
+        pass
 
 
 class DockerCoverageRunner:
@@ -19,7 +94,8 @@ class DockerCoverageRunner:
     def __init__(self, image: str, source_module: str, setup_code: str = "",
                  working_dir: str = "/opt/django__django",
                  env: dict = None, python_bin: str = "python",
-                 pre_command: str = "", target_file: str = None):
+                 pre_command: str = "", target_file: str = None,
+                 mode: str = None):
         """
         Args:
             image: Docker image name (e.g. 'aorwall/swe-bench-django_django-testbed:4.0')
@@ -35,6 +111,7 @@ class DockerCoverageRunner:
             target_file: If set, only count branches from files matching this
                 substring (e.g. 'sympy/physics/units/util.py'). Used when
                 --source is a broad package but we want file-level coverage.
+            mode: "run" or "exec" (default: DOCKER_MODE env var); see DOCKER_MODE.
         """
         self.image = image
         self.source_module = source_module
@@ -46,12 +123,57 @@ class DockerCoverageRunner:
         self.target_file = target_file
         self.cumulative_branches = set()
         self.cumulative_lines = set()
+        # Static extent of the code under measurement, as coverage.py reports
+        # it (executed + missing): every statement line and every possible arc,
+        # plus per-function regions. Lets callers ask what REMAINS unexecuted
+        # inside each function, not just whether it was touched.
+        self.all_lines = set()          # (file, line)
+        self.all_branches = set()       # (file, (from, to))
+        self.func_regions = {}          # (file, qualname) -> {"lines": set, "branches": set}
         self._coverage_data_dir = tempfile.mkdtemp(prefix="docker_cov_")
         # Make world-writable so non-root Docker users (e.g. swe-bench) can write
         os.chmod(self._coverage_data_dir, 0o777)
         self._test_count = 0
         self._pass_count = 0
         self._fail_count = 0
+        self.mode = mode or DOCKER_MODE
+        if self.mode not in ("run", "exec"):
+            raise ValueError(f"unknown docker mode {self.mode!r}")
+        self._container = None  # exec mode: name of the long-lived container
+
+    def _resource_args(self):
+        return ["--label", _OWNER_LABEL,
+                "--memory", DOCKER_MEMORY, "--memory-swap", DOCKER_MEMORY,
+                "--cpus", DOCKER_CPUS, "--pids-limit", DOCKER_PIDS]
+
+    def _env_args(self):
+        env_args = []
+        for k, v in self.env.items():
+            env_args.extend(["-e", f"{k}={v}"])
+        return env_args
+
+    def _ensure_container(self):
+        """exec mode: start the long-lived container if it isn't running."""
+        if self._container:
+            return self._container
+        name = f"qcurious-{os.getpid()}-{uuid.uuid4().hex[:12]}"
+        cmd = ["docker", "run", "-d", "--init", "--name", name,
+               *self._resource_args(),
+               "-v", f"{self._coverage_data_dir}:/qc:ro",
+               *self._env_args(),
+               "--entrypoint", "sleep", self.image, "infinity"]
+        r = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
+        if r.returncode != 0:
+            raise RuntimeError(f"could not start container: {r.stderr[-300:]}")
+        self._container = name
+        return name
+
+    def _drop_container(self):
+        """exec mode: remove the long-lived container (next test gets a new one)."""
+        if self._container:
+            subprocess.run(["docker", "rm", "-f", self._container],
+                           capture_output=True, timeout=60)
+            self._container = None
 
     def run_test(self, test_script: str, timeout: int = 60):
         """Run a test script inside the container and measure coverage.
@@ -63,6 +185,8 @@ class DockerCoverageRunner:
         Returns:
             DockerTestResult with output, exception, new_branches, coverage info
         """
+        if _shutting_down.is_set():
+            raise RuntimeError("DockerCoverageRunner is shutting down")
         self._test_count += 1
 
         # Build full script with setup
@@ -74,42 +198,76 @@ class DockerCoverageRunner:
         with open(script_path, "w") as f:
             f.write(full_script)
 
-        # Build docker command
-        env_args = []
-        for k, v in self.env.items():
-            env_args.extend(["-e", f"{k}={v}"])
-
         # Run with coverage, write JSON inside container then cat to stdout
         py = self.python_bin
         pre = f"{self.pre_command} && " if self.pre_command else ""
-        ensure_coverage = f"{py} -m pip install coverage -q 2>/dev/null; "
+        # Install coverage only if missing: an unconditional `pip install`
+        # contacts the package index every run (~25 s), dwarfing the test itself.
+        ensure_coverage = (f"{py} -c 'import coverage' 2>/dev/null || "
+                           f"{py} -m pip install coverage -q 2>/dev/null; ")
 
         # Strategy: run coverage, generate JSON inside container, print a
         # separator then cat the JSON to stdout. We parse it from the output.
         separator = "===COVERAGE_JSON_START==="
-        cmd = [
-            "docker", "run", "--rm",
-            "--entrypoint", "bash",
-            "-v", f"{script_path}:/tmp/test_script.py:ro",
-            *env_args,
-            self.image,
-            "-c",
-            f"cd {self.working_dir} && {pre}{ensure_coverage}"
-            f"{py} -m coverage run --rcfile=/dev/null --branch "
-            f"--source={self.source_module} "
-            f"/tmp/test_script.py 2>&1; "
-            f"echo '{separator}'; "
-            f"{py} -m coverage json --rcfile=/dev/null -o /tmp/cov.json 2>/dev/null && "
-            f"cat /tmp/cov.json 2>/dev/null"
-        ]
+        if self.mode == "exec":
+            script_in = f"/qc/{os.path.basename(script_path)}"
+            # Clear the previous test's coverage data so a failed run can't
+            # report stale results.
+            reset = "rm -f .coverage /tmp/cov.json; "
+        else:
+            script_in = "/tmp/test_script.py"
+            reset = ""
+        body = (f"cd {self.working_dir} && {reset}{pre}{ensure_coverage}"
+                f"{py} -m coverage run --rcfile=/dev/null --branch "
+                f"--source={self.source_module} "
+                f"{script_in} 2>&1; "
+                f"echo '{separator}'; "
+                f"{py} -m coverage json --rcfile=/dev/null -o /tmp/cov.json 2>/dev/null && "
+                f"cat /tmp/cov.json 2>/dev/null")
+
+        if self.mode == "exec":
+            try:
+                container_name = self._ensure_container()
+            except Exception as e:
+                self._fail_count += 1
+                return DockerTestResult(
+                    output=None, exception=str(e)[:200], new_branches=0,
+                    cumulative_branches=len(self.cumulative_branches),
+                    cumulative_lines=len(self.cumulative_lines),
+                )
+            cmd = ["docker", "exec", container_name, "bash", "-c", body]
+        else:
+            container_name = f"qcurious-{os.getpid()}-{uuid.uuid4().hex[:12]}"
+            cmd = ["docker", "run", "--rm", "--name", container_name,
+                   *self._resource_args(),
+                   "--entrypoint", "bash",
+                   "-v", f"{script_path}:{script_in}:ro",
+                   *self._env_args(),
+                   self.image, "-c", body]
 
         try:
             result = subprocess.run(
                 cmd, capture_output=True, text=True, timeout=timeout
             )
+            if (self.mode == "exec" and result.returncode != 0
+                    and ("is not running" in result.stderr
+                         or "No such container" in result.stderr)):
+                # container died (e.g. killed externally): one retry on a new one
+                self._container = None
+                cmd[2] = self._ensure_container()
+                container_name = cmd[2]
+                result = subprocess.run(
+                    cmd, capture_output=True, text=True, timeout=timeout
+                )
             raw_stdout = result.stdout.strip()
             stderr = result.stderr.strip()
         except subprocess.TimeoutExpired:
+            # Killing the docker CLI client does not stop the container (nor,
+            # in exec mode, the test process inside it); kill it explicitly or
+            # it keeps running and holding memory.
+            _kill_container(container_name)
+            if self.mode == "exec":
+                self._drop_container()
             self._fail_count += 1
             return DockerTestResult(
                 output=None, exception="TimeoutError", new_branches=0,
@@ -149,6 +307,23 @@ class DockerCoverageRunner:
                     # Filter to target file if specified
                     if self.target_file and self.target_file not in file_path:
                         continue
+                    # Static extent + per-function regions (coverage.py >= 7.5)
+                    self.all_lines.update(
+                        (file_path, ln) for ln in file_data.get("executed_lines", [])
+                        + file_data.get("missing_lines", []))
+                    self.all_branches.update(
+                        (file_path, tuple(a)) for a in file_data.get("executed_branches", [])
+                        + file_data.get("missing_branches", []))
+                    for qual, fd in file_data.get("functions", {}).items():
+                        if not qual:
+                            continue
+                        reg = self.func_regions.setdefault(
+                            (file_path, qual), {"lines": set(), "branches": set()})
+                        reg["lines"].update(fd.get("executed_lines", [])
+                                            + fd.get("missing_lines", []))
+                        reg["branches"].update(
+                            tuple(a) for a in fd.get("executed_branches", [])
+                            + fd.get("missing_branches", []))
                     # Track branches (coverage.py 7.x)
                     exec_branches = file_data.get("executed_branches", [])
                     if exec_branches:
@@ -198,6 +373,24 @@ class DockerCoverageRunner:
             cumulative_lines=len(self.cumulative_lines),
             passed=passed,
         )
+
+    def remaining_by_function(self, file_filter: str = None):
+        """{qualname: (missing_lines, missing_branches)} still unexecuted.
+
+        Uses coverage.py's own per-function regions, so a function counts as
+        remaining while any of its statements or arcs has not run — a locked
+        early-return does not mark the whole function done. Empty until the
+        first test has produced a coverage report.
+        """
+        out = {}
+        for (fp, qual), reg in self.func_regions.items():
+            if file_filter and file_filter not in fp:
+                continue
+            ml = sum(1 for ln in reg["lines"] if (fp, ln) not in self.cumulative_lines)
+            mb = sum(1 for a in reg["branches"] if (fp, a) not in self.cumulative_branches)
+            prev = out.get(qual, (0, 0))
+            out[qual] = (prev[0] + ml, prev[1] + mb)
+        return out
 
     def get_cumulative_coverage(self):
         return len(self.cumulative_branches)
@@ -250,12 +443,19 @@ class DockerCoverageRunner:
         self._fail_count = 0
 
     def cleanup(self):
-        """Remove temporary coverage data directory."""
+        """Remove the exec-mode container and the temporary script directory."""
         import shutil
+        try:
+            self._drop_container()
+        except Exception as e:
+            log.warning(f"Container removal failed: {e}")
         shutil.rmtree(self._coverage_data_dir, ignore_errors=True)
 
     def __del__(self):
-        self.cleanup()
+        try:
+            self.cleanup()
+        except Exception:
+            pass  # interpreter shutdown: the atexit label sweep covers it
 
     def __enter__(self):
         return self
