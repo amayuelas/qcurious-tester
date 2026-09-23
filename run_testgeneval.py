@@ -275,9 +275,11 @@ def run_strategy(example, strategy, seed, exec_budget, K, gamma):
                 sel = _random.choice([i for i in range(len(plans))
                                       if scores[i]["q"] == best_q])
             else:
-                sel = 0
+                sel, scores = 0, None  # unscored round: no prediction to update on
             committed = [execute(step) for step in plans[sel]
                          if executions < exec_budget]
+            if scores is None:
+                continue
             # conjugate update of the reachability posterior
             left = {f[0] for f in uncovered_functions(runner, funcs,
                                                       file_filter=target_file,

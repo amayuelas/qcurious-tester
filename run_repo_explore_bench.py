@@ -931,8 +931,11 @@ def run_strategy(target, strategy, seed, exec_budget, K, gamma, source):
 
             if qv_bayes:
                 # conjugate update: predicted functions that got covered raise
-                # alpha, those still uncovered raise beta.
-                left = {f[0] for f in uncovered_functions(runner, tgt_funcs)}
+                # alpha, those still uncovered raise beta. Same covered rule
+                # as the selection step above, so the posterior and the
+                # targets agree on what "covered" means.
+                left = {f[0] for f in uncovered_functions(runner, tgt_funcs,
+                                                          touch_rule=not qv_rem)}
                 pred = set(scores[selected_idx].get("executes") or ())
                 pred |= set(scores[selected_idx].get("enables") or ())
                 for f in pred:
