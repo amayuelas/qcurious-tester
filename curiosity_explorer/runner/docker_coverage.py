@@ -34,6 +34,18 @@ DOCKER_PIDS = os.environ.get("DOCKER_PIDS", "512")
 # the container's filesystem; timeouts still get a fresh container.
 DOCKER_MODE = os.environ.get("DOCKER_MODE", "exec")
 
+# Network mode for test containers. Neither default touches docker0: every
+# bridge-networked container consumes one veth slot, a host-wide limit (1023)
+# that other workloads on a shared machine can exhaust, after which
+# `docker run` fails with "exchange full".
+#   "none" — no interface at all. Fine when the image already has coverage
+#            (our curiositybench image does).
+#   "host" — shares the host stack, so `pip install coverage` works. Needed
+#            for the SWE-bench testbeds, which ship no coverage (and pythons
+#            as old as 3.8).
+# TestGenEval runners set DOCKER_NETWORK=host; RepoExploreBench keeps "none".
+DOCKER_NETWORK = os.environ.get("DOCKER_NETWORK", "none")
+
 # Every container this process starts carries this label, so leftovers can be
 # killed at exit (or by hand: docker ps -q --filter label=qcurious.owner=<pid>).
 _OWNER_LABEL = f"qcurious.owner={os.getpid()}"
@@ -142,7 +154,7 @@ class DockerCoverageRunner:
         self._container = None  # exec mode: name of the long-lived container
 
     def _resource_args(self):
-        return ["--label", _OWNER_LABEL,
+        return ["--label", _OWNER_LABEL, "--network", DOCKER_NETWORK,
                 "--memory", DOCKER_MEMORY, "--memory-swap", DOCKER_MEMORY,
                 "--cpus", DOCKER_CPUS, "--pids-limit", DOCKER_PIDS]
 
@@ -151,6 +163,36 @@ class DockerCoverageRunner:
         for k, v in self.env.items():
             env_args.extend(["-e", f"{k}={v}"])
         return env_args
+
+    def _ensure_coverage_installed(self, name):
+        """Install coverage once per container, verify it, or fail loudly.
+
+        Doing this per test was both wasteful and fragile: one failed install
+        (a network hiccup under load) left every later test in that container
+        reporting "No module named coverage", i.e. a whole file silently
+        scoring 0. SWE-bench testbeds ship no coverage at all.
+        """
+        py = self.python_bin
+        check = ["docker", "exec", name, "bash", "-c",
+                 f"{py} -c 'import coverage' 2>/dev/null && echo PRESENT"]
+        r = subprocess.run(check, capture_output=True, text=True, timeout=120)
+        if "PRESENT" in r.stdout:
+            return
+        for attempt in range(3):
+            subprocess.run(
+                ["docker", "exec", name, "bash", "-c",
+                 f"{py} -m pip install -q coverage 2>&1 | tail -2"],
+                capture_output=True, text=True, timeout=600)
+            r = subprocess.run(check, capture_output=True, text=True, timeout=120)
+            if "PRESENT" in r.stdout:
+                log.info(f"installed coverage in {self.image} "
+                         f"(attempt {attempt + 1})")
+                return
+            time.sleep(5 * (attempt + 1))
+        raise RuntimeError(
+            f"{self.image}: could not install coverage after 3 attempts "
+            f"(DOCKER_NETWORK={DOCKER_NETWORK}, python={py}) — every test "
+            f"would score 0")
 
     def _ensure_container(self):
         """exec mode: start the long-lived container if it isn't running."""
@@ -166,6 +208,7 @@ class DockerCoverageRunner:
         if r.returncode != 0:
             raise RuntimeError(f"could not start container: {r.stderr[-300:]}")
         self._container = name
+        self._ensure_coverage_installed(name)
         return name
 
     def _drop_container(self):
@@ -281,6 +324,15 @@ class DockerCoverageRunner:
                 cumulative_branches=len(self.cumulative_branches),
                 cumulative_lines=len(self.cumulative_lines),
             )
+
+        # A missing coverage module makes every test score 0 — loudly abort
+        # instead of filling the results with zeros (this cost a full
+        # TestGenEval run once, when --network none blocked its pip install).
+        if "No module named coverage" in raw_stdout:
+            raise RuntimeError(
+                f"{self.image}: coverage is not installed and could not be "
+                f"installed (DOCKER_NETWORK={DOCKER_NETWORK}); "
+                f"use DOCKER_NETWORK=host for images without coverage")
 
         # Split output: test output before separator, coverage JSON after
         separator = "===COVERAGE_JSON_START==="

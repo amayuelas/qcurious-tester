@@ -1,0 +1,20 @@
+[2026-09-22 21:13:22] django/django: 7 images, models ['gemini38'], 137 GB free
+[2026-09-22 21:59:59]   django/django / gemini38: exit 0
+[2026-09-22 21:59:59] sympy/sympy: 13 images, models ['gemini38'], 136 GB free
+[2026-09-23 00:10:50]   sympy/sympy / gemini38: exit 0
+[2026-09-23 00:10:50] pytest-dev/pytest: all models done, skipping
+[2026-09-23 00:10:50] matplotlib/matplotlib: 3 images, models ['gemini38'], 145 GB free
+[2026-09-23 00:39:23]   matplotlib/matplotlib / gemini38: exit 0
+[2026-09-23 00:39:23] astropy/astropy: 3 images, models ['gemini38'], 145 GB free
+[2026-09-23 00:51:30]   astropy/astropy / gemini38: exit 0
+[2026-09-23 00:51:30] pydata/xarray: 1 images, models ['gemini38'], 145 GB free
+[2026-09-23 01:12:07]   pydata/xarray / gemini38: exit 0
+[2026-09-23 01:12:07] sphinx-doc/sphinx: 2 images, models ['gemini38'], 145 GB free
+[2026-09-23 01:18:05]   sphinx-doc/sphinx / gemini38: exit 0
+[2026-09-23 01:18:05] mwaskom/seaborn: 1 images, models ['gemini38'], 145 GB free
+[2026-09-23 01:30:57]   mwaskom/seaborn / gemini38: exit 0
+[2026-09-23 01:30:57] pylint-dev/pylint: 2 images, models ['gemini38'], 145 GB free
+[2026-09-23 01:49:12]   pylint-dev/pylint / gemini38: exit 0
+[2026-09-23 01:49:12] pallets/flask: 1 images, models ['gemini38'], 145 GB free
+[2026-09-23 01:55:36]   pallets/flask / gemini38: exit 0
+[2026-09-23 01:55:38] merged 140 results -> /share/edc/home/aamayuelasfernandez/qcurious-tester/results/testgeneval/full_run_gemini38.json ($49.57)

@@ -1,0 +1,96 @@
+======================================================================
+TestGenEval Lite
+  Examples: 1 across 1 repos
+    pallets/flask: 1
+  Strategies: ['random', 'greedy', 'cov_greedy', 'covqvalue2']
+  Seeds: [42]
+  Exec budget: 24
+  Total runs: 4
+======================================================================
+  Connectivity: OK
+
+Running 1 targets with 8 workers...
+2026-09-23 19:54:34,412 INFO: installed coverage in aorwall/swe-bench-pallets_flask-testbed:2.3 (attempt 1)
+2026-09-23 19:55:34,769 INFO: installed coverage in aorwall/swe-bench-pallets_flask-testbed:2.3 (attempt 1)
+2026-09-23 19:56:58,122 INFO: installed coverage in aorwall/swe-bench-pallets_flask-testbed:2.3 (attempt 1)
+2026-09-23 19:58:18,833 INFO: Plan 0: ḡ=190, γE[v]=120.5, Q=310.5 (fn)
+2026-09-23 19:58:24,262 INFO: Plan 1: ḡ=166, γE[v]=168.0, Q=334.0 (fn)
+2026-09-23 19:58:28,791 INFO: Plan 2: ḡ=256, γE[v]=95.5, Q=351.5 (fn)
+2026-09-23 19:58:28,792 INFO: Plan 0: ḡ=95.0, γE[v]=114.2, Q=209.2 (bayes)
+2026-09-23 19:58:28,792 INFO: Plan 1: ḡ=83.0, γE[v]=122.3, Q=205.3 (bayes)
+2026-09-23 19:58:28,792 INFO: Plan 2: ḡ=128.0, γE[v]=96.5, Q=224.6 (bayes)
+2026-09-23 19:58:31,300 INFO: installed coverage in aorwall/swe-bench-pallets_flask-testbed:2.3 (attempt 1)
+2026-09-23 19:58:44,550 INFO: Plan 0: ḡ=191, γE[v]=0.0, Q=191.0 (fn)
+2026-09-23 19:58:47,720 INFO: Plan 1: ḡ=116, γE[v]=160.5, Q=276.5 (fn)
+2026-09-23 19:58:51,429 INFO: Plan 2: ḡ=223, γE[v]=120.5, Q=343.5 (fn)
+2026-09-23 19:58:51,429 INFO: Plan 0: ḡ=68.7, γE[v]=56.6, Q=125.2 (bayes)
+2026-09-23 19:58:51,430 INFO: Plan 1: ḡ=53.3, γE[v]=73.5, Q=126.8 (bayes)
+2026-09-23 19:58:51,430 INFO: Plan 2: ḡ=91.3, γE[v]=52.1, Q=143.4 (bayes)
+2026-09-23 19:58:59,560 INFO: Plan 1: ḡ=16, γE[v]=0.0, Q=16.0 (fn)
+2026-09-23 19:59:00,059 INFO: Plan 0: ḡ=133, γE[v]=0.0, Q=133.0 (fn)
+2026-09-23 19:59:00,717 INFO: Plan 2: ḡ=38, γE[v]=66.5, Q=104.5 (fn)
+2026-09-23 19:59:00,717 INFO: Plan 0: ḡ=34.6, γE[v]=7.4, Q=42.0 (bayes)
+2026-09-23 19:59:00,717 INFO: Plan 1: ḡ=5.3, γE[v]=22.0, Q=27.4 (bayes)
+2026-09-23 19:59:00,717 INFO: Plan 2: ḡ=9.5, γE[v]=24.4, Q=33.9 (bayes)
+2026-09-23 19:59:08,720 INFO: Plan 0: ḡ=15, γE[v]=0.0, Q=15.0 (fn)
+2026-09-23 19:59:10,121 INFO: Plan 2: ḡ=14, γE[v]=19.0, Q=33.0 (fn)
+2026-09-23 19:59:10,958 INFO: Plan 1: ḡ=38, γE[v]=8.0, Q=46.0 (fn)
+2026-09-23 19:59:10,958 INFO: Plan 0: ḡ=5.0, γE[v]=4.9, Q=9.9 (bayes)
+2026-09-23 19:59:10,958 INFO: Plan 1: ḡ=9.6, γE[v]=3.1, Q=12.7 (bayes)
+2026-09-23 19:59:10,958 INFO: Plan 2: ḡ=4.6, γE[v]=6.4, Q=11.0 (bayes)
+2026-09-23 19:59:18,695 INFO: Plan 0: ḡ=2, γE[v]=0.0, Q=2.0 (fn)
+2026-09-23 19:59:18,828 INFO: Plan 1: ḡ=37, γE[v]=0.0, Q=37.0 (fn)
+2026-09-23 19:59:18,833 INFO: Plan 2: ḡ=1, γE[v]=18.5, Q=19.5 (fn)
+2026-09-23 19:59:18,834 INFO: Plan 0: ḡ=0.5, γE[v]=3.8, Q=4.3 (bayes)
+2026-09-23 19:59:18,834 INFO: Plan 1: ḡ=7.4, γE[v]=0.3, Q=7.8 (bayes)
+2026-09-23 19:59:18,834 INFO: Plan 2: ḡ=0.2, γE[v]=5.3, Q=5.5 (bayes)
+2026-09-23 19:59:26,919 INFO: Plan 1: ḡ=1, γE[v]=0.0, Q=1.0 (fn)
+2026-09-23 19:59:27,070 INFO: Plan 2: ḡ=0, γE[v]=0.0, Q=0.0 (fn)
+2026-09-23 19:59:27,393 INFO: Plan 0: ḡ=2, γE[v]=0.0, Q=2.0 (fn)
+2026-09-23 19:59:27,393 INFO: Plan 0: ḡ=0.5, γE[v]=0.1, Q=0.6 (bayes)
+2026-09-23 19:59:27,393 INFO: Plan 1: ḡ=0.2, γE[v]=0.2, Q=0.5 (bayes)
+2026-09-23 19:59:27,393 INFO: Plan 2: ḡ=0.0, γE[v]=0.3, Q=0.3 (bayes)
+2026-09-23 19:59:34,081 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0 (fn)
+2026-09-23 19:59:34,216 INFO: Plan 2: ḡ=0, γE[v]=0.0, Q=0.0 (fn)
+2026-09-23 19:59:35,011 INFO: Plan 0: ḡ=1, γE[v]=0.0, Q=1.0 (fn)
+2026-09-23 19:59:35,012 INFO: Plan 0: ḡ=0.2, γE[v]=0.0, Q=0.2 (bayes)
+2026-09-23 19:59:35,012 INFO: Plan 1: ḡ=0.0, γE[v]=0.1, Q=0.1 (bayes)
+2026-09-23 19:59:35,012 INFO: Plan 2: ḡ=0.0, γE[v]=0.1, Q=0.1 (bayes)
+2026-09-23 19:59:42,193 INFO: Plan 0: ḡ=1, γE[v]=0.0, Q=1.0 (fn)
+2026-09-23 19:59:42,618 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0 (fn)
+2026-09-23 19:59:42,858 INFO: Plan 2: ḡ=0, γE[v]=0.0, Q=0.0 (fn)
+2026-09-23 19:59:42,858 INFO: Plan 0: ḡ=0.2, γE[v]=0.0, Q=0.2 (bayes)
+2026-09-23 19:59:42,858 INFO: Plan 1: ḡ=0.0, γE[v]=0.1, Q=0.1 (bayes)
+2026-09-23 19:59:42,858 INFO: Plan 2: ḡ=0.0, γE[v]=0.1, Q=0.1 (bayes)
+  [1/1] src/flask/cli.py (pallets/flask v2.3): {'random': 22, 'greedy': 18, 'cov_greedy': 25, 'covqvalue2': 84}
+
+======================================================================
+RESULTS
+======================================================================
+
+Module                                   repo            seed       random       greedy   cov_greedy   covqvalue2
+----------------------------------------------------------------------------------------------------------------
+flask.cli                                pallets/flask     42           22           18           25           84
+
+======================================================================
+STATISTICS
+======================================================================
+
+Per-strategy means (n=1):
+  random               branches=  22.0 ± 0.0  lines=131.0  pass_rate=71%
+  greedy               branches=  18.0 ± 0.0  lines=121.0  pass_rate=88%
+  cov_greedy           branches=  25.0 ± 0.0  lines=133.0  pass_rate=83%
+  covqvalue2           branches=  84.0 ± 0.0  lines=306.0  pass_rate=54%
+
+Paired vs random:
+
+Per-repo means:
+
+  pallets/flask (1 runs):
+    random               mean=22.0
+    greedy               mean=18.0
+    cov_greedy           mean=25.0
+    covqvalue2           mean=84.0
+
+Cost: $0.5825 | Time: 316s (5.3m)
+Saved to /share/edc/home/aamayuelasfernandez/qcurious-tester/results/testgeneval/by_repo/glm53/pallets__flask.json

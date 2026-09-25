@@ -62,6 +62,9 @@ GAMMA = 0.5
 def parse_args():
     p = argparse.ArgumentParser(description="TestGenEval Lite runner")
     p.add_argument("--max-examples", type=int, default=None)
+    p.add_argument("--code-files", nargs="+", default=None,
+                   help="run only these code_file paths (used to repair "
+                        "specific files, e.g. after an environment failure)")
     p.add_argument("--repos", nargs="+", default=None,
                    help="Filter by repo (e.g., django/django sympy/sympy)")
     p.add_argument("--strategies", nargs="+", default=ALL_STRATEGIES)
@@ -244,6 +247,10 @@ def run_strategy(example, strategy, seed, exec_budget, K, gamma):
         NEW_METHOD, "cov_bayes") else []
     cb_post = {f[0]: [1.0, 1.0] for f in funcs}
     fn_post = {f[0]: [1.0, 1.0] for f in funcs}  # Bayesian valuation posterior
+    # Per scored round: the untested functions before and after the committed
+    # plan, and the scorer's EXECUTES/ENABLES predictions for it, so the
+    # accuracy of the LLM's predictions can be measured offline.
+    pred_log = []
 
     while executions < exec_budget:
         # --- Full method: plans targeted at still-uncovered functions, scored
@@ -284,6 +291,12 @@ def run_strategy(example, strategy, seed, exec_budget, K, gamma):
             left = {f[0] for f in uncovered_functions(runner, funcs,
                                                       file_filter=target_file,
                                                       touch_rule=True)}
+            pred_log.append({
+                "uncovered_before": sorted(f[0] for f in uncovered),
+                "uncovered_after": sorted(left),
+                "executes": sorted(scores[sel].get("executes") or ()),
+                "enables": sorted(scores[sel].get("enables") or ()),
+            })
             pred = set(scores[sel].get("executes") or ())
             pred |= set(scores[sel].get("enables") or ())
             for f in pred:
@@ -416,6 +429,7 @@ def run_strategy(example, strategy, seed, exec_budget, K, gamma):
         "branch_curve": branch_curve,
         "line_curve": line_curve,
         "trace": trace,
+        **({"pred_log": pred_log} if pred_log else {}),
     }
 
 
@@ -511,6 +525,11 @@ def main():
 
     examples = load_testgeneval_examples(repos=args.repos,
                                           max_examples=args.max_examples)
+    if args.code_files:
+        wanted = set(args.code_files)
+        examples = [e for e in examples if e["code_file"] in wanted]
+        print(f"  Filtered to {len(examples)} of the requested "
+              f"{len(wanted)} files", flush=True)
     strategies = args.strategies
     seeds = args.seeds
 

@@ -1,0 +1,103 @@
+======================================================================
+TestGenEval Lite
+  Examples: 2 across 1 repos
+    sphinx-doc/sphinx: 2
+  Strategies: ['random', 'greedy', 'cov_greedy', 'covqvalue2']
+  Seeds: [42]
+  Exec budget: 24
+  Total runs: 8
+======================================================================
+  Connectivity: OK
+
+Running 2 targets with 8 workers...
+2026-09-23 19:22:31,978 INFO: Plan 0: ḡ=86, γE[v]=0.0, Q=86.0 (fn)
+2026-09-23 19:22:32,805 INFO: Plan 2: ḡ=142, γE[v]=0.0, Q=142.0 (fn)
+2026-09-23 19:22:32,901 INFO: Plan 1: ḡ=359, γE[v]=0.0, Q=359.0 (fn)
+2026-09-23 19:22:32,902 INFO: Plan 0: ḡ=43.0, γE[v]=72.5, Q=115.5 (bayes)
+2026-09-23 19:22:32,902 INFO: Plan 1: ḡ=179.5, γE[v]=4.2, Q=183.8 (bayes)
+2026-09-23 19:22:32,902 INFO: Plan 2: ḡ=71.0, γE[v]=58.5, Q=129.5 (bayes)
+2026-09-23 19:22:38,332 INFO: Plan 1: ḡ=146, γE[v]=0.0, Q=146.0 (fn)
+2026-09-23 19:22:38,367 INFO: Plan 2: ḡ=146, γE[v]=0.0, Q=146.0 (fn)
+2026-09-23 19:22:39,033 INFO: Plan 0: ḡ=1, γE[v]=0.0, Q=1.0 (fn)
+2026-09-23 19:22:39,033 INFO: Plan 0: ḡ=0.5, γE[v]=36.2, Q=36.8 (bayes)
+2026-09-23 19:22:39,033 INFO: Plan 1: ḡ=73.0, γE[v]=0.0, Q=73.0 (bayes)
+2026-09-23 19:22:39,033 INFO: Plan 2: ḡ=73.0, γE[v]=0.0, Q=73.0 (bayes)
+2026-09-23 19:22:41,138 INFO: Plan 1: ḡ=2, γE[v]=0.0, Q=2.0 (fn)
+2026-09-23 19:22:41,469 INFO: Plan 0: ḡ=15, γE[v]=0.0, Q=15.0 (fn)
+2026-09-23 19:22:42,343 INFO: Plan 2: ḡ=17, γE[v]=0.0, Q=17.0 (fn)
+2026-09-23 19:22:42,344 INFO: Plan 0: ḡ=7.5, γE[v]=0.5, Q=8.0 (bayes)
+2026-09-23 19:22:42,344 INFO: Plan 1: ḡ=1.0, γE[v]=3.8, Q=4.8 (bayes)
+2026-09-23 19:22:42,344 INFO: Plan 2: ḡ=8.5, γE[v]=0.0, Q=8.5 (bayes)
+2026-09-23 19:22:49,786 INFO: Plan 1: ḡ=2, γE[v]=0.0, Q=2.0 (fn)
+2026-09-23 19:22:49,911 INFO: Plan 2: ḡ=2, γE[v]=0.0, Q=2.0 (fn)
+2026-09-23 19:22:49,938 INFO: Plan 0: ḡ=2, γE[v]=0.0, Q=2.0 (fn)
+2026-09-23 19:22:49,939 INFO: Plan 0: ḡ=0.7, γE[v]=0.0, Q=0.7 (bayes)
+2026-09-23 19:22:49,939 INFO: Plan 1: ḡ=0.7, γE[v]=0.0, Q=0.7 (bayes)
+2026-09-23 19:22:49,939 INFO: Plan 2: ḡ=0.7, γE[v]=0.0, Q=0.7 (bayes)
+2026-09-23 19:22:58,066 INFO: Plan 1: ḡ=0, γE[v]=1.0, Q=1.0 (fn)
+2026-09-23 19:22:58,145 INFO: Plan 0: ḡ=2, γE[v]=0.0, Q=2.0 (fn)
+2026-09-23 19:22:58,377 INFO: Plan 2: ḡ=0, γE[v]=1.0, Q=1.0 (fn)
+2026-09-23 19:22:58,378 INFO: Plan 0: ḡ=0.5, γE[v]=0.0, Q=0.5 (bayes)
+2026-09-23 19:22:58,378 INFO: Plan 1: ḡ=0.0, γE[v]=0.3, Q=0.3 (bayes)
+2026-09-23 19:22:58,379 INFO: Plan 2: ḡ=0.0, γE[v]=0.3, Q=0.3 (bayes)
+2026-09-23 19:23:05,626 INFO: Plan 0: ḡ=2, γE[v]=0.0, Q=2.0 (fn)
+2026-09-23 19:23:05,889 INFO: Plan 1: ḡ=2, γE[v]=0.0, Q=2.0 (fn)
+2026-09-23 19:23:06,670 INFO: Plan 2: ḡ=2, γE[v]=0.0, Q=2.0 (fn)
+2026-09-23 19:23:06,670 INFO: Plan 0: ḡ=0.4, γE[v]=0.0, Q=0.4 (bayes)
+2026-09-23 19:23:06,670 INFO: Plan 1: ḡ=0.4, γE[v]=0.0, Q=0.4 (bayes)
+2026-09-23 19:23:06,670 INFO: Plan 2: ḡ=0.4, γE[v]=0.0, Q=0.4 (bayes)
+2026-09-23 19:23:14,096 INFO: Plan 0: ḡ=2, γE[v]=0.0, Q=2.0 (fn)
+2026-09-23 19:23:14,143 INFO: Plan 2: ḡ=2, γE[v]=0.0, Q=2.0 (fn)
+2026-09-23 19:23:14,453 INFO: Plan 1: ḡ=0, γE[v]=0.0, Q=0.0 (fn)
+2026-09-23 19:23:14,454 INFO: Plan 0: ḡ=0.3, γE[v]=0.0, Q=0.3 (bayes)
+2026-09-23 19:23:14,454 INFO: Plan 1: ḡ=0.0, γE[v]=0.2, Q=0.2 (bayes)
+2026-09-23 19:23:14,454 INFO: Plan 2: ḡ=0.3, γE[v]=0.0, Q=0.3 (bayes)
+2026-09-23 19:23:21,387 INFO: Plan 0: ḡ=2, γE[v]=0.0, Q=2.0 (fn)
+2026-09-23 19:23:21,691 INFO: Plan 2: ḡ=2, γE[v]=0.0, Q=2.0 (fn)
+2026-09-23 19:23:22,323 INFO: Plan 1: ḡ=0, γE[v]=1.0, Q=1.0 (fn)
+2026-09-23 19:23:22,324 INFO: Plan 0: ḡ=0.3, γE[v]=0.0, Q=0.3 (bayes)
+2026-09-23 19:23:22,324 INFO: Plan 1: ḡ=0.0, γE[v]=0.2, Q=0.2 (bayes)
+2026-09-23 19:23:22,324 INFO: Plan 2: ḡ=0.3, γE[v]=0.0, Q=0.3 (bayes)
+2026-09-23 19:23:29,385 INFO: Plan 0: ḡ=2, γE[v]=0.0, Q=2.0 (fn)
+2026-09-23 19:23:29,410 INFO: Plan 2: ḡ=2, γE[v]=0.0, Q=2.0 (fn)
+2026-09-23 19:23:29,840 INFO: Plan 1: ḡ=2, γE[v]=0.0, Q=2.0 (fn)
+2026-09-23 19:23:29,840 INFO: Plan 0: ḡ=0.2, γE[v]=0.0, Q=0.2 (bayes)
+2026-09-23 19:23:29,841 INFO: Plan 1: ḡ=0.2, γE[v]=0.0, Q=0.2 (bayes)
+2026-09-23 19:23:29,841 INFO: Plan 2: ḡ=0.2, γE[v]=0.0, Q=0.2 (bayes)
+  [1/2] sphinx/util/typing.py (sphinx-doc/sphinx v3.5): {'random': 5, 'greedy': 5, 'cov_greedy': 8, 'covqvalue2': 98}
+  [2/2] sphinx/environment/adapters/indexentries.py (sphinx-doc/sphinx v3.2): {'random': 51, 'greedy': 17, 'cov_greedy': 63, 'covqvalue2': 66}
+
+======================================================================
+RESULTS
+======================================================================
+
+Module                                   repo            seed       random       greedy   cov_greedy   covqvalue2
+----------------------------------------------------------------------------------------------------------------
+sphinx.util.typing                       sphinx-doc/sph    42            5            5            8           98
+sphinx.environment.adapters.indexentrie  sphinx-doc/sph    42           51           17           63           66
+
+======================================================================
+STATISTICS
+======================================================================
+
+Per-strategy means (n=2):
+  random               branches=  28.0 ± 23.0  lines=56.0  pass_rate=54%
+  greedy               branches=  11.0 ± 6.0  lines=25.0  pass_rate=46%
+  cov_greedy           branches=  35.5 ± 27.5  lines=69.5  pass_rate=46%
+  covqvalue2           branches=  82.0 ± 16.0  lines=114.0  pass_rate=85%
+
+Paired vs random:
+  greedy               Δ= -17.0 ± 17.0  W=0 L=1 T=1  p=0.5000 d=-0.71 
+  cov_greedy           Δ=  +7.5 ± 4.5  W=2 L=0 T=0  p=0.3440 d=1.18 
+  covqvalue2           Δ= +54.0 ± 39.0  W=2 L=0 T=0  p=0.3982 d=0.98 
+
+Per-repo means:
+
+  sphinx-doc/sphinx (2 runs):
+    random               mean=28.0
+    greedy               mean=11.0
+    cov_greedy           mean=35.5
+    covqvalue2           mean=82.0
+
+Cost: $1.1184 | Time: 333s (5.5m)
+Saved to /share/edc/home/aamayuelasfernandez/qcurious-tester/results/testgeneval/by_repo/glm53/sphinx-doc__sphinx.json

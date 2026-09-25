@@ -1,0 +1,341 @@
+2026-09-23 14:29:31,900 INFO: RepoExploreBench: 93 targets across 9 repos
+======================================================================
+RepoExploreBench v2.0
+  Targets: 93 files across 9 repos
+  Strategies: ['cov_qvalue_tgt_fnt_bayes']
+  Seeds: [42]
+  Exec budget: 24 per run
+  Map mode: full
+  Total runs: 93
+======================================================================
+  Connectivity: OK
+
+  Fetching source code...
+    click.core: 114085 chars
+    click.types: 36390 chars
+    click.termui: 28323 chars
+    click.utils: 20295 chars
+    click.shell_completion: 18459 chars
+    click.decorators: 18718 chars
+    click.parser: 19066 chars
+    click.testing: 16083 chars
+    click.formatting: 9705 chars
+    click.exceptions: 9272 chars
+    requests.utils: 33447 chars
+    requests.models: 35222 chars
+    requests.sessions: 30372 chars
+    requests.cookies: 18559 chars
+    requests.adapters: 19552 chars
+    requests.auth: 10186 chars
+    flask.app: 59200 chars
+    flask.cli: 33820 chars
+    flask.helpers: 22991 chars
+    flask.ctx: 14840 chars
+    flask.sessions: 14168 chars
+    flask.config: 12855 chars
+    flask.json.tag: 8870 chars
+    flask.testing: 10016 chars
+    flask.templating: 7537 chars
+    flask.json.provider: 7639 chars
+    rich.console: 99096 chars
+    rich.progress: 59691 chars
+    rich.text: 47302 chars
+    rich.table: 39643 chars
+    rich.pretty: 35811 chars
+    rich.syntax: 35364 chars
+    rich.markdown: 26159 chars
+    rich.style: 27072 chars
+    rich.traceback: 29466 chars
+    rich.segment: 24209 chars
+    rich.color: 18220 chars
+    rich.layout: 13939 chars
+    jinja2.compiler: 72198 chars
+    jinja2.filters: 53861 chars
+    jinja2.environment: 61252 chars
+    jinja2.nodes: 34549 chars
+    jinja2.runtime: 33405 chars
+    jinja2.parser: 39735 chars
+    jinja2.ext: 31843 chars
+    jinja2.lexer: 29725 chars
+    jinja2.utils: 23932 chars
+    jinja2.loaders: 23084 chars
+    jinja2.sandbox: 14583 chars
+    jinja2.bccache: 14060 chars
+    httpx._client: 67489 chars
+    httpx._models: 42302 chars
+    httpx._urls: 21747 chars
+    httpx._main: 15634 chars
+    httpx._urlparse: 17719 chars
+    httpx._api: 12927 chars
+    httpx._utils: 13857 chars
+    httpx._transports.default: 13289 chars
+    httpx._config: 12203 chars
+    httpx._auth: 11829 chars
+    pydantic.types: 89470 chars
+    pydantic.json_schema: 102806 chars
+    pydantic.main: 65891 chars
+    pydantic.fields: 45929 chars
+    pydantic.config: 29138 chars
+    pydantic.networks: 21214 chars
+    pydantic.functional_validators: 23599 chars
+    pydantic.color: 21492 chars
+    pydantic.type_adapter: 18033 chars
+    pydantic.functional_serializers: 14619 chars
+    werkzeug.http: 43362 chars
+    werkzeug.serving: 39331 chars
+    werkzeug.datastructures.structures: 31760 chars
+    werkzeug.routing.map: 36349 chars
+    werkzeug.routing.rules: 31894 chars
+    werkzeug.exceptions: 26061 chars
+    werkzeug.wrappers.response: 32586 chars
+    werkzeug.sansio.response: 27646 chars
+    werkzeug.utils: 24653 chars
+    werkzeug.wrappers.request: 24619 chars
+    werkzeug.local: 22002 chars
+    werkzeug.wsgi: 20893 chars
+    starlette.routing: 35752 chars
+    starlette.testclient: 29843 chars
+    starlette.datastructures: 23348 chars
+    starlette.responses: 12650 chars
+    starlette.requests: 11196 chars
+    starlette.formparsers: 10433 chars
+    starlette.applications: 10922 chars
+    starlette.middleware.errors: 7937 chars
+    starlette.staticfiles: 8723 chars
+    starlette.templating: 8984 chars
+    starlette.middleware.base: 8794 chars
+  Fetched 93/93 modules
+
+Running 93 targets with 48 workers...
+  [1/93] requests.auth seed=42: {'cov_qvalue_tgt_fnt_bayes': 69}
+  [2/93] click.termui seed=42: {'cov_qvalue_tgt_fnt_bayes': 39}
+  [3/93] click.testing seed=42: {'cov_qvalue_tgt_fnt_bayes': 60}
+  [4/93] jinja2.utils seed=42: {'cov_qvalue_tgt_fnt_bayes': 91}
+  [5/93] flask.config seed=42: {'cov_qvalue_tgt_fnt_bayes': 45}
+  [6/93] click.exceptions seed=42: {'cov_qvalue_tgt_fnt_bayes': 38}
+  [7/93] click.types seed=42: {'cov_qvalue_tgt_fnt_bayes': 32}
+  [8/93] click.formatting seed=42: {'cov_qvalue_tgt_fnt_bayes': 54}
+  [9/93] rich.text seed=42: {'cov_qvalue_tgt_fnt_bayes': 206}
+  [10/93] flask.ctx seed=42: {'cov_qvalue_tgt_fnt_bayes': 88}
+  [11/93] click.utils seed=42: {'cov_qvalue_tgt_fnt_bayes': 58}
+  [12/93] rich.layout seed=42: {'cov_qvalue_tgt_fnt_bayes': 70}
+  [13/93] rich.table seed=42: {'cov_qvalue_tgt_fnt_bayes': 180}
+  [14/93] flask.sessions seed=42: {'cov_qvalue_tgt_fnt_bayes': 15}
+  [15/93] rich.progress seed=42: {'cov_qvalue_tgt_fnt_bayes': 78}
+  [16/93] rich.markdown seed=42: {'cov_qvalue_tgt_fnt_bayes': 18}
+  [17/93] rich.style seed=42: {'cov_qvalue_tgt_fnt_bayes': 136}
+  [18/93] flask.testing seed=42: {'cov_qvalue_tgt_fnt_bayes': 33}
+  [19/93] requests.models seed=42: {'cov_qvalue_tgt_fnt_bayes': 122}
+  [20/93] requests.cookies seed=42: {'cov_qvalue_tgt_fnt_bayes': 81}
+  [21/93] jinja2.parser seed=42: {'cov_qvalue_tgt_fnt_bayes': 202}
+  [22/93] rich.traceback seed=42: {'cov_qvalue_tgt_fnt_bayes': 78}
+  [23/93] jinja2.lexer seed=42: {'cov_qvalue_tgt_fnt_bayes': 21}
+  [24/93] jinja2.environment seed=42: {'cov_qvalue_tgt_fnt_bayes': 125}
+  [25/93] click.decorators seed=42: {'cov_qvalue_tgt_fnt_bayes': 50}
+  [26/93] flask.json.tag seed=42: {'cov_qvalue_tgt_fnt_bayes': 24}
+  [27/93] click.parser seed=42: {'cov_qvalue_tgt_fnt_bayes': 33}
+  [28/93] flask.helpers seed=42: {'cov_qvalue_tgt_fnt_bayes': 22}
+  [29/93] rich.pretty seed=42: {'cov_qvalue_tgt_fnt_bayes': 113}
+  [30/93] rich.console seed=42: {'cov_qvalue_tgt_fnt_bayes': 58}
+  [31/93] rich.syntax seed=42: {'cov_qvalue_tgt_fnt_bayes': 72}
+  [32/93] flask.templating seed=42: {'cov_qvalue_tgt_fnt_bayes': 55}
+  [33/93] requests.adapters seed=42: {'cov_qvalue_tgt_fnt_bayes': 99}
+  [34/93] click.shell_completion seed=42: {'cov_qvalue_tgt_fnt_bayes': 30}
+  [35/93] flask.json.provider seed=42: {'cov_qvalue_tgt_fnt_bayes': 52}
+  [36/93] jinja2.runtime seed=42: {'cov_qvalue_tgt_fnt_bayes': 90}
+  [37/93] click.core seed=42: {'cov_qvalue_tgt_fnt_bayes': 197}
+  [38/93] jinja2.loaders seed=42: {'cov_qvalue_tgt_fnt_bayes': 87}
+  [39/93] flask.app seed=42: {'cov_qvalue_tgt_fnt_bayes': 82}
+  [40/93] jinja2.compiler seed=42: {'cov_qvalue_tgt_fnt_bayes': 95}
+  [41/93] rich.segment seed=42: {'cov_qvalue_tgt_fnt_bayes': 102}
+  [42/93] jinja2.filters seed=42: {'cov_qvalue_tgt_fnt_bayes': 164}
+  [43/93] requests.utils seed=42: {'cov_qvalue_tgt_fnt_bayes': 64}
+  [44/93] jinja2.ext seed=42: {'cov_qvalue_tgt_fnt_bayes': 10}
+  [45/93] rich.color seed=42: {'cov_qvalue_tgt_fnt_bayes': 46}
+  [46/93] flask.cli seed=42: {'cov_qvalue_tgt_fnt_bayes': 132}
+  [47/93] requests.sessions seed=42: {'cov_qvalue_tgt_fnt_bayes': 31}
+  [48/93] jinja2.nodes seed=42: {'cov_qvalue_tgt_fnt_bayes': 13}
+  [49/93] jinja2.sandbox seed=42: {'cov_qvalue_tgt_fnt_bayes': 87}
+  [50/93] httpx._urls seed=42: {'cov_qvalue_tgt_fnt_bayes': 81}
+  [51/93] werkzeug.exceptions seed=42: {'cov_qvalue_tgt_fnt_bayes': 39}
+  [52/93] pydantic.config seed=42: {'cov_qvalue_tgt_fnt_bayes': 1}
+  [53/93] pydantic.main seed=42: {'cov_qvalue_tgt_fnt_bayes': 183}
+  [54/93] werkzeug.local seed=42: {'cov_qvalue_tgt_fnt_bayes': 56}
+  [55/93] pydantic.json_schema seed=42: {'cov_qvalue_tgt_fnt_bayes': 261}
+  [56/93] jinja2.bccache seed=42: {'cov_qvalue_tgt_fnt_bayes': 24}
+  [57/93] pydantic.type_adapter seed=42: {'cov_qvalue_tgt_fnt_bayes': 17}
+  [58/93] httpx._urlparse seed=42: {'cov_qvalue_tgt_fnt_bayes': 73}
+  [59/93] httpx._models seed=42: {'cov_qvalue_tgt_fnt_bayes': 195}
+  [60/93] httpx._utils seed=42: {'cov_qvalue_tgt_fnt_bayes': 61}
+  [61/93] pydantic.networks seed=42: {'cov_qvalue_tgt_fnt_bayes': 35}
+  [62/93] httpx._transports.default seed=42: {'cov_qvalue_tgt_fnt_bayes': 27}
+  [63/93] httpx._api seed=42: {'cov_qvalue_tgt_fnt_bayes': 11}
+  [64/93] httpx._main seed=42: {'cov_qvalue_tgt_fnt_bayes': 86}
+  [65/93] werkzeug.datastructures.structures seed=42: {'cov_qvalue_tgt_fnt_bayes': 76}
+  [66/93] pydantic.color seed=42: {'cov_qvalue_tgt_fnt_bayes': 95}
+  [67/93] httpx._config seed=42: {'cov_qvalue_tgt_fnt_bayes': 21}
+  [68/93] starlette.datastructures seed=42: {'cov_qvalue_tgt_fnt_bayes': 131}
+  [69/93] pydantic.types seed=42: {'cov_qvalue_tgt_fnt_bayes': 139}
+  [70/93] werkzeug.wrappers.response seed=42: {'cov_qvalue_tgt_fnt_bayes': 80}
+  [71/93] httpx._auth seed=42: {'cov_qvalue_tgt_fnt_bayes': 85}
+  [72/93] pydantic.fields seed=42: {'cov_qvalue_tgt_fnt_bayes': 144}
+  [73/93] pydantic.functional_validators seed=42: {'cov_qvalue_tgt_fnt_bayes': 47}
+  [74/93] werkzeug.sansio.response seed=42: {'cov_qvalue_tgt_fnt_bayes': 76}
+  [75/93] pydantic.functional_serializers seed=42: {'cov_qvalue_tgt_fnt_bayes': 23}
+  [76/93] starlette.applications seed=42: {'cov_qvalue_tgt_fnt_bayes': 9}
+  [77/93] werkzeug.utils seed=42: {'cov_qvalue_tgt_fnt_bayes': 41}
+  [78/93] werkzeug.routing.rules seed=42: {'cov_qvalue_tgt_fnt_bayes': 141}
+  [79/93] httpx._client seed=42: {'cov_qvalue_tgt_fnt_bayes': 134}
+  [80/93] werkzeug.wsgi seed=42: {'cov_qvalue_tgt_fnt_bayes': 63}
+  [81/93] werkzeug.http seed=42: {'cov_qvalue_tgt_fnt_bayes': 103}
+  [82/93] starlette.requests seed=42: {'cov_qvalue_tgt_fnt_bayes': 73}
+  [83/93] werkzeug.serving seed=42: {'cov_qvalue_tgt_fnt_bayes': 32}
+  [84/93] starlette.responses seed=42: {'cov_qvalue_tgt_fnt_bayes': 52}
+  [85/93] starlette.testclient seed=42: {'cov_qvalue_tgt_fnt_bayes': 68}
+  [86/93] werkzeug.routing.map seed=42: {'cov_qvalue_tgt_fnt_bayes': 42}
+  [87/93] starlette.routing seed=42: {'cov_qvalue_tgt_fnt_bayes': 71}
+  [88/93] werkzeug.wrappers.request seed=42: {'cov_qvalue_tgt_fnt_bayes': 67}
+  [89/93] starlette.formparsers seed=42: {'cov_qvalue_tgt_fnt_bayes': 2}
+  [90/93] starlette.staticfiles seed=42: {'cov_qvalue_tgt_fnt_bayes': 60}
+  [91/93] starlette.templating seed=42: {'cov_qvalue_tgt_fnt_bayes': 26}
+  [92/93] starlette.middleware.errors seed=42: {'cov_qvalue_tgt_fnt_bayes': 47}
+  [93/93] starlette.middleware.base seed=42: {'cov_qvalue_tgt_fnt_bayes': 58}
+
+======================================================================
+RESULTS
+======================================================================
+
+Module                              seed  cov_qvalue_
+-----------------------------------------------------
+requests.auth                         42           69
+click.termui                          42           39
+click.testing                         42           60
+jinja2.utils                          42           91
+flask.config                          42           45
+click.exceptions                      42           38
+click.types                           42           32
+click.formatting                      42           54
+rich.text                             42          206
+flask.ctx                             42           88
+click.utils                           42           58
+rich.layout                           42           70
+rich.table                            42          180
+flask.sessions                        42           15
+rich.progress                         42           78
+rich.markdown                         42           18
+rich.style                            42          136
+flask.testing                         42           33
+requests.models                       42          122
+requests.cookies                      42           81
+jinja2.parser                         42          202
+rich.traceback                        42           78
+jinja2.lexer                          42           21
+jinja2.environment                    42          125
+click.decorators                      42           50
+flask.json.tag                        42           24
+click.parser                          42           33
+flask.helpers                         42           22
+rich.pretty                           42          113
+rich.console                          42           58
+rich.syntax                           42           72
+flask.templating                      42           55
+requests.adapters                     42           99
+click.shell_completion                42           30
+flask.json.provider                   42           52
+jinja2.runtime                        42           90
+click.core                            42          197
+jinja2.loaders                        42           87
+flask.app                             42           82
+jinja2.compiler                       42           95
+rich.segment                          42          102
+jinja2.filters                        42          164
+requests.utils                        42           64
+jinja2.ext                            42           10
+rich.color                            42           46
+flask.cli                             42          132
+requests.sessions                     42           31
+jinja2.nodes                          42           13
+jinja2.sandbox                        42           87
+httpx._urls                           42           81
+werkzeug.exceptions                   42           39
+pydantic.config                       42            1
+pydantic.main                         42          183
+werkzeug.local                        42           56
+pydantic.json_schema                  42          261
+jinja2.bccache                        42           24
+pydantic.type_adapter                 42           17
+httpx._urlparse                       42           73
+httpx._models                         42          195
+httpx._utils                          42           61
+pydantic.networks                     42           35
+httpx._transports.default             42           27
+httpx._api                            42           11
+httpx._main                           42           86
+werkzeug.datastructures.structures    42           76
+pydantic.color                        42           95
+httpx._config                         42           21
+starlette.datastructures              42          131
+pydantic.types                        42          139
+werkzeug.wrappers.response            42           80
+httpx._auth                           42           85
+pydantic.fields                       42          144
+pydantic.functional_validators        42           47
+werkzeug.sansio.response              42           76
+pydantic.functional_serializers       42           23
+starlette.applications                42            9
+werkzeug.utils                        42           41
+werkzeug.routing.rules                42          141
+httpx._client                         42          134
+werkzeug.wsgi                         42           63
+werkzeug.http                         42          103
+starlette.requests                    42           73
+werkzeug.serving                      42           32
+starlette.responses                   42           52
+starlette.testclient                  42           68
+werkzeug.routing.map                  42           42
+starlette.routing                     42           71
+werkzeug.wrappers.request             42           67
+starlette.formparsers                 42            2
+starlette.staticfiles                 42           60
+starlette.templating                  42           26
+starlette.middleware.errors           42           47
+starlette.middleware.base             42           58
+
+======================================================================
+STATISTICS
+======================================================================
+
+Per-strategy means (n=93):
+  cov_qvalue_tgt_fnt_bayes branches=  74.2 ± 5.4  lines=212.2  pass_rate=54%
+
+Per-repo means:
+
+  click (10 runs):
+    cov_qvalue_tgt_fnt_bayes mean=59.1
+
+  flask (10 runs):
+    cov_qvalue_tgt_fnt_bayes mean=54.8
+
+  httpx (10 runs):
+    cov_qvalue_tgt_fnt_bayes mean=77.4
+
+  jinja2 (12 runs):
+    cov_qvalue_tgt_fnt_bayes mean=84.1
+
+  pydantic (10 runs):
+    cov_qvalue_tgt_fnt_bayes mean=94.5
+
+  requests (6 runs):
+    cov_qvalue_tgt_fnt_bayes mean=77.7
+
+  rich (12 runs):
+    cov_qvalue_tgt_fnt_bayes mean=96.4
+
+  starlette (11 runs):
+    cov_qvalue_tgt_fnt_bayes mean=54.3
+
+  werkzeug (12 runs):
+    cov_qvalue_tgt_fnt_bayes mean=68.0
+
+Cost: $0.0000 | Time: 1283s (21.4m)
+Saved to /share/edc/home/aamayuelasfernandez/qcurious-tester/results/ablations/ablation_K1_gemma.json

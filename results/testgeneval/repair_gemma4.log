@@ -1,0 +1,11 @@
+gemma4: 8 all-zero file(s) across 3 repo(s)
+  django__django: 4
+  pytest-dev__pytest: 3
+  sympy__sympy: 1
+  re-running 4 file(s) of django/django ...
+    patched 5/4 file(s) into django__django.json
+  re-running 3 file(s) of pytest-dev/pytest ...
+    patched 0/3 file(s) into pytest-dev__pytest.json
+  re-running 1 file(s) of sympy/sympy ...
+    patched 0/1 file(s) into sympy__sympy.json
+repaired 5/8 file(s)

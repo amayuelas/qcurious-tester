@@ -17,6 +17,13 @@ FIREWORKS_API_BASE = "https://api.fireworks.ai/inference/v1"
 FIREWORKS_API_KEY = os.environ.get("FIREWORKS_API_KEY", "")
 # Local vLLM OpenAI-compatible server (no API rate limits). Used for any model
 # whose id starts with "google/" or contains "gemma".
+# OpenRouter: an OpenAI-compatible gateway to many providers. Used for models
+# whose direct API is rate-limited for us (e.g. GLM via Mistral). Model ids
+# carry an "openrouter/" prefix here, e.g. "openrouter/z-ai/glm-5.3"; the
+# prefix is stripped before the request (see llm._wire_name).
+OPENROUTER_API_BASE = os.environ.get("OPENROUTER_API_BASE",
+                                     "https://openrouter.ai/api/v1")
+OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY", "")
 VLLM_API_BASE = os.environ.get("VLLM_API_BASE", "http://localhost:8000/v1")
 VLLM_API_KEY = os.environ.get("VLLM_API_KEY", "EMPTY")
 LOGPROB_MODEL = "accounts/fireworks/models/gpt-oss-120b"
@@ -31,6 +38,8 @@ MODEL = os.environ.get("MODEL", "gemini-3-flash-preview")
 MODEL_EXTRA_PARAMS = {
     "gemini-3.8-flash": {"reasoning_effort": "low"},
     "zai-glm-5-3": {"reasoning_effort": "low"},
+    "z-ai/glm-5.3": {"reasoning_effort": "low"},   # same model via OpenRouter
+    "z-ai/glm-5.3-flash": {"reasoning_effort": "low"},
 }
 THINKING_TOKEN_ALLOWANCE = int(os.environ.get("THINKING_TOKEN_ALLOWANCE", "4096"))
 
@@ -72,6 +81,10 @@ MODEL_PRICING = {
     # Source: https://docs.mistral.ai/models/zai-glm-5-3 (retrieved 2026-09-21)
     # Cached input is $0.14/M; not modeled here (upper-bound cost estimate).
     "zai-glm-5-3": {"input": 1.40, "output": 4.40},
+    # Same model via OpenRouter (list price; OpenRouter adds a small fee)
+    "openrouter/z-ai/glm-5.3": {"input": 1.40, "output": 4.40},
+    # GLM 5.3 Flash (https://openrouter.ai/z-ai/glm-5.3-flash, 2026-09-22)
+    "openrouter/z-ai/glm-5.3-flash": {"input": 0.075, "output": 0.25},
     "gemma-4-31B-it": {"input": 0.0, "output": 0.0},  # local vLLM
     # Source: https://developers.openai.com/api/docs/pricing (retrieved 2026-03-23)
     "gpt-5.4": {"input": 2.50, "output": 15.00},

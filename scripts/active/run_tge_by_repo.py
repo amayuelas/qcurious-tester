@@ -22,6 +22,12 @@ import argparse
 import json
 import os
 import shutil
+
+# SWE-bench testbeds ship no coverage module (and pythons as old as 3.8), so
+# the runner pip-installs it inside the container, which needs a network.
+# "host" provides one without consuming a docker0 veth slot — the bridge is a
+# host-wide resource (1023 interfaces) that co-tenant workloads can exhaust.
+os.environ.setdefault("DOCKER_NETWORK", "host")
 import subprocess
 import sys
 import time

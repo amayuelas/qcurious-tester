@@ -1,0 +1,189 @@
+  Filtered to 1 of the requested 1 files
+======================================================================
+TestGenEval Lite
+  Examples: 1 across 1 repos
+    sympy/sympy: 1
+  Strategies: ['random', 'greedy', 'cov_greedy', 'covqvalue2']
+  Seeds: [42]
+  Exec budget: 24
+  Total runs: 4
+======================================================================
+  Connectivity: OK
+
+Running 1 targets with 1 workers...
+2026-09-23 11:47:27,282 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 11:48:31,794 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 11:49:36,291 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 11:50:40,785 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 11:51:45,330 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 11:52:49,775 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 11:53:54,258 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 11:54:58,635 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 11:56:03,152 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 11:57:07,638 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 11:58:12,214 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 11:59:16,674 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 12:00:21,153 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 12:01:25,730 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 12:02:30,172 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 12:03:34,648 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 12:04:39,049 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 12:05:43,327 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 12:06:47,787 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 12:07:52,176 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 12:08:56,599 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 12:10:01,176 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 12:11:05,613 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 12:12:10,011 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 12:13:14,537 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 12:14:19,353 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 12:15:24,270 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 12:16:28,849 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 12:17:33,453 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 12:18:38,448 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 12:19:43,029 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 12:20:47,872 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 12:21:52,409 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 12:22:57,226 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 12:24:01,880 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 12:25:06,740 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 12:26:11,310 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 12:27:16,128 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 12:28:20,605 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 12:29:25,171 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 12:30:29,747 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 12:31:34,381 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 12:32:39,006 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 12:33:43,948 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 12:34:49,009 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 12:35:54,136 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 12:36:59,154 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 12:38:04,229 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 12:39:10,620 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 12:40:17,072 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 12:41:23,145 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 12:42:29,687 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 12:43:35,317 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 12:44:41,236 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 12:45:47,425 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 12:46:53,782 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 12:48:00,096 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 12:49:06,074 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 12:50:12,401 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 12:51:18,949 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 12:52:25,942 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 12:53:32,594 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 12:54:38,507 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 12:55:44,979 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 12:56:51,200 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 12:57:58,091 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 12:59:04,512 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 13:00:11,326 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 13:01:17,359 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 13:02:23,583 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 13:03:29,805 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 13:04:36,068 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 13:05:53,612 INFO: Plan 0: ḡ=21, γE[v]=0.0, Q=21.0 (fn)
+2026-09-23 13:05:53,782 INFO: Plan 2: ḡ=32, γE[v]=0.0, Q=32.0 (fn)
+2026-09-23 13:05:53,868 INFO: Plan 1: ḡ=31, γE[v]=0.0, Q=31.0 (fn)
+2026-09-23 13:05:53,869 INFO: Plan 0: ḡ=10.5, γE[v]=75.0, Q=85.5 (bayes)
+2026-09-23 13:05:53,869 INFO: Plan 1: ḡ=15.5, γE[v]=72.5, Q=88.0 (bayes)
+2026-09-23 13:05:53,869 INFO: Plan 2: ḡ=16.0, γE[v]=72.2, Q=88.2 (bayes)
+2026-09-23 13:05:56,211 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 13:06:58,951 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 13:08:01,639 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 13:09:18,276 INFO: Plan 0: ḡ=11, γE[v]=0.0, Q=11.0 (fn)
+2026-09-23 13:09:18,572 INFO: Plan 1: ḡ=30, γE[v]=0.0, Q=30.0 (fn)
+2026-09-23 13:09:18,794 INFO: Plan 2: ḡ=38, γE[v]=0.0, Q=38.0 (fn)
+2026-09-23 13:09:18,795 INFO: Plan 0: ḡ=5.5, γE[v]=74.8, Q=80.3 (bayes)
+2026-09-23 13:09:18,795 INFO: Plan 1: ḡ=15.0, γE[v]=70.1, Q=85.1 (bayes)
+2026-09-23 13:09:18,795 INFO: Plan 2: ḡ=13.7, γE[v]=70.8, Q=84.4 (bayes)
+2026-09-23 13:09:21,203 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 13:10:23,844 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 13:11:26,554 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 13:12:41,189 INFO: Plan 0: ḡ=11, γE[v]=0.0, Q=11.0 (fn)
+2026-09-23 13:12:41,537 INFO: Plan 2: ḡ=32, γE[v]=0.0, Q=32.0 (fn)
+2026-09-23 13:12:41,743 INFO: Plan 1: ḡ=32, γE[v]=0.0, Q=32.0 (fn)
+2026-09-23 13:12:41,744 INFO: Plan 0: ḡ=4.5, γE[v]=72.8, Q=77.3 (bayes)
+2026-09-23 13:12:41,744 INFO: Plan 1: ḡ=11.0, γE[v]=69.6, Q=80.6 (bayes)
+2026-09-23 13:12:41,744 INFO: Plan 2: ḡ=10.7, γE[v]=69.8, Q=80.4 (bayes)
+2026-09-23 13:12:44,174 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 13:13:46,797 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 13:14:49,445 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 13:16:02,741 INFO: Plan 0: ḡ=21, γE[v]=0.0, Q=21.0 (fn)
+2026-09-23 13:16:02,915 INFO: Plan 2: ḡ=32, γE[v]=0.0, Q=32.0 (fn)
+2026-09-23 13:16:03,309 INFO: Plan 1: ḡ=33, γE[v]=0.0, Q=33.0 (fn)
+2026-09-23 13:16:03,309 INFO: Plan 0: ḡ=9.0, γE[v]=69.2, Q=78.2 (bayes)
+2026-09-23 13:16:03,310 INFO: Plan 1: ḡ=8.7, γE[v]=69.3, Q=78.0 (bayes)
+2026-09-23 13:16:03,310 INFO: Plan 2: ḡ=10.7, γE[v]=68.3, Q=79.0 (bayes)
+2026-09-23 13:16:05,721 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 13:17:08,397 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 13:18:11,292 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 13:19:25,077 INFO: Plan 0: ḡ=22, γE[v]=0.0, Q=22.0 (fn)
+2026-09-23 13:19:25,164 INFO: Plan 2: ḡ=32, γE[v]=0.0, Q=32.0 (fn)
+2026-09-23 13:19:25,369 INFO: Plan 1: ḡ=32, γE[v]=0.0, Q=32.0 (fn)
+2026-09-23 13:19:25,370 INFO: Plan 0: ḡ=9.5, γE[v]=67.6, Q=77.1 (bayes)
+2026-09-23 13:19:25,370 INFO: Plan 1: ḡ=8.2, γE[v]=68.2, Q=76.4 (bayes)
+2026-09-23 13:19:25,370 INFO: Plan 2: ḡ=8.0, γE[v]=68.3, Q=76.3 (bayes)
+2026-09-23 13:19:28,170 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 13:20:30,821 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 13:21:33,513 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 13:22:49,711 INFO: Plan 0: ḡ=21, γE[v]=0.0, Q=21.0 (fn)
+2026-09-23 13:22:49,728 INFO: Plan 1: ḡ=30, γE[v]=0.0, Q=30.0 (fn)
+2026-09-23 13:22:49,984 INFO: Plan 2: ḡ=38, γE[v]=0.0, Q=38.0 (fn)
+2026-09-23 13:22:49,985 INFO: Plan 0: ḡ=6.2, γE[v]=67.8, Q=74.0 (bayes)
+2026-09-23 13:22:49,985 INFO: Plan 1: ḡ=7.2, γE[v]=67.2, Q=74.5 (bayes)
+2026-09-23 13:22:49,985 INFO: Plan 2: ḡ=9.2, γE[v]=66.2, Q=75.5 (bayes)
+2026-09-23 13:22:52,367 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 13:23:55,057 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 13:24:57,831 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 13:26:11,768 INFO: Plan 0: ḡ=23, γE[v]=0.0, Q=23.0 (fn)
+2026-09-23 13:26:11,873 INFO: Plan 2: ḡ=38, γE[v]=0.0, Q=38.0 (fn)
+2026-09-23 13:26:12,129 INFO: Plan 1: ḡ=38, γE[v]=0.0, Q=38.0 (fn)
+2026-09-23 13:26:12,130 INFO: Plan 0: ḡ=6.7, γE[v]=66.6, Q=73.3 (bayes)
+2026-09-23 13:26:12,130 INFO: Plan 1: ḡ=10.7, γE[v]=64.6, Q=75.3 (bayes)
+2026-09-23 13:26:12,130 INFO: Plan 2: ḡ=7.4, γE[v]=66.2, Q=73.7 (bayes)
+2026-09-23 13:26:14,495 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 13:27:17,109 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 13:28:19,810 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 13:29:35,164 INFO: Plan 0: ḡ=21, γE[v]=0.0, Q=21.0 (fn)
+2026-09-23 13:29:35,337 INFO: Plan 2: ḡ=32, γE[v]=0.0, Q=32.0 (fn)
+2026-09-23 13:29:35,560 INFO: Plan 1: ḡ=37, γE[v]=0.0, Q=37.0 (fn)
+2026-09-23 13:29:35,560 INFO: Plan 0: ḡ=5.9, γE[v]=65.8, Q=71.6 (bayes)
+2026-09-23 13:29:35,560 INFO: Plan 1: ḡ=7.9, γE[v]=64.7, Q=72.7 (bayes)
+2026-09-23 13:29:35,560 INFO: Plan 2: ḡ=6.4, γE[v]=65.5, Q=71.9 (bayes)
+2026-09-23 13:29:37,923 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 13:30:40,550 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+2026-09-23 13:31:43,181 INFO: installed coverage in aorwall/swe-bench-sympy_sympy-testbed:1.5 (attempt 1)
+  [1/1] sympy/printing/pycode.py (sympy/sympy v1.5): {'random': 0, 'greedy': 0, 'cov_greedy': 0, 'covqvalue2': 0}
+
+======================================================================
+RESULTS
+======================================================================
+
+Module                                   repo            seed       random       greedy   cov_greedy   covqvalue2
+----------------------------------------------------------------------------------------------------------------
+sympy.printingcode                       sympy/sympy       42            0            0            0            0
+
+======================================================================
+STATISTICS
+======================================================================
+
+Per-strategy means (n=1):
+  random               branches=   0.0 ± 0.0  lines=0.0  pass_rate=0%
+  greedy               branches=   0.0 ± 0.0  lines=0.0  pass_rate=0%
+  cov_greedy           branches=   0.0 ± 0.0  lines=0.0  pass_rate=0%
+  covqvalue2           branches=   0.0 ± 0.0  lines=0.0  pass_rate=0%
+
+Paired vs random:
+
+Per-repo means:
+
+  sympy/sympy (1 runs):
+    random               mean=0.0
+    greedy               mean=0.0
+    cov_greedy           mean=0.0
+    covqvalue2           mean=0.0
+
+Cost: $0.0000 | Time: 6321s (105.3m)
+Saved to /share/edc/home/aamayuelasfernandez/qcurious-tester/results/testgeneval/repair/gemma4__sympy__sympy.json

@@ -1,0 +1,111 @@
+======================================================================
+TestGenEval Lite
+  Examples: 3 across 1 repos
+    astropy/astropy: 3
+  Strategies: ['random', 'greedy', 'cov_greedy', 'covqvalue2']
+  Seeds: [42]
+  Exec budget: 24
+  Total runs: 12
+======================================================================
+  Connectivity: OK
+
+Running 3 targets with 12 workers...
+2026-09-23 00:45:49,022 INFO: Plan 2: ḡ=253, γE[v]=97.5, Q=350.5 (fn)
+2026-09-23 00:45:49,164 INFO: Plan 0: ḡ=209, γE[v]=126.0, Q=335.0 (fn)
+2026-09-23 00:45:51,078 INFO: Plan 1: ḡ=734, γE[v]=21.0, Q=755.0 (fn)
+2026-09-23 00:45:51,078 INFO: Plan 0: ḡ=104.5, γE[v]=318.4, Q=422.9 (bayes)
+2026-09-23 00:45:51,078 INFO: Plan 1: ḡ=367.0, γE[v]=182.4, Q=549.4 (bayes)
+2026-09-23 00:45:51,079 INFO: Plan 2: ḡ=126.5, γE[v]=306.1, Q=432.6 (bayes)
+2026-09-23 00:46:02,579 INFO: Plan 1: ḡ=150, γE[v]=0.0, Q=150.0 (fn)
+2026-09-23 00:46:02,602 INFO: Plan 0: ḡ=39, γE[v]=0.0, Q=39.0 (fn)
+2026-09-23 00:46:02,605 INFO: Plan 2: ḡ=85, γE[v]=0.0, Q=85.0 (fn)
+2026-09-23 00:46:02,606 INFO: Plan 0: ḡ=19.5, γE[v]=151.4, Q=170.9 (bayes)
+2026-09-23 00:46:02,606 INFO: Plan 1: ḡ=71.3, γE[v]=125.5, Q=196.8 (bayes)
+2026-09-23 00:46:02,606 INFO: Plan 2: ḡ=42.5, γE[v]=139.9, Q=182.4 (bayes)
+2026-09-23 00:46:09,003 INFO: Plan 1: ḡ=253, γE[v]=0.0, Q=253.0 (fn)
+2026-09-23 00:46:09,057 INFO: Plan 2: ḡ=268, γE[v]=0.0, Q=268.0 (fn)
+2026-09-23 00:46:09,151 INFO: Plan 0: ḡ=88, γE[v]=51.5, Q=139.5 (fn)
+2026-09-23 00:46:09,151 INFO: Plan 0: ḡ=44.0, γE[v]=47.3, Q=91.3 (bayes)
+2026-09-23 00:46:09,151 INFO: Plan 1: ḡ=126.5, γE[v]=3.8, Q=130.2 (bayes)
+2026-09-23 00:46:09,151 INFO: Plan 2: ḡ=134.0, γE[v]=0.0, Q=134.0 (bayes)
+2026-09-23 00:46:14,541 INFO: Plan 0: ḡ=39, γE[v]=0.0, Q=39.0 (fn)
+2026-09-23 00:46:14,755 INFO: Plan 1: ḡ=59, γE[v]=0.0, Q=59.0 (fn)
+2026-09-23 00:46:16,882 INFO: Plan 2: ḡ=66, γE[v]=0.0, Q=66.0 (fn)
+2026-09-23 00:46:16,882 INFO: Plan 0: ḡ=19.5, γE[v]=123.2, Q=142.8 (bayes)
+2026-09-23 00:46:16,882 INFO: Plan 1: ḡ=19.8, γE[v]=123.1, Q=142.9 (bayes)
+2026-09-23 00:46:16,882 INFO: Plan 2: ḡ=33.0, γE[v]=116.5, Q=149.5 (bayes)
+2026-09-23 00:46:28,411 INFO: Plan 0: ḡ=95, γE[v]=0.5, Q=95.5 (fn)
+2026-09-23 00:46:28,728 INFO: Plan 1: ḡ=59, γE[v]=0.0, Q=59.0 (fn)
+2026-09-23 00:46:29,017 INFO: Plan 2: ḡ=71, γE[v]=0.0, Q=71.0 (fn)
+2026-09-23 00:46:29,017 INFO: Plan 0: ḡ=41.7, γE[v]=80.4, Q=122.1 (bayes)
+2026-09-23 00:46:29,017 INFO: Plan 1: ḡ=19.8, γE[v]=91.3, Q=111.2 (bayes)
+2026-09-23 00:46:29,017 INFO: Plan 2: ḡ=35.5, γE[v]=83.5, Q=119.0 (bayes)
+2026-09-23 00:46:40,175 INFO: Plan 1: ḡ=64, γE[v]=0.0, Q=64.0 (fn)
+2026-09-23 00:46:40,693 INFO: Plan 0: ḡ=122, γE[v]=4.5, Q=126.5 (fn)
+2026-09-23 00:46:43,749 INFO: Plan 2: ḡ=71, γE[v]=0.0, Q=71.0 (fn)
+2026-09-23 00:46:43,750 INFO: Plan 0: ḡ=53.0, γE[v]=60.6, Q=113.6 (bayes)
+2026-09-23 00:46:43,750 INFO: Plan 1: ḡ=30.3, γE[v]=71.7, Q=102.0 (bayes)
+2026-09-23 00:46:43,750 INFO: Plan 2: ḡ=35.5, γE[v]=69.1, Q=104.6 (bayes)
+2026-09-23 00:46:54,486 INFO: Plan 2: ḡ=159, γE[v]=0.0, Q=159.0 (fn)
+2026-09-23 00:46:54,519 INFO: Plan 1: ḡ=94, γE[v]=0.0, Q=94.0 (fn)
+2026-09-23 00:46:54,650 INFO: Plan 0: ḡ=97, γE[v]=4.5, Q=101.5 (fn)
+2026-09-23 00:46:54,651 INFO: Plan 0: ḡ=28.3, γE[v]=58.9, Q=87.3 (bayes)
+2026-09-23 00:46:54,651 INFO: Plan 1: ḡ=41.5, γE[v]=52.0, Q=93.5 (bayes)
+2026-09-23 00:46:54,651 INFO: Plan 2: ḡ=79.5, γE[v]=33.0, Q=112.5 (bayes)
+2026-09-23 00:47:05,787 INFO: Plan 0: ḡ=89, γE[v]=0.0, Q=89.0 (fn)
+2026-09-23 00:47:06,061 INFO: Plan 2: ḡ=64, γE[v]=0.0, Q=64.0 (fn)
+2026-09-23 00:47:06,972 INFO: Plan 1: ḡ=51, γE[v]=0.0, Q=51.0 (fn)
+2026-09-23 00:47:06,973 INFO: Plan 0: ḡ=25.7, γE[v]=22.9, Q=48.5 (bayes)
+2026-09-23 00:47:06,973 INFO: Plan 1: ḡ=16.4, γE[v]=27.5, Q=43.9 (bayes)
+2026-09-23 00:47:06,973 INFO: Plan 2: ḡ=29.3, γE[v]=21.0, Q=50.4 (bayes)
+2026-09-23 00:47:18,882 INFO: Plan 0: ḡ=81, γE[v]=0.0, Q=81.0 (fn)
+2026-09-23 00:47:19,086 INFO: Plan 1: ḡ=49, γE[v]=0.0, Q=49.0 (fn)
+2026-09-23 00:47:19,737 INFO: Plan 2: ḡ=10, γE[v]=0.0, Q=10.0 (fn)
+2026-09-23 00:47:19,737 INFO: Plan 0: ḡ=23.7, γE[v]=9.2, Q=32.9 (bayes)
+2026-09-23 00:47:19,737 INFO: Plan 1: ḡ=15.7, γE[v]=13.2, Q=28.9 (bayes)
+2026-09-23 00:47:19,737 INFO: Plan 2: ḡ=2.8, γE[v]=19.7, Q=22.4 (bayes)
+  [1/3] astropy/wcs/wcs.py (astropy/astropy v1.3): {'random': 60, 'greedy': 41, 'cov_greedy': 216, 'covqvalue2': 260}
+  [2/3] astropy/io/ascii/qdp.py (astropy/astropy v5.1): {'random': 10, 'greedy': 10, 'cov_greedy': 89, 'covqvalue2': 153}
+2026-09-23 00:49:10,544 INFO: Plan 2: ḡ=116, γE[v]=0.0, Q=116.0 (fn)
+2026-09-23 00:49:10,562 INFO: Plan 1: ḡ=109, γE[v]=3.5, Q=112.5 (fn)
+2026-09-23 00:49:10,727 INFO: Plan 0: ḡ=96, γE[v]=0.0, Q=96.0 (fn)
+2026-09-23 00:49:10,727 INFO: Plan 0: ḡ=48.0, γE[v]=5.0, Q=53.0 (bayes)
+2026-09-23 00:49:10,727 INFO: Plan 1: ḡ=54.5, γE[v]=1.9, Q=56.4 (bayes)
+2026-09-23 00:49:10,727 INFO: Plan 2: ḡ=58.0, γE[v]=0.0, Q=58.0 (bayes)
+  [3/3] astropy/modeling/separable.py (astropy/astropy v4.3): {'random': 18, 'greedy': 22, 'cov_greedy': 42, 'covqvalue2': 45}
+
+======================================================================
+RESULTS
+======================================================================
+
+Module                                   repo            seed       random       greedy   cov_greedy   covqvalue2
+----------------------------------------------------------------------------------------------------------------
+astropy.wcs.wcs                          astropy/astrop    42           60           41          216          260
+astropy.io.ascii.qdp                     astropy/astrop    42           10           10           89          153
+astropy.modeling.separable               astropy/astrop    42           18           22           42           45
+
+======================================================================
+STATISTICS
+======================================================================
+
+Per-strategy means (n=3):
+  random               branches=  29.3 ± 15.5  lines=113.7  pass_rate=94%
+  greedy               branches=  24.3 ± 9.0  lines=107.3  pass_rate=92%
+  cov_greedy           branches= 115.7 ± 52.0  lines=239.3  pass_rate=35%
+  covqvalue2           branches= 152.7 ± 62.1  lines=306.0  pass_rate=60%
+
+Paired vs random:
+  greedy               Δ=  -5.0 ± 7.1  W=1 L=1 T=1  p=0.5540 d=-0.41 
+  cov_greedy           Δ= +86.3 ± 38.3  W=3 L=0 T=0  p=0.1528 d=1.30 
+  covqvalue2           Δ=+123.3 ± 50.9  W=3 L=0 T=0  p=0.1363 d=1.40 
+
+Per-repo means:
+
+  astropy/astropy (3 runs):
+    random               mean=29.3
+    greedy               mean=24.3
+    cov_greedy           mean=115.7
+    covqvalue2           mean=152.7
+
+Cost: $1.2118 | Time: 717s (12.0m)
+Saved to /share/edc/home/aamayuelasfernandez/qcurious-tester/results/testgeneval/by_repo/gemini38/astropy__astropy.json

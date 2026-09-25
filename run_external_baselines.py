@@ -105,6 +105,9 @@ def run_pynguin_target(target, search_time, docker_timeout):
     )
     cmd = [
         "docker", "run", "--rm", "--entrypoint", "bash",
+        # generation is offline; --network none also avoids consuming a veth
+        # slot on docker0, which a shared host can exhaust ("exchange full")
+        "--network", "none",
         "-e", "PYNGUIN_DANGER_AWARE=1",
         image, "-c", inner,
     ]
@@ -185,10 +188,42 @@ def run_coverup_target(target, model, docker_timeout):
                "-e", f"COVERUP_VLLM_MODEL={model}"]
         net = ["--network", "host", "-v", f"{inject_dir}:/inject:ro"]
     else:
-        litellm_model = f"openai/{model}"
-        env = ["-e", f"OPENAI_API_BASE={config.GEMINI_API_BASE}",
-               "-e", f"OPENAI_API_KEY={config.GEMINI_API_KEY}"]
-        net = []
+        # Route to the same endpoint our own client would use for this model,
+        # via litellm's OpenAI-compatible provider (was hardcoded to gemini,
+        # which silently sent e.g. GLM traffic to the wrong API).
+        # OpenRouter ids carry our routing prefix; strip it and use its base.
+        # (Checking "glm" before this sent openrouter/z-ai/glm-5.3 to Mistral,
+        # which scored 0 on all 93 targets.)
+        if model.startswith("openrouter/"):
+            model = model[len("openrouter/"):]
+            litellm_model = f"openai/{model}"
+            base, key = config.OPENROUTER_API_BASE, config.OPENROUTER_API_KEY
+        elif model.startswith("mistral") or "glm" in model.lower():
+            # litellm's NATIVE mistral provider, not the generic openai one:
+            # via "openai/" it raises InternalServerError ("Invalid response
+            # object") on GLM, whose replies carry thinking chunks. The native
+            # path normalises them and passes tool calls through, which CoverUp
+            # needs. It reads MISTRAL_API_KEY from the environment.
+            litellm_model = f"mistral/{model}"
+            base, key = config.MISTRAL_API_BASE, config.MISTRAL_API_KEY
+        elif model.startswith("gpt"):
+            base, key = "https://api.openai.com/v1", config.OPENAI_API_KEY
+        elif model.startswith("accounts/fireworks/"):
+            base, key = config.FIREWORKS_API_BASE, config.FIREWORKS_API_KEY
+        else:
+            base, key = config.GEMINI_API_BASE, config.GEMINI_API_KEY
+        # litellm also refuses function calling for model names missing from
+        # its static registry, so inject the same sitecustomize used for vLLM.
+        inject_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                  "scripts", "coverup_inject")
+        env = ["-e", f"OPENAI_API_BASE={base}", "-e", f"OPENAI_API_KEY={key}",
+               "-e", f"MISTRAL_API_KEY={config.MISTRAL_API_KEY}",
+               "-e", "COVERUP_REASONING_EFFORT="
+                     + os.environ.get("COVERUP_REASONING_EFFORT", "low"),
+               "-e", "PYTHONPATH=/inject",
+               "-e", f"COVERUP_REGISTER_MODEL={model}"]
+        # host networking reaches the API without taking a docker0 veth slot
+        net = ["--network", "host", "-v", f"{inject_dir}:/inject:ro"]
 
     # CoverUp's per-candidate coverage check (testrunner.measure_test_coverage)
     # runs slipcover WITHOUT --source, so slipcover only instruments the working

@@ -66,7 +66,7 @@ STRATEGY_ALIASES = {"covqvalue2": METHOD, "cov_qvalue_v2": METHOD,
 ALL_STRATEGIES = ["random", "greedy", "cov_greedy", "cov_qvalue"]
 EXEC_BUDGET = 24
 K = 3
-PLAN_LENGTH = 3
+PLAN_LENGTH = 3   # steps per plan (S); --plan-length overrides for the S sweep
 GAMMA = 0.5
 # Summary-content ablation (Exp 7): set from --map-mode in main(), read by
 # run_strategy() when constructing each CoverageMap. Module-global so it reaches
@@ -89,6 +89,8 @@ def parse_args():
     p.add_argument("--seeds", nargs="+", type=int, default=[42])
     p.add_argument("--exec-budget", type=int, default=EXEC_BUDGET)
     p.add_argument("--K", type=int, default=K)
+    p.add_argument("--plan-length", type=int, default=PLAN_LENGTH,
+                   help="steps per plan (S); the paper sweeps 1/3/5")
     p.add_argument("--gamma", type=float, default=GAMMA)
     p.add_argument("--parallel", type=int, default=4,
                    help="Number of targets to run in parallel")
@@ -118,7 +120,8 @@ def parse_args():
 
 def fetch_source(module_name):
     """Fetch module source code from Docker image."""
-    cmd = (f"docker run --rm {DOCKER_IMAGE} python3 -c "
+    # --network none: no veth slot on docker0 (see DOCKER_NETWORK)
+    cmd = (f"docker run --rm --network none {DOCKER_IMAGE} python3 -c "
            f"\"import inspect, {module_name}; print(inspect.getsource({module_name}))\"")
     try:
         result = subprocess.run(cmd, shell=True, capture_output=True, text=True, timeout=30)
@@ -760,7 +763,18 @@ def run_strategy(target, strategy, seed, exec_budget, K, gamma, source):
             else float(digits)
     qv_flags = [p for p in qv_parts if p not in g_parts]
     is_qv_variant = bool(qv_parts) and set(qv_flags) <= {
-        "fb", "tgt", "calib", "fn", "fnv", "fnt", "ft", "rem", "bayes"}
+        "fb", "tgt", "calib", "fn", "fnv", "fnt", "ft", "rem", "bayes", "rnd",
+        "oracle"}
+    # "_oracle": counterfactual best-of-K over THIS pool — trial-run every
+    # candidate from a snapshot and commit the one that really gained most.
+    # (divhints_oracle is the old, untargeted pool's ceiling, so it is not
+    # comparable to a targeted method: it scored 48.0 against 81.5 for a random
+    # pick from the targeted pool.) Trial runs are free lookahead, as in the
+    # rebuttal's oracle; only the committed plan's steps cost budget.
+    qv_oracle = "oracle" in qv_parts
+    # "_rnd": commit a uniformly random plan from the pool instead of argmax-Q.
+    # Isolates generation from selection in the component ladder.
+    qv_rnd = "rnd" in qv_parts
     qv_bayes = "bayes" in qv_parts  # Bayesian valuation of the LLM perception
     # Coverage-map granularity. Default: a function counts as covered once any
     # of its lines has run. "_rem" instead keeps a function targeted while any
@@ -866,7 +880,22 @@ def run_strategy(target, strategy, seed, exec_budget, K, gamma, source):
                 line_curve.append(runner.get_cumulative_lines())
                 continue
 
-            if len(plans) <= 1:
+            if qv_oracle:
+                snap_o = runner.snapshot()
+                base_o = len(snap_o["branches"])
+                best_i, best_gain = 0, -1
+                for i, plan in enumerate(plans):
+                    runner.restore(snap_o)
+                    for step in plan:
+                        runner.run_test(step)
+                    gain = runner.get_cumulative_coverage() - base_o
+                    if gain > best_gain:
+                        best_gain, best_i = gain, i
+                runner.restore(snap_o)
+                scores = {i: {"immediate": 0, "future": 0,
+                              "q": 1 if i == best_i else 0}
+                          for i in range(len(plans))}
+            elif len(plans) <= 1:
                 scores = {0: {"immediate": 0, "future": 0, "q": 0}}
             elif qv_fn:
                 left = {f[0] for f in uncovered_now}
@@ -909,9 +938,12 @@ def run_strategy(target, strategy, seed, exec_budget, K, gamma, source):
             # argmax-Q with uniformly random tie-breaking: plain max() always
             # took plan 0 on ties (~15% of rounds), and plan 0 always gets the
             # same generic diversity hint.
-            best_q = max(scores[i]["q"] for i in range(len(plans)))
-            selected_idx = _random.choice(
-                [i for i in range(len(plans)) if scores[i]["q"] == best_q])
+            if qv_rnd:
+                selected_idx = _random.randrange(len(plans))
+            else:
+                best_q = max(scores[i]["q"] for i in range(len(plans)))
+                selected_idx = _random.choice(
+                    [i for i in range(len(plans)) if scores[i]["q"] == best_q])
 
             # Commit argmax-Q (matches cov_qvalue), counting steps vs budget
             runner.restore(snap)
@@ -1277,6 +1309,9 @@ def main():
     SCORE_MAP_MODE = args.score_map_mode
     reset_cost()
 
+    global PLAN_LENGTH
+    PLAN_LENGTH = args.plan_length
+
     targets = load_benchmark(repos=args.repos, max_targets=args.max_targets)
     if args.per_repo:
         seen = {}
@@ -1465,6 +1500,7 @@ def main():
             "config": {
                 "strategies": strategies, "seeds": seeds,
                 "exec_budget": args.exec_budget, "K": args.K,
+                "plan_length": args.plan_length,
                 "gamma": args.gamma, "map_mode": args.map_mode,
                 "score_map_mode": args.score_map_mode,
             },

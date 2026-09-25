@@ -1,0 +1,115 @@
+2026-09-24 14:47:40,814 INFO: RepoExploreBench: 93 targets across 9 repos
+======================================================================
+Exp 4 — external baseline: coverup
+  Targets: 93  search-time: 60s  parallel: 8
+======================================================================
+  [1/93] click.utils                      branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [2/93] click.termui                     branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [3/93] click.shell_completion           branches=14   lines=113   11 passed in 0.07s
+  [4/93] click.decorators                 branches=31   lines=76    1 passed in 0.02s
+  [5/93] click.parser                     branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [6/93] click.types                      branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [7/93] click.core                       branches=52   lines=249   1 passed in 0.03s
+  [8/93] click.formatting                 branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [9/93] click.exceptions                 branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [10/93] requests.sessions                branches=46   lines=148   38 passed in 0.29s
+  [11/93] requests.cookies                 branches=41   lines=122   28 passed in 0.24s
+  [12/93] requests.models                  branches=82   lines=212   35 passed in 0.28s
+  [13/93] requests.utils                   branches=89   lines=232   61 passed in 0.33s
+  [14/93] requests.adapters                branches=7    lines=74    6 passed in 0.15s
+  [15/93] requests.auth                    branches=39   lines=126   9 passed in 0.15s
+  [16/93] flask.app                        branches=104  lines=286   49 passed in 0.39s
+  [17/93] flask.ctx                        branches=22   lines=125   9 passed in 0.18s
+  [18/93] flask.helpers                    branches=30   lines=91    23 passed in 0.28s
+  [19/93] flask.sessions                   branches=14   lines=103   6 passed in 0.15s
+  [20/93] flask.cli                        branches=114  lines=225   34 passed in 0.28s
+  [21/93] flask.config                     branches=25   lines=64    13 passed in 0.18s
+  [22/93] flask.json.tag                   branches=12   lines=103   1 passed in 0.11s
+  [23/93] flask.testing                    branches=8    lines=43    2 passed in 0.12s
+  [24/93] flask.json.provider              branches=8    lines=44    6 passed in 0.13s
+  [25/93] flask.templating                 branches=13   lines=61    8 passed in 0.16s
+  [26/93] rich.console                     branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [27/93] rich.progress                    branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [28/93] rich.text                        branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [29/93] rich.markdown                    branches=20   lines=137   1 passed in 0.11s
+  [30/93] rich.syntax                      branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [31/93] rich.pretty                      branches=9    lines=105   6 passed in 0.10s
+  [32/93] rich.style                       branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [33/93] rich.traceback                   branches=28   lines=88    6 passed in 0.11s
+  [34/93] rich.layout                      branches=17   lines=96    6 passed in 0.11s
+  [35/93] rich.color                       branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [36/93] rich.segment                     branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [37/93] jinja2.filters                   branches=119  lines=159   1 failed, 2 passed in 0.09s
+  [38/93] jinja2.environment               branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [39/93] jinja2.nodes                     branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [40/93] jinja2.runtime                   branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [41/93] jinja2.parser                    branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [42/93] jinja2.lexer                     branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [43/93] jinja2.ext                       branches=100  lines=246   29 passed in 0.17s
+  [44/93] jinja2.utils                     branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [45/93] jinja2.loaders                   branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [46/93] jinja2.sandbox                   branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [47/93] httpx._urls                      branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [48/93] jinja2.bccache                   branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [49/93] httpx._models                    branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [50/93] httpx._client                    branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [51/93] click.testing                    branches=27   lines=86    7 passed in 0.06s
+  [52/93] httpx._main                      branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [53/93] httpx._utils                     branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [54/93] httpx._api                       branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [55/93] httpx._transports.default        branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [56/93] httpx._urlparse                  branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [57/93] httpx._config                    branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [58/93] httpx._auth                      branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [59/93] pydantic.types                   branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [60/93] pydantic.fields                  branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [61/93] pydantic.config                  branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [62/93] pydantic.main                    branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [63/93] pydantic.json_schema             branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [64/93] pydantic.networks                branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [65/93] pydantic.color                   branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [66/93] pydantic.type_adapter            branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [67/93] pydantic.functional_validators   branches=52   lines=123   1 passed in 0.12s
+  [68/93] werkzeug.http                    branches=81   lines=190   52 passed in 0.24s
+  [69/93] werkzeug.serving                 branches=63   lines=192   35 passed in 0.22s
+  [70/93] pydantic.functional_serializers  branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [71/93] werkzeug.exceptions              branches=30   lines=239   28 passed in 0.18s
+  [72/93] werkzeug.datastructures.structures branches=71   lines=263   38 passed in 0.22s
+  [73/93] werkzeug.sansio.response         branches=60   lines=140   7 passed in 0.07s
+  [74/93] werkzeug.routing.map             branches=52   lines=167   5 passed in 0.07s
+  [75/93] werkzeug.routing.rules           branches=114  lines=313   27 passed in 0.21s
+  [76/93] werkzeug.wrappers.response       branches=72   lines=173   21 passed in 0.15s
+  [77/93] rich.table                       branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [78/93] starlette.testclient             branches=2    lines=77    1 passed in 0.15s
+  [79/93] starlette.routing                branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [80/93] werkzeug.utils                   branches=22   lines=94    14 passed in 0.11s
+  [81/93] werkzeug.local                   branches=49   lines=246   17 passed in 0.10s
+  [82/93] werkzeug.wsgi                    branches=25   lines=96    11 passed in 0.10s
+  [83/93] werkzeug.wrappers.request        branches=45   lines=98    8 passed in 0.10s
+  [84/93] jinja2.compiler                  branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [85/93] starlette.datastructures         branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [86/93] starlette.responses              branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [87/93] starlette.requests               branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [88/93] starlette.formparsers            branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [89/93] starlette.applications           branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [90/93] starlette.middleware.errors      branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [91/93] starlette.staticfiles            branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [92/93] starlette.templating             branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [93/93] starlette.middleware.base        branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+
+======================================================================
+RESULTS (coverup)
+======================================================================
+  mean branches: 19.5  (n=93)
+    click        mean=12.4 (n=10)
+    flask        mean=35.0 (n=10)
+    httpx        mean=0.0 (n=10)
+    jinja2       mean=18.2 (n=12)
+    pydantic     mean=5.2 (n=10)
+    requests     mean=50.7 (n=6)
+    rich         mean=6.2 (n=12)
+    starlette    mean=0.2 (n=11)
+    werkzeug     mean=57.0 (n=12)
+
+  Time: 524s (8.7m)
+Saved to /share/edc/home/aamayuelasfernandez/qcurious-tester/results/repo_explore_bench/final_coverup_glm53.json

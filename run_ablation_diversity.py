@@ -40,7 +40,8 @@ STRATEGIES = ["cov_greedy", "cov_diverse", "cov_qvalue", "cov_nodiversity"]
 
 
 def fetch_source(module_name):
-    cmd = (f"docker run --rm {DOCKER_IMAGE} python3 -c "
+    # --network none: no veth slot on docker0 (see DOCKER_NETWORK)
+    cmd = (f"docker run --rm --network none {DOCKER_IMAGE} python3 -c "
            f"\"import inspect, {module_name}; print(inspect.getsource({module_name}))\"")
     try:
         result = subprocess.run(cmd, shell=True, capture_output=True, text=True, timeout=30)

@@ -1,0 +1,103 @@
+======================================================================
+TestGenEval Lite
+  Examples: 2 across 1 repos
+    mwaskom/seaborn: 2
+  Strategies: ['random', 'greedy', 'cov_greedy', 'covqvalue2']
+  Seeds: [42]
+  Exec budget: 24
+  Total runs: 8
+======================================================================
+  Connectivity: OK
+
+Running 2 targets with 8 workers...
+2026-09-23 19:32:35,851 INFO: Plan 2: ḡ=32, γE[v]=0.0, Q=32.0 (fn)
+2026-09-23 19:32:40,845 INFO: Plan 0: ḡ=289, γE[v]=18.0, Q=307.0 (fn)
+2026-09-23 19:32:42,255 INFO: Plan 1: ḡ=217, γE[v]=55.5, Q=272.5 (fn)
+2026-09-23 19:32:42,256 INFO: Plan 0: ḡ=144.5, γE[v]=59.1, Q=203.6 (bayes)
+2026-09-23 19:32:42,256 INFO: Plan 1: ḡ=108.5, γE[v]=78.7, Q=187.2 (bayes)
+2026-09-23 19:32:42,256 INFO: Plan 2: ḡ=16.0, γE[v]=122.5, Q=138.5 (bayes)
+2026-09-23 19:33:08,180 INFO: Plan 0: ḡ=166, γE[v]=127.0, Q=293.0 (fn)
+2026-09-23 19:33:08,928 INFO: Plan 1: ḡ=179, γE[v]=120.0, Q=299.0 (fn)
+2026-09-23 19:33:10,150 INFO: Plan 2: ḡ=33, γE[v]=0.0, Q=33.0 (fn)
+2026-09-23 19:33:10,150 INFO: Plan 0: ḡ=72.2, γE[v]=63.3, Q=135.4 (bayes)
+2026-09-23 19:33:10,150 INFO: Plan 1: ḡ=65.3, γE[v]=65.8, Q=131.1 (bayes)
+2026-09-23 19:33:10,150 INFO: Plan 2: ḡ=11.0, γE[v]=86.8, Q=97.8 (bayes)
+2026-09-23 19:33:33,137 INFO: Plan 1: ḡ=37, γE[v]=0.0, Q=37.0 (fn)
+2026-09-23 19:33:42,444 INFO: Plan 0: ḡ=212, γE[v]=21.0, Q=233.0 (fn)
+2026-09-23 19:33:42,617 INFO: Plan 2: ḡ=226, γE[v]=32.5, Q=258.5 (fn)
+2026-09-23 19:33:42,618 INFO: Plan 0: ḡ=54.7, γE[v]=21.0, Q=75.7 (bayes)
+2026-09-23 19:33:42,618 INFO: Plan 1: ḡ=16.2, γE[v]=39.0, Q=55.1 (bayes)
+2026-09-23 19:33:42,618 INFO: Plan 2: ḡ=59.3, γE[v]=19.3, Q=78.6 (bayes)
+2026-09-23 19:34:06,187 INFO: Plan 2: ḡ=27, γE[v]=0.0, Q=27.0 (fn)
+2026-09-23 19:34:06,898 INFO: Plan 1: ḡ=37, γE[v]=0.0, Q=37.0 (fn)
+2026-09-23 19:34:17,458 INFO: Plan 0: ḡ=211, γE[v]=28.0, Q=239.0 (fn)
+2026-09-23 19:34:17,459 INFO: Plan 0: ḡ=44.0, γE[v]=13.3, Q=57.3 (bayes)
+2026-09-23 19:34:17,459 INFO: Plan 1: ḡ=13.6, γE[v]=26.6, Q=40.2 (bayes)
+2026-09-23 19:34:17,459 INFO: Plan 2: ḡ=6.4, γE[v]=30.2, Q=36.6 (bayes)
+2026-09-23 19:34:35,293 INFO: Plan 2: ḡ=15, γE[v]=0.0, Q=15.0 (fn)
+2026-09-23 19:34:35,372 INFO: Plan 0: ḡ=15, γE[v]=0.0, Q=15.0 (fn)
+2026-09-23 19:34:35,430 INFO: Plan 1: ḡ=15, γE[v]=0.0, Q=15.0 (fn)
+2026-09-23 19:34:35,431 INFO: Plan 0: ḡ=7.5, γE[v]=0.0, Q=7.5 (bayes)
+2026-09-23 19:34:35,431 INFO: Plan 1: ḡ=7.5, γE[v]=0.0, Q=7.5 (bayes)
+2026-09-23 19:34:35,431 INFO: Plan 2: ḡ=7.5, γE[v]=0.0, Q=7.5 (bayes)
+2026-09-23 19:34:40,837 INFO: Plan 1: ḡ=25, γE[v]=112.0, Q=137.0 (fn)
+2026-09-23 19:34:49,303 INFO: Plan 2: ḡ=227, γE[v]=20.0, Q=247.0 (fn)
+2026-09-23 19:34:58,851 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0 (fn)
+2026-09-23 19:34:58,851 INFO: Plan 0: ḡ=0.0, γE[v]=26.0, Q=26.0 (bayes)
+2026-09-23 19:34:58,851 INFO: Plan 1: ḡ=5.9, γE[v]=31.2, Q=37.0 (bayes)
+2026-09-23 19:34:58,851 INFO: Plan 2: ḡ=39.3, γE[v]=7.5, Q=46.9 (bayes)
+2026-09-23 19:35:22,414 INFO: Plan 1: ḡ=22, γE[v]=13.5, Q=35.5 (fn)
+2026-09-23 19:35:23,259 INFO: Plan 2: ḡ=32, γE[v]=44.5, Q=76.5 (fn)
+2026-09-23 19:35:33,855 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0 (fn)
+2026-09-23 19:35:33,856 INFO: Plan 0: ḡ=0.0, γE[v]=14.4, Q=14.4 (bayes)
+2026-09-23 19:35:33,856 INFO: Plan 1: ḡ=3.7, γE[v]=13.5, Q=17.2 (bayes)
+2026-09-23 19:35:33,856 INFO: Plan 2: ḡ=5.2, γE[v]=15.3, Q=20.5 (bayes)
+2026-09-23 19:35:55,883 INFO: Plan 2: ḡ=11, γE[v]=22.5, Q=33.5 (fn)
+2026-09-23 19:35:56,563 INFO: Plan 1: ḡ=25, γE[v]=0.0, Q=25.0 (fn)
+2026-09-23 19:36:14,715 INFO: Plan 0: ḡ=0, γE[v]=0.0, Q=0.0 (fn)
+2026-09-23 19:36:14,716 INFO: Plan 0: ḡ=0.0, γE[v]=11.5, Q=11.5 (bayes)
+2026-09-23 19:36:14,716 INFO: Plan 1: ḡ=4.7, γE[v]=9.1, Q=13.9 (bayes)
+2026-09-23 19:36:14,716 INFO: Plan 2: ḡ=1.6, γE[v]=12.3, Q=13.8 (bayes)
+2026-09-23 19:36:37,668 INFO: Plan 0: ḡ=108, γE[v]=0.0, Q=108.0 (fn)
+2026-09-23 19:36:37,746 INFO: Plan 1: ḡ=7, γE[v]=8.5, Q=15.5 (fn)
+2026-09-23 19:36:41,933 INFO: Plan 2: ḡ=12, γE[v]=56.0, Q=68.0 (fn)
+2026-09-23 19:36:41,933 INFO: Plan 0: ḡ=16.5, γE[v]=1.3, Q=17.7 (bayes)
+2026-09-23 19:36:41,933 INFO: Plan 1: ḡ=1.7, γE[v]=9.2, Q=10.9 (bayes)
+2026-09-23 19:36:41,934 INFO: Plan 2: ḡ=1.7, γE[v]=12.9, Q=14.6 (bayes)
+  [1/2] seaborn/_core/scales.py (mwaskom/seaborn v0.12): {'random': 24, 'greedy': 40, 'cov_greedy': 22, 'covqvalue2': 75}
+  [2/2] seaborn/_stats/regression.py (mwaskom/seaborn v0.12): {'random': 6, 'greedy': 7, 'cov_greedy': 6, 'covqvalue2': 6}
+
+======================================================================
+RESULTS
+======================================================================
+
+Module                                   repo            seed       random       greedy   cov_greedy   covqvalue2
+----------------------------------------------------------------------------------------------------------------
+seaborn._core.scales                     mwaskom/seabor    42           24           40           22           75
+seaborn._stats.regression                mwaskom/seabor    42            6            7            6            6
+
+======================================================================
+STATISTICS
+======================================================================
+
+Per-strategy means (n=2):
+  random               branches=  15.0 ± 9.0  lines=82.0  pass_rate=10%
+  greedy               branches=  23.5 ± 16.5  lines=103.0  pass_rate=35%
+  cov_greedy           branches=  14.0 ± 8.0  lines=81.0  pass_rate=10%
+  covqvalue2           branches=  40.5 ± 34.5  lines=159.5  pass_rate=33%
+
+Paired vs random:
+  greedy               Δ=  +8.5 ± 7.5  W=2 L=0 T=0  p=0.4603 d=0.80 
+  cov_greedy           Δ=  -1.0 ± 1.0  W=0 L=1 T=1  p=0.5000 d=-0.71 
+  covqvalue2           Δ= +25.5 ± 25.5  W=1 L=0 T=1  p=0.5000 d=0.71 
+
+Per-repo means:
+
+  mwaskom/seaborn (2 runs):
+    random               mean=15.0
+    greedy               mean=23.5
+    cov_greedy           mean=14.0
+    covqvalue2           mean=40.5
+
+Cost: $1.1468 | Time: 774s (12.9m)
+Saved to /share/edc/home/aamayuelasfernandez/qcurious-tester/results/testgeneval/by_repo/glm53/mwaskom__seaborn.json

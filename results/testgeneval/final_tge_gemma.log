@@ -1,0 +1,21 @@
+[2026-09-22 21:13:28] django/django: 7 images, models ['gemma4'], 137 GB free
+[2026-09-22 22:32:11]   django/django / gemma4: exit 0
+[2026-09-22 22:32:11] sympy/sympy: 13 images, models ['gemma4'], 136 GB free
+[2026-09-23 00:54:10]   sympy/sympy / gemma4: exit 0
+[2026-09-23 00:54:10] pytest-dev/pytest: 7 images, models ['gemma4'], 145 GB free
+[2026-09-23 01:08:15]   pytest-dev/pytest / gemma4: exit 0
+[2026-09-23 01:08:15] matplotlib/matplotlib: 3 images, models ['gemma4'], 145 GB free
+[2026-09-23 01:39:38]   matplotlib/matplotlib / gemma4: exit 0
+[2026-09-23 01:39:38] astropy/astropy: 3 images, models ['gemma4'], 145 GB free
+[2026-09-23 01:55:05]   astropy/astropy / gemma4: exit 0
+[2026-09-23 01:55:05] pydata/xarray: 1 images, models ['gemma4'], 145 GB free
+[2026-09-23 02:17:59]   pydata/xarray / gemma4: exit 0
+[2026-09-23 02:17:59] sphinx-doc/sphinx: 2 images, models ['gemma4'], 145 GB free
+[2026-09-23 02:26:13]   sphinx-doc/sphinx / gemma4: exit 0
+[2026-09-23 02:26:13] mwaskom/seaborn: 1 images, models ['gemma4'], 145 GB free
+[2026-09-23 02:41:03]   mwaskom/seaborn / gemma4: exit 0
+[2026-09-23 02:41:03] pylint-dev/pylint: 2 images, models ['gemma4'], 145 GB free
+[2026-09-23 02:59:36]   pylint-dev/pylint / gemma4: exit 0
+[2026-09-23 02:59:36] pallets/flask: 1 images, models ['gemma4'], 145 GB free
+[2026-09-23 03:07:41]   pallets/flask / gemma4: exit 0
+[2026-09-23 03:07:43] merged 140 results -> /share/edc/home/aamayuelasfernandez/qcurious-tester/results/testgeneval/full_run_gemma4.json ($0.00)

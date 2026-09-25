@@ -1,0 +1,115 @@
+2026-09-22 20:49:38,257 INFO: RepoExploreBench: 93 targets across 9 repos
+======================================================================
+Exp 4 — external baseline: coverup
+  Targets: 93  search-time: 60s  parallel: 4
+======================================================================
+  [1/93] click.utils                      branches=40   lines=169   10 failed, 28 passed in 0.50s
+  [2/93] click.termui                     branches=70   lines=154   7 failed, 36 passed, 36 errors in 1.78s
+  [3/93] click.types                      branches=112  lines=348   56 failed, 51 passed, 31 errors in 2.84s
+  [4/93] click.shell_completion           branches=77   lines=225   98 passed in 0.50s
+  [5/93] click.testing                    branches=87   lines=292   54 passed in 0.44s
+  [6/93] click.decorators                 branches=21   lines=49    1 error in 0.63s
+  [7/93] click.parser                     branches=111  lines=231   5 failed, 58 passed, 10 warnings, 5 errors in 0.61s
+  [8/93] click.formatting                 branches=58   lines=128   3 failed, 26 passed, 4 errors in 0.33s
+  [9/93] click.exceptions                 branches=33   lines=126   3 failed, 20 passed in 1.50s
+  [10/93] click.core                       branches=475  lines=952   73 failed, 114 passed, 6 errors in 3.98s
+  [11/93] requests.models                  branches=216  lines=458   186 passed in 0.99s
+  [12/93] requests.sessions                branches=108  lines=269   123 passed in 0.85s
+  [13/93] requests.cookies                 branches=107  lines=242   116 passed in 0.89s
+  [14/93] requests.utils                   branches=227  lines=485   268 passed in 1.06s
+  [15/93] requests.auth                    branches=55   lines=177   35 passed in 0.42s
+  [16/93] flask.helpers                    branches=43   lines=117   66 passed in 0.49s
+  [17/93] flask.app                        branches=179  lines=385   140 passed, 1 skipped in 1.18s
+  [18/93] flask.sessions                   branches=20   lines=123   53 passed in 0.49s
+  [19/93] flask.config                     branches=48   lines=110   34 passed in 0.32s
+  [20/93] requests.adapters                branches=69   lines=192   2 failed, 58 passed, 1 warning in 0.60s
+  [21/93] flask.cli                        branches=225  lines=433   18 failed, 140 passed, 6 warnings in 1.62s
+  [22/93] flask.ctx                        branches=38   lines=155   52 passed in 0.58s
+  [23/93] flask.json.tag                   branches=25   lines=133   33 passed in 0.41s
+  [24/93] flask.templating                 branches=32   lines=113   31 passed in 0.43s
+  [25/93] flask.testing                    branches=41   lines=116   34 passed in 0.43s
+  [26/93] flask.json.provider              branches=16   lines=69    25 passed in 0.33s
+  [27/93] rich.table                       branches=146  lines=331   13 passed in 0.40s
+  [28/93] rich.text                        branches=150  lines=339   23 failed, 34 passed in 1.11s
+  [29/93] rich.console                     branches=219  lines=619   18 passed in 0.37s
+  [30/93] rich.progress                    branches=169  lines=514   34 passed in 0.64s
+  [31/93] rich.markdown                    branches=105  lines=391   11 failed, 74 passed in 2.13s
+  [32/93] rich.style                       branches=130  lines=288   23 failed, 49 passed, 6 errors in 1.38s
+  [33/93] rich.pretty                      branches=116  lines=347   95 passed in 0.76s
+  [34/93] rich.syntax                      branches=108  lines=320   10 failed, 53 passed, 13 errors in 2.14s
+  [35/93] rich.traceback                   branches=135  lines=297   1 failed, 52 passed in 1.39s
+  [36/93] rich.layout                      branches=68   lines=196   6 failed, 41 passed in 0.67s
+  [37/93] rich.color                       branches=76   lines=174   15 failed, 16 passed, 11 errors in 0.82s
+  [38/93] rich.segment                     branches=139  lines=213   14 failed, 33 passed, 24 errors in 2.08s
+  [39/93] jinja2.environment               branches=125  lines=389   35 passed in 0.48s
+  [40/93] jinja2.nodes                     branches=83   lines=515   37 passed in 0.76s
+  [41/93] jinja2.filters                   branches=249  lines=378   26 failed, 88 passed, 21 errors in 2.74s
+  [42/93] jinja2.compiler                  branches=148  lines=459   5 passed in 0.12s
+  [43/93] jinja2.ext                       branches=187  lines=379   1 failed, 83 passed in 0.82s
+  [44/93] jinja2.utils                     branches=36   lines=152   18 passed in 0.22s
+  [45/93] jinja2.runtime                   branches=163  lines=416   14 failed, 51 passed in 1.06s
+  [46/93] jinja2.parser                    branches=152  lines=389   18 failed, 19 passed in 0.91s
+  [47/93] jinja2.lexer                     branches=9    lines=123   1 error in 0.80s
+  [48/93] jinja2.sandbox                   branches=45   lines=137   14 failed, 15 passed in 0.78s
+  [49/93] jinja2.loaders                   branches=79   lines=205   41 passed in 0.52s
+  [50/93] jinja2.bccache                   branches=36   lines=159   8 failed, 51 passed in 0.63s
+  [51/93] httpx._urls                      branches=41   lines=90    1 passed in 0.11s
+  [52/93] httpx._main                      branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [53/93] httpx._models                    branches=161  lines=344   2 failed, 6 passed, 3 errors in 0.31s
+  [54/93] httpx._client                    branches=152  lines=435   16 failed, 37 passed, 1 warning in 1.58s
+  [55/93] httpx._api                       branches=6    lines=29    12 passed in 0.41s
+  [56/93] httpx._urlparse                  branches=105  lines=175   4 failed, 63 passed, 14 errors in 0.87s
+  [57/93] httpx._utils                     branches=44   lines=110   3 failed, 38 passed in 0.91s
+  [58/93] httpx._transports.default        branches=25   lines=85    13 passed in 0.32s
+  [59/93] httpx._config                    branches=11   lines=86    5 failed, 18 passed, 11 errors in 0.69s
+  [60/93] pydantic.main                    branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [61/93] pydantic.json_schema             branches=270  lines=609   8 passed in 0.26s
+  [62/93] pydantic.types                   branches=208  lines=601   63 passed, 1 warning in 1.77s
+  [63/93] httpx._auth                      branches=20   lines=132   2 failed, 16 passed in 0.40s
+  [64/93] pydantic.config                  branches=20   lines=138   17 passed, 7 warnings in 0.23s
+  [65/93] pydantic.functional_validators   branches=102  lines=199   46 passed in 0.84s
+  [66/93] pydantic.fields                  branches=263  lines=483   32 failed, 70 passed, 7 warnings, 30 errors in 5.55s
+  [67/93] pydantic.networks                branches=115  lines=384   86 passed in 1.86s
+  [68/93] pydantic.color                   branches=92   lines=187   2 failed, 49 passed, 4 warnings in 0.75s
+  [69/93] pydantic.type_adapter            branches=58   lines=162   6 failed, 41 passed, 6 errors in 0.80s
+  [70/93] werkzeug.http                    branches=240  lines=434   236 passed in 1.05s
+  [71/93] werkzeug.datastructures.structures branches=203  lines=497   164 passed in 1.42s
+  [72/93] pydantic.functional_serializers  branches=38   lines=71    22 passed in 0.48s
+  [73/93] werkzeug.routing.rules           branches=169  lines=386   1 failed, 96 passed in 0.94s
+  [74/93] werkzeug.routing.map             branches=156  lines=308   77 passed, 2 warnings in 0.73s
+  [75/93] werkzeug.sansio.response         branches=124  lines=261   104 passed in 0.79s
+  [76/93] werkzeug.exceptions              branches=48   lines=269   6 failed, 92 passed in 1.15s
+  [77/93] werkzeug.wrappers.response       branches=132  lines=272   108 passed in 0.77s
+  [78/93] werkzeug.local                   branches=70   lines=279   57 passed in 0.48s
+  [79/93] werkzeug.utils                   branches=80   lines=212   46 passed in 0.64s
+  [80/93] werkzeug.wrappers.request        branches=81   lines=178   67 passed in 0.86s
+  [81/93] werkzeug.wsgi                    branches=85   lines=225   93 passed in 0.58s
+  [82/93] starlette.testclient             branches=89   lines=331   87 passed, 4 warnings in 2.74s
+  [83/93] starlette.datastructures         branches=205  lines=427   130 passed in 1.64s
+  [84/93] starlette.routing                branches=119  lines=406   18 failed, 83 passed, 1 warning in 1.25s
+  [85/93] starlette.responses              branches=2    lines=54    1 error in 0.55s
+  [86/93] starlette.applications           branches=10   lines=83    2 failed, 21 passed, 2 warnings in 0.41s
+  [87/93] starlette.requests               branches=56   lines=128   15 failed, 17 passed in 0.58s
+  [88/93] starlette.staticfiles            branches=48   lines=123   51 passed in 0.38s
+  [89/93] starlette.formparsers            branches=24   lines=129   16 passed in 0.22s
+  [90/93] starlette.middleware.errors      branches=10   lines=54    7 passed in 0.12s
+  [91/93] starlette.templating             branches=29   lines=85    20 passed in 0.26s
+  [92/93] starlette.middleware.base        branches=0    lines=0     self._warn("No data was collected.", slug="no-data-collected")
+  [93/93] werkzeug.serving                 branches=0    lines=0     docker_timeout
+
+======================================================================
+RESULTS (coverup)
+======================================================================
+  mean branches: 98.0  (n=93)
+    click        mean=108.4 (n=10)
+    flask        mean=66.7 (n=10)
+    httpx        mean=56.5 (n=10)
+    jinja2       mean=109.3 (n=12)
+    pydantic     mean=116.6 (n=10)
+    requests     mean=130.3 (n=6)
+    rich         mean=130.1 (n=12)
+    starlette    mean=53.8 (n=11)
+    werkzeug     mean=115.7 (n=12)
+
+  Time: 5196s (86.6m)
+Saved to /share/edc/home/aamayuelasfernandez/qcurious-tester/results/repo_explore_bench/final_coverup_gemini38.json

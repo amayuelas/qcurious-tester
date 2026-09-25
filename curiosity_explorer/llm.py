@@ -2,8 +2,10 @@
 
 import hashlib
 import logging
+import os
 import random
 import sys
+import threading
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
@@ -16,7 +18,15 @@ import config
 _RETRYABLE = ("429", "rate", "limit", "quota", "resource_exhausted", "overloaded",
               "timeout", "timed out", "temporarily", "503", "502", "500",
               "unavailable", "connection")
-_MAX_RETRIES = 5      # attempts after the first try
+_MAX_RETRIES = 8      # attempts after the first try
+_BACKOFF_CAP = 120.0  # seconds; rate limits can need minute-scale waits
+# Errors that will not fix themselves: an exhausted account budget, a revoked
+# key. Retrying is pointless and, worse, the caller keeps going with empty
+# responses — a GLM run once "completed" 34/93 targets on nothing but "" after
+# the Mistral budget ran out. Abort the run instead.
+_FATAL = ("budget_exhausted", "budget exhausted", "insufficient_quota",
+          "invalid_api_key", "account is not active", "402")
+_FATAL_STREAK = 20    # consecutive empty responses that abort the run
 _BACKOFF_BASE = 2.0   # seconds; exponential with full jitter, capped at 60s
 
 try:
@@ -33,9 +43,17 @@ def _make_client():
     return _client_for_model(config.MODEL)
 
 
+def _wire_name(model: str) -> str:
+    """The id the provider expects (our ids carry a routing prefix)."""
+    return model[len("openrouter/"):] if model.startswith("openrouter/") else model
+
+
 def _client_for_model(model: str) -> OpenAI:
     """Create an OpenAI-compatible client for a specific model."""
-    if model.startswith("accounts/fireworks/"):
+    if model.startswith("openrouter/"):
+        return OpenAI(base_url=config.OPENROUTER_API_BASE,
+                      api_key=config.OPENROUTER_API_KEY)
+    elif model.startswith("accounts/fireworks/"):
         return OpenAI(base_url=config.FIREWORKS_API_BASE,
                       api_key=config.FIREWORKS_API_KEY)
     elif model.startswith("mistral") or "glm" in model.lower():
@@ -72,6 +90,103 @@ def reconfigure():
     global client
     client = _make_client()
 
+# Per-provider concurrency caps. Our own fan-out multiplies fast: each worker
+# issues K generation calls plus K scoring calls in parallel, so N workers can
+# mean ~6N simultaneous requests. Mistral answers that with 429 storms (the
+# rebuttal abandoned mistral-large after 4,340 of them, correlated with two
+# host crashes), and retry inflation then dominates the run. A semaphore caps
+# in-flight requests per provider regardless of how many workers exist.
+_PROVIDER_LIMITS = {
+    "mistral": int(os.environ.get("MISTRAL_MAX_CONCURRENCY", "12")),
+}
+class AdaptiveLimiter:
+    """In-flight cap that shrinks on rate limits and recovers on success.
+
+    A fixed cap has to be guessed: too high and the provider answers with 429s
+    (retry inflation, no extra goodput, since the real limit is tokens/minute);
+    too low and we leave throughput on the table. This is AIMD, as in TCP
+    congestion control: multiplicative decrease when the provider pushes back,
+    additive increase after a run of clean responses.
+    """
+
+    def __init__(self, limit, min_limit=2, max_limit=None):
+        self.limit = limit
+        self.min_limit = min_limit
+        self.max_limit = max_limit or max(limit * 2, limit + 8)
+        self._in_flight = 0
+        self._ok_streak = 0
+        self._last_cut = 0.0
+        self._cv = threading.Condition()
+
+    def acquire(self):
+        with self._cv:
+            while self._in_flight >= self.limit:
+                self._cv.wait(timeout=5)
+            self._in_flight += 1
+
+    def release(self):
+        with self._cv:
+            self._in_flight -= 1
+            self._cv.notify()
+
+    def on_rate_limited(self):
+        with self._cv:
+            now = time.time()
+            # one cut per cooldown: a burst of 429s is one signal, not many
+            if now - self._last_cut < 10.0:
+                return
+            new = max(self.min_limit, int(self.limit * 0.7))
+            if new < self.limit:
+                log.warning(f"rate limited: concurrency {self.limit} -> {new}")
+                self.limit = new
+            self._last_cut = now
+            self._ok_streak = 0
+
+    def on_success(self):
+        with self._cv:
+            self._ok_streak += 1
+            if self._ok_streak >= 50 and self.limit < self.max_limit:
+                self.limit += 1
+                self._ok_streak = 0
+                self._cv.notify()
+
+
+_provider_sems: dict[str, AdaptiveLimiter] = {}
+_sem_lock = threading.Lock()
+
+
+def _provider_of(model: str) -> str:
+    if model.startswith("openrouter/"):
+        return "openrouter"
+    if model.startswith("mistral") or "glm" in model.lower():
+        return "mistral"
+    if model.startswith("gpt"):
+        return "openai"
+    if model.startswith("accounts/fireworks/"):
+        return "fireworks"
+    if model.startswith("google/") or "gemma" in model.lower():
+        return "vllm"
+    return "gemini"
+
+
+def _semaphore_for(model: str):
+    """Concurrency gate for this model's provider, or None if uncapped."""
+    prov = _provider_of(model)
+    limit = _PROVIDER_LIMITS.get(prov)
+    if not limit:
+        return None
+    with _sem_lock:
+        if prov not in _provider_sems:
+            _provider_sems[prov] = AdaptiveLimiter(limit)
+    return _provider_sems[prov]
+
+
+class FatalAPIError(RuntimeError):
+    """Raised when the provider reports a condition retrying cannot fix."""
+
+
+_empty_streak = 0
+
 # Response cache: key -> response string
 _cache: dict[str, str] = {}
 _cache_hits = 0
@@ -107,7 +222,8 @@ def _extract_text(msg) -> str:
 
 def _request_params(model: str, max_tokens: int) -> dict:
     """Token-limit and per-model extra params for a chat completion call."""
-    params = dict(config.MODEL_EXTRA_PARAMS.get(model, {}))
+    params = dict(config.MODEL_EXTRA_PARAMS.get(model)
+                  or config.MODEL_EXTRA_PARAMS.get(_wire_name(model), {}))
     if "reasoning_effort" in params:
         max_tokens += config.THINKING_TOKEN_ALLOWANCE
     # OpenAI gpt-5+ models require max_completion_tokens
@@ -164,12 +280,21 @@ def generate_with_model(model: str, prompt: str, temperature: float = 0.7,
     for attempt in range(_MAX_RETRIES + 1):
         try:
             cli = _get_client(model)
-            response = cli.chat.completions.create(
-                model=model,
-                messages=[{"role": "user", "content": prompt}],
-                temperature=temperature,
-                **tok_param,
-            )
+            sem = _semaphore_for(model)
+            if sem:
+                sem.acquire()
+            try:
+                response = cli.chat.completions.create(
+                    model=_wire_name(model),
+                    messages=[{"role": "user", "content": prompt}],
+                    temperature=temperature,
+                    **tok_param,
+                )
+            finally:
+                if sem:
+                    sem.release()
+            if sem:
+                sem.on_success()
             msg = response.choices[0].message
             result = _extract_text(msg).strip()
 
@@ -180,17 +305,39 @@ def generate_with_model(model: str, prompt: str, temperature: float = 0.7,
             break
 
         except Exception as e:
+            if any(t in str(e).lower() for t in _FATAL):
+                raise FatalAPIError(f"{model}: {e}") from e
             transient = any(t in str(e).lower() for t in _RETRYABLE)
+            sem = _semaphore_for(model)
+            if sem and ("429" in str(e) or "rate" in str(e).lower()):
+                sem.on_rate_limited()
             if transient and attempt < _MAX_RETRIES:
                 # Exponential backoff with full jitter, capped at 60s.
-                delay = min(_BACKOFF_BASE * (2 ** attempt), 60.0)
+                delay = min(_BACKOFF_BASE * (2 ** attempt), _BACKOFF_CAP)
                 delay = random.uniform(0, delay)
                 log.warning(f"Transient API error ({model}), retry "
                             f"{attempt+1}/{_MAX_RETRIES} in {delay:.1f}s: {e}")
                 time.sleep(delay)
                 continue
+            # Exhausted retries on a transient error: never hand back "" —
+            # it parses as a zero score and silently corrupts results (2 such
+            # calls slipped through a GLM rate-limit storm before this guard).
+            if transient:
+                raise FatalAPIError(
+                    f"{model}: still failing after {_MAX_RETRIES} retries "
+                    f"(reduce concurrency): {e}") from e
             log.warning(f"API error ({model}): {e}")
             return ""
+
+    global _empty_streak
+    if result:
+        _empty_streak = 0
+    else:
+        _empty_streak += 1
+        if _empty_streak >= _FATAL_STREAK:
+            raise FatalAPIError(
+                f"{model}: {_empty_streak} consecutive empty responses — "
+                f"aborting rather than filling results with blanks")
 
     if result is None:
         return ""
@@ -243,7 +390,7 @@ def generate_with_logprobs(model: str, prompt: str, temperature: float = 0.3,
     try:
         cli = _get_client(model)
         response = cli.chat.completions.create(
-            model=model,
+            model=_wire_name(model),
             messages=[{"role": "user", "content": prompt}],
             temperature=temperature,
             max_tokens=max_tokens,

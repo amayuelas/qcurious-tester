@@ -1,0 +1,208 @@
+  Filtered to 3 of the requested 2 files
+======================================================================
+TestGenEval Lite
+  Examples: 3 across 1 repos
+    pytest-dev/pytest: 3
+  Strategies: ['random', 'greedy', 'cov_greedy', 'covqvalue2']
+  Seeds: [42]
+  Exec budget: 24
+  Total runs: 12
+======================================================================
+  Connectivity: OK
+
+Running 3 targets with 3 workers...
+2026-09-23 11:38:50,687 INFO: installed coverage in aorwall/swe-bench-pytest-dev_pytest-testbed:7.0 (attempt 1)
+2026-09-23 11:38:51,023 INFO: installed coverage in aorwall/swe-bench-pytest-dev_pytest-testbed:5.4 (attempt 1)
+2026-09-23 11:38:52,367 INFO: installed coverage in aorwall/swe-bench-pytest-dev_pytest-testbed:4.4 (attempt 1)
+2026-09-23 11:40:05,759 INFO: installed coverage in aorwall/swe-bench-pytest-dev_pytest-testbed:7.0 (attempt 1)
+2026-09-23 11:40:10,029 INFO: installed coverage in aorwall/swe-bench-pytest-dev_pytest-testbed:4.4 (attempt 1)
+2026-09-23 11:40:19,577 INFO: installed coverage in aorwall/swe-bench-pytest-dev_pytest-testbed:5.4 (attempt 1)
+2026-09-23 11:41:25,922 INFO: installed coverage in aorwall/swe-bench-pytest-dev_pytest-testbed:7.0 (attempt 1)
+2026-09-23 11:41:35,073 INFO: installed coverage in aorwall/swe-bench-pytest-dev_pytest-testbed:4.4 (attempt 1)
+2026-09-23 11:42:20,842 INFO: installed coverage in aorwall/swe-bench-pytest-dev_pytest-testbed:5.4 (attempt 1)
+2026-09-23 11:43:00,433 INFO: Plan 0: ḡ=140, γE[v]=0.0, Q=140.0 (fn)
+2026-09-23 11:43:01,000 INFO: Plan 2: ḡ=165, γE[v]=9.5, Q=174.5 (fn)
+2026-09-23 11:43:04,415 INFO: Plan 1: ḡ=374, γE[v]=91.0, Q=465.0 (fn)
+2026-09-23 11:43:04,416 INFO: Plan 0: ḡ=70.0, γE[v]=229.5, Q=299.5 (bayes)
+2026-09-23 11:43:04,416 INFO: Plan 1: ḡ=187.0, γE[v]=175.1, Q=362.1 (bayes)
+2026-09-23 11:43:04,416 INFO: Plan 2: ḡ=82.5, γE[v]=223.7, Q=306.2 (bayes)
+2026-09-23 11:43:06,969 INFO: installed coverage in aorwall/swe-bench-pytest-dev_pytest-testbed:7.0 (attempt 1)
+2026-09-23 11:43:26,972 INFO: Plan 0: ḡ=143, γE[v]=0.0, Q=143.0 (fn)
+2026-09-23 11:43:27,241 INFO: Plan 2: ḡ=165, γE[v]=0.0, Q=165.0 (fn)
+2026-09-23 11:43:29,316 INFO: Plan 1: ḡ=311, γE[v]=54.0, Q=365.0 (fn)
+2026-09-23 11:43:29,317 INFO: Plan 0: ḡ=61.5, γE[v]=187.4, Q=248.9 (bayes)
+2026-09-23 11:43:29,317 INFO: Plan 1: ḡ=103.7, γE[v]=169.3, Q=272.9 (bayes)
+2026-09-23 11:43:29,317 INFO: Plan 2: ḡ=68.8, γE[v]=183.7, Q=252.6 (bayes)
+2026-09-23 11:43:49,028 INFO: Plan 0: ḡ=72, γE[v]=0.0, Q=72.0 (fn)
+2026-09-23 11:43:49,521 INFO: Plan 2: ḡ=165, γE[v]=0.0, Q=165.0 (fn)
+2026-09-23 11:43:50,016 INFO: Plan 1: ḡ=106, γE[v]=46.5, Q=152.5 (fn)
+2026-09-23 11:43:50,016 INFO: Plan 0: ḡ=36.0, γE[v]=180.9, Q=216.9 (bayes)
+2026-09-23 11:43:50,016 INFO: Plan 1: ḡ=26.5, γE[v]=188.7, Q=215.2 (bayes)
+2026-09-23 11:43:50,016 INFO: Plan 2: ḡ=68.8, γE[v]=164.5, Q=233.3 (bayes)
+2026-09-23 11:44:08,997 INFO: Plan 0: ḡ=69, γE[v]=0.0, Q=69.0 (fn)
+2026-09-23 11:44:09,568 INFO: Plan 2: ḡ=165, γE[v]=0.0, Q=165.0 (fn)
+2026-09-23 11:44:11,025 INFO: Plan 1: ḡ=122, γE[v]=76.0, Q=198.0 (fn)
+2026-09-23 11:44:11,026 INFO: Plan 0: ḡ=34.5, γE[v]=171.3, Q=205.8 (bayes)
+2026-09-23 11:44:11,026 INFO: Plan 1: ḡ=30.5, γE[v]=178.1, Q=208.6 (bayes)
+2026-09-23 11:44:11,026 INFO: Plan 2: ḡ=48.2, γE[v]=164.5, Q=212.7 (bayes)
+2026-09-23 11:44:31,544 INFO: Plan 0: ḡ=92, γE[v]=0.0, Q=92.0 (fn)
+2026-09-23 11:44:31,755 INFO: Plan 2: ḡ=165, γE[v]=0.0, Q=165.0 (fn)
+2026-09-23 11:44:33,005 INFO: Plan 1: ḡ=122, γE[v]=59.5, Q=181.5 (fn)
+2026-09-23 11:44:33,006 INFO: Plan 0: ḡ=46.0, γE[v]=160.1, Q=206.1 (bayes)
+2026-09-23 11:44:33,006 INFO: Plan 1: ḡ=30.5, γE[v]=171.8, Q=202.3 (bayes)
+2026-09-23 11:44:33,006 INFO: Plan 2: ḡ=37.1, γE[v]=164.5, Q=201.7 (bayes)
+2026-09-23 11:44:33,881 INFO: Plan 2: ḡ=53, γE[v]=10.0, Q=63.0 (fn)
+2026-09-23 11:44:34,334 INFO: Plan 1: ḡ=69, γE[v]=8.0, Q=77.0 (fn)
+2026-09-23 11:44:34,335 INFO: Plan 0: ḡ=10, γE[v]=37.5, Q=47.5 (fn)
+2026-09-23 11:44:34,336 INFO: Plan 0: ḡ=5.0, γE[v]=20.4, Q=25.4 (bayes)
+2026-09-23 11:44:34,336 INFO: Plan 1: ḡ=34.5, γE[v]=4.4, Q=38.9 (bayes)
+2026-09-23 11:44:34,336 INFO: Plan 2: ḡ=26.5, γE[v]=8.4, Q=35.0 (bayes)
+2026-09-23 11:44:36,898 INFO: installed coverage in aorwall/swe-bench-pytest-dev_pytest-testbed:5.4 (attempt 1)
+2026-09-23 11:44:41,191 INFO: Plan 0: ḡ=85, γE[v]=0.0, Q=85.0 (fn)
+2026-09-23 11:44:42,673 INFO: Plan 2: ḡ=95, γE[v]=36.5, Q=131.5 (fn)
+2026-09-23 11:44:43,707 INFO: Plan 1: ḡ=145, γE[v]=119.0, Q=264.0 (fn)
+2026-09-23 11:44:43,708 INFO: Plan 0: ḡ=42.5, γE[v]=232.8, Q=275.2 (bayes)
+2026-09-23 11:44:43,708 INFO: Plan 1: ḡ=72.5, γE[v]=223.1, Q=295.6 (bayes)
+2026-09-23 11:44:43,708 INFO: Plan 2: ḡ=47.5, γE[v]=231.9, Q=279.4 (bayes)
+2026-09-23 11:44:46,326 INFO: installed coverage in aorwall/swe-bench-pytest-dev_pytest-testbed:4.4 (attempt 1)
+2026-09-23 11:44:52,435 INFO: Plan 0: ḡ=129, γE[v]=0.0, Q=129.0 (fn)
+2026-09-23 11:44:52,893 INFO: Plan 2: ḡ=165, γE[v]=0.0, Q=165.0 (fn)
+2026-09-23 11:44:53,420 INFO: Plan 1: ḡ=122, γE[v]=17.5, Q=139.5 (fn)
+2026-09-23 11:44:53,421 INFO: Plan 0: ḡ=35.0, γE[v]=157.9, Q=192.9 (bayes)
+2026-09-23 11:44:53,421 INFO: Plan 1: ḡ=30.5, γE[v]=161.3, Q=191.8 (bayes)
+2026-09-23 11:44:53,421 INFO: Plan 2: ḡ=37.1, γE[v]=156.8, Q=194.0 (bayes)
+2026-09-23 11:44:59,918 INFO: Plan 0: ḡ=11, γE[v]=37.0, Q=48.0 (fn)
+2026-09-23 11:44:59,956 INFO: Plan 2: ḡ=54, γE[v]=13.5, Q=67.5 (fn)
+2026-09-23 11:45:00,013 INFO: Plan 1: ḡ=33, γE[v]=26.0, Q=59.0 (fn)
+2026-09-23 11:45:00,013 INFO: Plan 0: ḡ=3.7, γE[v]=14.6, Q=18.2 (bayes)
+2026-09-23 11:45:00,013 INFO: Plan 1: ḡ=11.0, γE[v]=10.2, Q=21.2 (bayes)
+2026-09-23 11:45:00,013 INFO: Plan 2: ḡ=18.0, γE[v]=6.0, Q=24.0 (bayes)
+2026-09-23 11:45:05,069 INFO: Plan 0: ḡ=79, γE[v]=0.0, Q=79.0 (fn)
+2026-09-23 11:45:06,963 INFO: Plan 2: ḡ=115, γE[v]=26.5, Q=141.5 (fn)
+2026-09-23 11:45:07,080 INFO: Plan 1: ḡ=117, γE[v]=115.0, Q=232.0 (fn)
+2026-09-23 11:45:07,080 INFO: Plan 0: ḡ=38.3, γE[v]=202.9, Q=241.2 (bayes)
+2026-09-23 11:45:07,081 INFO: Plan 1: ḡ=39.0, γE[v]=209.0, Q=248.0 (bayes)
+2026-09-23 11:45:07,081 INFO: Plan 2: ḡ=53.5, γE[v]=196.5, Q=250.0 (bayes)
+2026-09-23 11:45:15,425 INFO: Plan 0: ḡ=129, γE[v]=0.0, Q=129.0 (fn)
+2026-09-23 11:45:15,901 INFO: Plan 2: ḡ=165, γE[v]=0.0, Q=165.0 (fn)
+2026-09-23 11:45:16,731 INFO: Plan 1: ḡ=78, γE[v]=81.0, Q=159.0 (fn)
+2026-09-23 11:45:16,732 INFO: Plan 0: ḡ=33.0, γE[v]=155.5, Q=188.5 (bayes)
+2026-09-23 11:45:16,732 INFO: Plan 1: ḡ=19.5, γE[v]=167.6, Q=187.1 (bayes)
+2026-09-23 11:45:16,732 INFO: Plan 2: ḡ=30.3, γE[v]=156.8, Q=187.1 (bayes)
+2026-09-23 11:45:23,719 INFO: Plan 1: ḡ=72, γE[v]=6.5, Q=78.5 (fn)
+2026-09-23 11:45:23,853 INFO: Plan 0: ḡ=10, γE[v]=37.5, Q=47.5 (fn)
+2026-09-23 11:45:23,984 INFO: Plan 2: ḡ=54, γE[v]=15.5, Q=69.5 (fn)
+2026-09-23 11:45:23,985 INFO: Plan 0: ḡ=2.8, γE[v]=11.9, Q=14.7 (bayes)
+2026-09-23 11:45:23,985 INFO: Plan 1: ḡ=18.0, γE[v]=2.2, Q=20.2 (bayes)
+2026-09-23 11:45:23,985 INFO: Plan 2: ḡ=13.5, γE[v]=5.1, Q=18.6 (bayes)
+2026-09-23 11:45:25,697 INFO: Plan 0: ḡ=82, γE[v]=0.0, Q=82.0 (fn)
+2026-09-23 11:45:27,630 INFO: Plan 2: ḡ=95, γE[v]=37.5, Q=132.5 (fn)
+2026-09-23 11:45:27,650 INFO: Plan 1: ḡ=117, γE[v]=105.5, Q=222.5 (fn)
+2026-09-23 11:45:27,651 INFO: Plan 0: ḡ=39.8, γE[v]=189.2, Q=229.0 (bayes)
+2026-09-23 11:45:27,651 INFO: Plan 1: ḡ=39.0, γE[v]=195.6, Q=234.6 (bayes)
+2026-09-23 11:45:27,651 INFO: Plan 2: ḡ=29.7, γE[v]=196.5, Q=226.2 (bayes)
+2026-09-23 11:45:35,970 INFO: Plan 0: ḡ=69, γE[v]=0.0, Q=69.0 (fn)
+2026-09-23 11:45:36,532 INFO: Plan 2: ḡ=165, γE[v]=0.0, Q=165.0 (fn)
+2026-09-23 11:45:37,360 INFO: Plan 1: ḡ=96, γE[v]=84.0, Q=180.0 (fn)
+2026-09-23 11:45:37,361 INFO: Plan 0: ḡ=17.2, γE[v]=159.8, Q=177.0 (bayes)
+2026-09-23 11:45:37,361 INFO: Plan 1: ḡ=24.0, γE[v]=162.0, Q=186.1 (bayes)
+2026-09-23 11:45:37,361 INFO: Plan 2: ḡ=28.8, γE[v]=154.0, Q=182.8 (bayes)
+  [1/3] src/_pytest/python.py (pytest-dev/pytest v7.0): {'random': 0, 'greedy': 0, 'cov_greedy': 0, 'covqvalue2': 0}
+2026-09-23 11:45:47,996 INFO: Plan 0: ḡ=11, γE[v]=37.0, Q=48.0 (fn)
+2026-09-23 11:45:48,108 INFO: Plan 1: ḡ=33, γE[v]=26.0, Q=59.0 (fn)
+2026-09-23 11:45:48,234 INFO: Plan 2: ḡ=54, γE[v]=15.5, Q=69.5 (fn)
+2026-09-23 11:45:48,235 INFO: Plan 0: ḡ=2.4, γE[v]=10.1, Q=12.5 (bayes)
+2026-09-23 11:45:48,235 INFO: Plan 1: ḡ=6.6, γE[v]=7.2, Q=13.8 (bayes)
+2026-09-23 11:45:48,235 INFO: Plan 2: ḡ=10.8, γE[v]=4.3, Q=15.1 (bayes)
+2026-09-23 11:45:48,466 INFO: Plan 0: ḡ=79, γE[v]=0.0, Q=79.0 (fn)
+2026-09-23 11:45:50,084 INFO: Plan 2: ḡ=115, γE[v]=27.5, Q=142.5 (fn)
+2026-09-23 11:45:50,574 INFO: Plan 1: ḡ=111, γE[v]=93.5, Q=204.5 (fn)
+2026-09-23 11:45:50,575 INFO: Plan 0: ḡ=38.3, γE[v]=174.8, Q=213.1 (bayes)
+2026-09-23 11:45:50,575 INFO: Plan 1: ḡ=28.3, γE[v]=185.9, Q=214.2 (bayes)
+2026-09-23 11:45:50,575 INFO: Plan 2: ḡ=36.3, γE[v]=177.4, Q=213.7 (bayes)
+2026-09-23 11:46:07,847 INFO: Plan 0: ḡ=82, γE[v]=0.0, Q=82.0 (fn)
+2026-09-23 11:46:09,458 INFO: Plan 2: ḡ=115, γE[v]=26.5, Q=141.5 (fn)
+2026-09-23 11:46:09,639 INFO: Plan 1: ḡ=107, γE[v]=103.5, Q=210.5 (fn)
+2026-09-23 11:46:09,639 INFO: Plan 0: ḡ=39.8, γE[v]=165.7, Q=205.6 (bayes)
+2026-09-23 11:46:09,640 INFO: Plan 1: ḡ=21.5, γE[v]=182.2, Q=203.7 (bayes)
+2026-09-23 11:46:09,640 INFO: Plan 2: ḡ=36.3, γE[v]=169.1, Q=205.4 (bayes)
+2026-09-23 11:46:10,284 INFO: Plan 0: ḡ=11, γE[v]=37.0, Q=48.0 (fn)
+2026-09-23 11:46:10,387 INFO: Plan 1: ḡ=33, γE[v]=26.0, Q=59.0 (fn)
+2026-09-23 11:46:10,506 INFO: Plan 2: ḡ=54, γE[v]=15.5, Q=69.5 (fn)
+2026-09-23 11:46:10,507 INFO: Plan 0: ḡ=2.0, γE[v]=8.9, Q=10.9 (bayes)
+2026-09-23 11:46:10,507 INFO: Plan 1: ḡ=5.5, γE[v]=6.3, Q=11.8 (bayes)
+2026-09-23 11:46:10,507 INFO: Plan 2: ḡ=9.0, γE[v]=3.8, Q=12.8 (bayes)
+2026-09-23 11:46:26,986 INFO: Plan 0: ḡ=79, γE[v]=0.0, Q=79.0 (fn)
+2026-09-23 11:46:28,167 INFO: Plan 2: ḡ=101, γE[v]=28.5, Q=129.5 (fn)
+2026-09-23 11:46:29,031 INFO: Plan 1: ḡ=119, γE[v]=131.0, Q=250.0 (fn)
+2026-09-23 11:46:29,032 INFO: Plan 0: ḡ=25.8, γE[v]=166.2, Q=192.0 (bayes)
+2026-09-23 11:46:29,032 INFO: Plan 1: ḡ=23.9, γE[v]=176.1, Q=200.0 (bayes)
+2026-09-23 11:46:29,032 INFO: Plan 2: ḡ=31.7, γE[v]=165.0, Q=196.6 (bayes)
+2026-09-23 11:46:31,818 INFO: Plan 0: ḡ=10, γE[v]=37.5, Q=47.5 (fn)
+2026-09-23 11:46:31,854 INFO: Plan 1: ḡ=33, γE[v]=26.0, Q=59.0 (fn)
+2026-09-23 11:46:31,980 INFO: Plan 2: ḡ=54, γE[v]=15.5, Q=69.5 (fn)
+2026-09-23 11:46:31,981 INFO: Plan 0: ḡ=1.5, γE[v]=8.2, Q=9.8 (bayes)
+2026-09-23 11:46:31,981 INFO: Plan 1: ḡ=4.7, γE[v]=5.8, Q=10.5 (bayes)
+2026-09-23 11:46:31,981 INFO: Plan 2: ḡ=7.7, γE[v]=3.5, Q=11.2 (bayes)
+2026-09-23 11:46:48,003 INFO: Plan 0: ḡ=85, γE[v]=0.0, Q=85.0 (fn)
+2026-09-23 11:46:48,794 INFO: Plan 2: ḡ=115, γE[v]=18.5, Q=133.5 (fn)
+2026-09-23 11:46:49,428 INFO: Plan 1: ḡ=117, γE[v]=119.5, Q=236.5 (fn)
+2026-09-23 11:46:49,429 INFO: Plan 0: ḡ=28.2, γE[v]=156.5, Q=184.7 (bayes)
+2026-09-23 11:46:49,429 INFO: Plan 1: ḡ=19.5, γE[v]=169.6, Q=189.1 (bayes)
+2026-09-23 11:46:49,429 INFO: Plan 2: ḡ=31.6, γE[v]=155.9, Q=187.5 (bayes)
+2026-09-23 11:46:52,112 INFO: Plan 0: ḡ=11, γE[v]=37.0, Q=48.0 (fn)
+2026-09-23 11:46:52,241 INFO: Plan 2: ḡ=55, γE[v]=15.0, Q=70.0 (fn)
+2026-09-23 11:46:52,330 INFO: Plan 1: ḡ=30, γE[v]=27.5, Q=57.5 (fn)
+2026-09-23 11:46:52,331 INFO: Plan 0: ḡ=1.4, γE[v]=7.5, Q=9.0 (bayes)
+2026-09-23 11:46:52,331 INFO: Plan 1: ḡ=3.8, γE[v]=5.6, Q=9.4 (bayes)
+2026-09-23 11:46:52,331 INFO: Plan 2: ḡ=6.9, γE[v]=3.1, Q=10.0 (bayes)
+2026-09-23 11:47:07,749 INFO: Plan 0: ḡ=82, γE[v]=0.0, Q=82.0 (fn)
+2026-09-23 11:47:09,171 INFO: Plan 1: ḡ=117, γE[v]=45.5, Q=162.5 (fn)
+2026-09-23 11:47:09,474 INFO: Plan 2: ḡ=95, γE[v]=36.5, Q=131.5 (fn)
+2026-09-23 11:47:09,474 INFO: Plan 0: ḡ=26.8, γE[v]=152.2, Q=178.9 (bayes)
+2026-09-23 11:47:09,474 INFO: Plan 1: ḡ=16.7, γE[v]=160.5, Q=177.2 (bayes)
+2026-09-23 11:47:09,474 INFO: Plan 2: ḡ=21.9, γE[v]=156.8, Q=178.7 (bayes)
+  [2/3] src/_pytest/python.py (pytest-dev/pytest v4.4): {'random': 0, 'greedy': 0, 'cov_greedy': 0, 'covqvalue2': 0}
+2026-09-23 11:47:11,025 INFO: Plan 0: ḡ=10, γE[v]=37.5, Q=47.5 (fn)
+2026-09-23 11:47:11,145 INFO: Plan 1: ḡ=30, γE[v]=27.5, Q=57.5 (fn)
+2026-09-23 11:47:11,162 INFO: Plan 2: ḡ=54, γE[v]=15.5, Q=69.5 (fn)
+2026-09-23 11:47:11,162 INFO: Plan 0: ḡ=1.2, γE[v]=7.2, Q=8.3 (bayes)
+2026-09-23 11:47:11,162 INFO: Plan 1: ḡ=3.3, γE[v]=5.3, Q=8.6 (bayes)
+2026-09-23 11:47:11,162 INFO: Plan 2: ḡ=6.0, γE[v]=3.0, Q=9.0 (bayes)
+  [3/3] src/_pytest/mark/evaluate.py (pytest-dev/pytest v5.4): {'random': 0, 'greedy': 0, 'cov_greedy': 0, 'covqvalue2': 0}
+
+======================================================================
+RESULTS
+======================================================================
+
+Module                                   repo            seed       random       greedy   cov_greedy   covqvalue2
+----------------------------------------------------------------------------------------------------------------
+_pytestthon                              pytest-dev/pyt    42            0            0            0            0
+_pytestthon                              pytest-dev/pyt    42            0            0            0            0
+_pytest.mark.evaluate                    pytest-dev/pyt    42            0            0            0            0
+
+======================================================================
+STATISTICS
+======================================================================
+
+Per-strategy means (n=3):
+  random               branches=   0.0 ± 0.0  lines=0.0  pass_rate=0%
+  greedy               branches=   0.0 ± 0.0  lines=0.0  pass_rate=0%
+  cov_greedy           branches=   0.0 ± 0.0  lines=0.0  pass_rate=0%
+  covqvalue2           branches=   0.0 ± 0.0  lines=0.0  pass_rate=0%
+
+Paired vs random:
+  greedy               Δ=  +0.0 ± 0.0  W=0 L=0 T=3  p=1.0000 d=0.00 
+  cov_greedy           Δ=  +0.0 ± 0.0  W=0 L=0 T=3  p=1.0000 d=0.00 
+  covqvalue2           Δ=  +0.0 ± 0.0  W=0 L=0 T=3  p=1.0000 d=0.00 
+
+Per-repo means:
+
+  pytest-dev/pytest (3 runs):
+    random               mean=0.0
+    greedy               mean=0.0
+    cov_greedy           mean=0.0
+    covqvalue2           mean=0.0
+
+Cost: $0.0000 | Time: 508s (8.5m)
+Saved to /share/edc/home/aamayuelasfernandez/qcurious-tester/results/testgeneval/repair/gemma4__pytest-dev__pytest.json

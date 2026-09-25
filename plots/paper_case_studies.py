@@ -66,16 +66,25 @@ COMPACT_RC = {
 MODULES = [
     ("flask.app", r"$\tt{flask.app}$"),
     ("werkzeug.http", r"$\tt{werkzeug.http}$"),
-    ("requests.models", r"$\tt{requests.models}$"),
     ("jinja2.ext", r"$\tt{jinja2.ext}$"),
+    ("click.core", r"$\tt{click.core}$"),
 ]
 
 
+# Resubmission run (GLM 5.3): the baselines make progress here, so the panels
+# show CovQValue pulling ahead rather than only baselines stuck at zero.
+# The method is stored as "covqvalue2".
+RESULTS_FILE = "results/repo_explore_bench/final_reb_glm53.json"
+RENAME = {"covqvalue2": "cov_qvalue"}
+
+
 def main():
-    with open("results/repo_explore_bench/full_run_gemini.json") as f:
+    with open(RESULTS_FILE) as f:
         data = json.load(f)
 
     targets = {r["module"]: r for r in data["results"]}
+    for r in targets.values():
+        r["strategies"] = {RENAME.get(k, k): v for k, v in r["strategies"].items()}
 
     with matplotlib.rc_context(COMPACT_RC):
         fig, axes = plt.subplots(1, 4, figsize=(20, 4.5))

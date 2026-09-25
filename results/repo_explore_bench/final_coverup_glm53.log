@@ -1,0 +1,5 @@
+2026-09-24 15:35:37,049 INFO: RepoExploreBench: 93 targets across 9 repos
+======================================================================
+Exp 4 — external baseline: coverup
+  Targets: 93  search-time: 60s  parallel: 8
+======================================================================

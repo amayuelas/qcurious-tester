@@ -1,0 +1,38 @@
+  Filtered to 1 of the requested 1 files
+======================================================================
+TestGenEval Lite
+  Examples: 1 across 1 repos
+    sympy/sympy: 1
+  Strategies: ['random', 'greedy', 'cov_greedy', 'covqvalue2']
+  Seeds: [42]
+  Exec budget: 24
+  Total runs: 4
+======================================================================
+Traceback (most recent call last):
+  File "/share/edc/home/aamayuelasfernandez/qcurious-tester/curiosity_explorer/llm.py", line 287, in generate_with_model
+    response = cli.chat.completions.create(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/local/home/aamayuelasfernandez/.local/lib/python3.12/site-packages/openai/_utils/_utils.py", line 286, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/local/home/aamayuelasfernandez/.local/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 1204, in create
+    return self._post(
+           ^^^^^^^^^^^
+  File "/local/home/aamayuelasfernandez/.local/lib/python3.12/site-packages/openai/_base_client.py", line 1297, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/local/home/aamayuelasfernandez/.local/lib/python3.12/site-packages/openai/_base_client.py", line 1070, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.APIStatusError: Error code: 402 - {'object': 'error', 'message': 'Customer monthly spending limit reached. Increase your limit to restore access: https://admin.mistral.ai/subscription', 'type': 'billing_customer_monthly_spending_limit_reached', 'param': None, 'code': '2300', 'raw_status_code': 402}
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/share/edc/home/aamayuelasfernandez/qcurious-tester/run_testgeneval.py", line 694, in <module>
+    main()
+  File "/share/edc/home/aamayuelasfernandez/qcurious-tester/run_testgeneval.py", line 551, in main
+    t = generate_with_model(config.MODEL, "Say ok", 0.3, 100)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/share/edc/home/aamayuelasfernandez/qcurious-tester/curiosity_explorer/llm.py", line 309, in generate_with_model
+    raise FatalAPIError(f"{model}: {e}") from e
+curiosity_explorer.llm.FatalAPIError: zai-glm-5-3: Error code: 402 - {'object': 'error', 'message': 'Customer monthly spending limit reached. Increase your limit to restore access: https://admin.mistral.ai/subscription', 'type': 'billing_customer_monthly_spending_limit_reached', 'param': None, 'code': '2300', 'raw_status_code': 402}

@@ -1,0 +1,21 @@
+[2026-09-23 13:35:23] django/django: 7 images, models ['glm53'], 145 GB free
+[2026-09-23 15:16:07]   django/django / glm53: exit 0
+[2026-09-23 15:16:07] sympy/sympy: 13 images, models ['glm53'], 145 GB free
+[2026-09-23 17:53:36]   sympy/sympy / glm53: exit 0
+[2026-09-23 17:53:36] pytest-dev/pytest: 7 images, models ['glm53'], 145 GB free
+[2026-09-23 18:13:30]   pytest-dev/pytest / glm53: exit 0
+[2026-09-23 18:13:30] matplotlib/matplotlib: 3 images, models ['glm53'], 145 GB free
+[2026-09-23 18:42:14]   matplotlib/matplotlib / glm53: exit 0
+[2026-09-23 18:42:14] astropy/astropy: 3 images, models ['glm53'], 145 GB free
+[2026-09-23 18:56:14]   astropy/astropy / glm53: exit 0
+[2026-09-23 18:56:14] pydata/xarray: 1 images, models ['glm53'], 145 GB free
+[2026-09-23 19:18:20]   pydata/xarray / glm53: exit 0
+[2026-09-23 19:18:20] sphinx-doc/sphinx: 2 images, models ['glm53'], 145 GB free
+[2026-09-23 19:24:02]   sphinx-doc/sphinx / glm53: exit 0
+[2026-09-23 19:24:03] mwaskom/seaborn: 1 images, models ['glm53'], 145 GB free
+[2026-09-23 19:37:07]   mwaskom/seaborn / glm53: exit 0
+[2026-09-23 19:37:07] pylint-dev/pylint: 2 images, models ['glm53'], 145 GB free
+[2026-09-23 19:54:24]   pylint-dev/pylint / glm53: exit 0
+[2026-09-23 19:54:24] pallets/flask: 1 images, models ['glm53'], 145 GB free
+[2026-09-23 19:59:50]   pallets/flask / glm53: exit 0
+[2026-09-23 19:59:52] merged 140 results -> /share/edc/home/aamayuelasfernandez/qcurious-tester/results/testgeneval/full_run_glm53.json ($90.67)
