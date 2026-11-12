@@ -45,10 +45,11 @@ In `run_repo_explore_bench.py`:
 
 ## Inference budget (report it, since Zakb asks for "comparable")
 
-Per execution: method = (3 plan generations + 3 scoring calls) / 3 executions
-= 2 calls; CovGreedy = 3 generations per execution = 3 calls; Greedy = 4.
-So the baselines get at least as many calls. Run with `--per-strategy-cost`
-and report calls, input tokens and output tokens per strategy next to coverage.
+Per module (paper Appendix F): Random and CovGreedy 72 calls, Greedy 96,
+ours 48. So the baselines already get more calls; the hints add input tokens
+to them. Appendix F measured this on 10 click modules only. Run with `--per-strategy-cost`
+and report calls, input tokens and output tokens per strategy on all 93 targets
+(replaces Table 8).
 
 ## Scale and cost
 
@@ -77,5 +78,6 @@ and model. Paired tests: `covqvalue2` vs `cov_greedy_tgt`,
   original gap that information alone closes.
 - Gap closes to within noise: the contribution is the posterior-chosen target
   information itself. Say so, move `cov_greedy_tgt` into the main table as the
-  strongest baseline, and rest the planning claim on whatever
+  strongest baseline, restate the headline numbers against it instead of
+  Greedy (also answers 1zqK W4), and rest the planning claim on whatever
   `cov_qvalue_tgt_rnd` vs `cov_greedy_tgt` shows.

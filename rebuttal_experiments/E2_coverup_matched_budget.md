@@ -5,7 +5,8 @@ matched execution and inference budgets?").
 
 ## Question
 
-The paper compares each tool at its native budget. Does the ordering hold when
+The paper runs CoverUp to completion (Table 3: 98.0 / 45.2 / 59.8 vs ours
+103.5 / 85.5 / 101.6). Does the ordering hold when
 CoverUp gets the same number of test executions and LLM calls as our method?
 
 ## Step 0: measure CoverUp's native usage (free, do first)

@@ -18,6 +18,9 @@ stop and answer in text only (see Fallback).
 The choice is made on availability, fit and cost. We do not know how Test4Py
 will score against us, and the result is reported whichever way it goes.
 
+Note: the paper already cites TestForge (as greedy) and TELPA; Test4Py and
+TestWeaver are not cited and must be added to related work either way.
+
 ## Setup checklist
 
 1. Clone at a pinned commit; record the hash here.

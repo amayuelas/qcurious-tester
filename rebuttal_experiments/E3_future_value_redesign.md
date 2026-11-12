@@ -1,168 +1,176 @@
-# E3. Redesigned future value and posteriors
+# E3. Future value: headroom, redesign, and posterior semantics
 
-**Answers:** Zakb W1, W2, Q1; 1zqK W1, W2, Q1, Q2. Also jDfu's summary remark
-that most of the gain comes from targeting.
+**Answers:** Zakb W1, W2, Q1; 1zqK W1, W2, Q1, Q2; jDfu's summary remark that
+most of the gain comes from targeting.
 
-## Why the current term is flat (diagnosis, goes in the rebuttal)
+## Notation (paper vs code)
 
-`_rescore_with_posterior` computes
+The paper's Eq. 3 is  Q = g + gamma * v,  g = sum_{E} p_f |f|,
+v = lambda * sum_{N} (1 - p_f) |f|, lambda = 0.09, default gamma = 1.
+The code (`_rescore_with_posterior`) computes g + gamma_c * (value of the
+whole next state), which reduces to (1 - gamma_c) * g + gamma_c * v + const.
+Same ranking, with  gamma_paper = gamma_c / (1 - gamma_c):
 
-    g(a) = sum_{f in EXECUTES(a)} p_f * size_f
-    v(a) = sum_{f uncovered, f not in EXECUTES(a)} p'_f * size_f
-           p'_f = p_f + (1 - p_f) * 0.09   if f in ENABLES(a), else p_f
+| code flag | gamma_c | paper |
+|---|---|---|
+| `_g0` | 0 | gamma = 0 (88.6) |
+| `_g025` | 0.25 | gamma = 1/3 (86.8) |
+| default / `_g05` | 0.5 | gamma = 1, the method (85.5) |
+| `_g1` | 1 | "v only, no g" (82.6) |
 
-Let T = sum over all uncovered f of p_f * size_f (the same for every plan in a
-round). Then v(a) = T - g(a) + 0.09 * sum_{f in ENABLES(a)} (1 - p_f) * size_f,
-so
+New variants below take the PAPER gamma directly.
 
-    Q(a) = (1 - gamma) * g(a) + gamma * 0.09 * B(a) + const,
-    B(a) = sum_{f in ENABLES(a)} (1 - p_f) * size_f.
+## What the paper already concedes, and what is actually wrong
 
-Consequences:
-1. The "value of the next state" subtracts the immediate gain back out. At
-   gamma=0.5 the ranking is g plus a bonus worth 9% of B; at gamma=1 the
-   immediate term vanishes and only the bonus ranks plans (matches the drop at
-   gamma=1 in the sweep: 82.6 vs 86.8-88.6).
-2. The bonus is weighted by (1 - p_f): it prefers enabling functions we
-   believe are UNLIKELY to be reachable.
-3. One Beta posterior serves two meanings. A function predicted ENABLES and
-   (correctly) not executed gets beta+1, lowering the p_f that the same
-   formula says the plan raised. Both reviewers found this.
-4. A covered function leaves the candidate set, so its alpha+1 is never read.
-   Evidence from successes is thrown away.
+Section 5.1 already says the future-value term "has no measurable effect" and
+Appendix E reports that ENABLES functions are covered next round 17.8% of the
+time vs 15.2% for other untested functions. The reviewers' objection is that
+the title, abstract and corridor motivation rest on a term with no measured
+benefit, and that the posterior is not well defined. Four concrete problems:
 
-So the flat gamma curve tests this implementation, not the idea of valuing
-future reachability.
+1. **Weak signal, small weight.** v is an ENABLES bonus scaled by 0.09, so it
+   rarely changes the argmax; and the ENABLES predictions themselves carry a
+   2.6-point lift. Nobody has measured whether a better signal COULD help on
+   this benchmark (no headroom estimate).
+2. **lambda is inconsistent with the paper's own numbers.** lambda = 0.09
+   comes from pilot logs (21.2% vs 13.4%). The rates in Appendix E give
+   (0.178 - 0.152) / (1 - 0.152) = 0.03. A reviewer can compute this. Fix by
+   learning the lift per run instead of fixing a constant.
+3. **One posterior, two meanings** (Zakb W2, 1zqK W2). Algorithm 1 line 22
+   updates over E union N: a function predicted ENABLED and, as predicted, not
+   executed gets beta+1, lowering the p_f that Eq. 3 says the plan raised.
+4. **Successes are discarded** (Zakb W2). A covered function leaves U, so its
+   alpha+1 is never read; p_f only ever moves down.
+
+Also: the (1 - p_f) weight in v favours enabling functions we believe are
+hard to reach, with no check that they are then executable.
+
+## Stage 0. Is there any headroom for looking ahead? (new, most important)
+
+Before redesigning v, measure the ceiling. Two counterfactual selectors on the
+SAME plan pool, trial runs rolled back from a snapshot (free lookahead, as in
+the existing `_oracle`):
+
+- `..._oracle` (exists): commit the plan with the highest realised gain this
+  round. Myopic ceiling.
+- `..._oracle2` (NEW): for each of the K plans, run it, then from the
+  resulting state generate the next round's K plans and trial-run them;
+  commit the plan maximising (gain now + best gain next round). Two-round
+  lookahead ceiling.
+
+Headroom of planning = oracle2 - oracle. Run on the 27-target pilot set
+(seed 42; LLM calls are about 4x, free on Gemma, about 3 h) and on the
+hidden-key corridors (depths 4/6/8).
+
+- If oracle2 is about equal to oracle on RepoExploreBench: with K=3 targeted
+  plans, no future-value estimator can help there; the benefit of planning is
+  in the multi-step PLANS (S=3) and in targeting, not in the selector. That is
+  a clean, honest answer to Zakb Q1 / 1zqK Q1, and the corridor result shows
+  where lookahead does matter.
+- If oracle2 is clearly above oracle: there is something to capture, and the
+  redesign below is tested against that ceiling.
 
 ## Redesign: `cov_qvalue_tgt_fnt_bayes2` (NEW)
 
-Keep generation, targeting and the EXECUTES/ENABLES scorer prompt unchanged.
-Change only the valuation and the updates.
+Generation, targeting and the EXECUTES/ENABLES prompt are unchanged.
 
-**Two quantities, each with one meaning.**
+**Execution reliability r_f** = P(f covered after the plan | predicted
+EXECUTES f). Per-function Beta shrunk to a run-level rate, since a run has 8
+rounds:
 
-- Execution reliability r_f = P(f is covered after the plan | scorer said
-  EXECUTES f). Per-function Beta, shrunk toward a global rate because one run
-  has only 8 rounds:
-      r_f = (a_f + m * rho) / (a_f + b_f + m),   m = 4
-  rho = global hit rate of EXECUTES predictions in this run, itself
-  Beta(1,1)-initialised. Updates use ONLY functions in EXECUTES of the
-  committed plan: covered -> a_f+1 and rho hit; still uncovered -> b_f+1 and
-  rho miss. Successes now matter through rho even though f leaves the
-  candidate set (fixes point 4). ENABLES predictions never touch r_f (fixes
-  point 3).
-- Unlock lift delta = how much more likely an ENABLED function is to be covered
-  in the next round than an uncovered function that was not enabled:
-      u = P(covered in next round | predicted ENABLES by committed plan)
-      b = P(covered in next round | uncovered, not predicted)
-      delta = max(0, (u - b) / (1 - b))
-  u and b are Beta posteriors with priors centred on the measured rates (0.212
-  and 0.134, `analyze_future_conversion.py`) at prior strength 10, updated one
-  round later when the outcome is known. This replaces the fixed UNLOCK_BUMP
-  = 0.09 with a quantity learned per run, and gives the reviewers a direct
-  answer to "what probability does the posterior represent".
+    r_f = (a_f + m * rho) / (a_f + b_f + m),   m = 4
 
-**Q-value (no cancellation).**
+rho = hit rate of EXECUTES predictions so far in this run (Beta(1,1) start;
+Appendix E precision 0.49 says it should settle near 0.5). Updates use only
+functions in E of the committed plan. Hits raise rho, so evidence from
+successes is used even though f leaves U (problem 4). ENABLES predictions
+never touch r_f (problem 3). This is the answer to "what probability does the
+posterior represent": the probability that a function the scorer says a plan
+executes is in fact covered.
 
-    g(a) = sum_{f in EXECUTES(a)} r_f * size_f
-    v(a) = h_t * delta * sum_{f in ENABLES(a)} r_f * size_f
-    Q(a) = g(a) + gamma * v(a)
+**Unlock lift delta**, learned per run (problem 2):
 
-v is the expected coverage a follow-up round collects BECAUSE of this plan
-(the increment over the base rate), weighted by r_f (prefers enabling
-functions we can actually execute; fixes point 2). h_t = 1 if at least one
-full round of budget remains after this plan, else 0: with no budget left
-there is no future to value. This is the one-step form of
-q = g + gamma * E[v(h')] with the plan-independent part of v(h') dropped, which
-cannot change the argmax.
+    u = P(covered next round | predicted ENABLES by the committed plan)
+    b = P(covered next round | untested, not predicted)
+    delta = max(0, (u - b) / (1 - b))
 
-**Follow-through (`_ft`, exists).** Future value is only real if the next
-round collects it. With `_ft`, next round's first target chunk is the enabled
-functions plus the setup that ran. Test the redesign with and without it.
+u and b are Beta posteriors with priors centred on the Appendix E rates
+(0.178, 0.152), prior strength 10, updated one round later.
+
+**Q-value.**
+
+    g(a) = sum_{f in E(a)} r_f |f|
+    v(a) = h_t * delta * sum_{f in N(a)} r_f |f|
+    Q(a) = g(a) + gamma * v(a),   gamma = 1
+
+v is the expected extra code the next round covers because of this plan,
+weighted by how reliably we execute what we target (replaces the 1 - p_f
+weight). h_t = 0 in the last round (no future to value), else 1.
+
+**Follow-through (`_ft`, exists).** Next round's first chunk is the functions
+the committed plan enabled, with the setup that ran. Future value is only
+real if the next round goes and collects it.
 
 ## Conditions
 
-| ID | Strategy | What it tests |
+| ID | Strategy | Tests |
 |---|---|---|
-| A0 | `cov_qvalue_tgt_rnd` | no selection (floor) |
-| A1 | `cov_qvalue_tgt_fnt_bayes_g0` | immediate only, old posterior |
-| A2 | `cov_qvalue_tgt_fnt_bayes` | current method |
-| A3 | `cov_qvalue_tgt_fnt_bayes2_g0` (NEW) | immediate only, new r_f |
-| A4 | `cov_qvalue_tgt_fnt_bayes2` (NEW) | redesign, gamma=0.5 |
-| A5 | `cov_qvalue_tgt_fnt_bayes2_g1` (NEW) | redesign, gamma=1 |
-| A6 | `cov_qvalue_tgt_fnt_bayes2_ft` (NEW) | redesign + follow-through |
-| A7 | `cov_qvalue_tgt_fnt_bayes_oracle` | best-of-pool ceiling |
+| A0 | `cov_qvalue_tgt_rnd` | no selection |
+| A1 | `cov_qvalue_tgt_fnt_bayes_g0` | paper, gamma = 0 |
+| A2 | `cov_qvalue_tgt_fnt_bayes` | paper method (gamma = 1) |
+| A3 | `cov_qvalue_tgt_fnt_bayes2_g0` (NEW) | new r_f, immediate only |
+| A4 | `cov_qvalue_tgt_fnt_bayes2` (NEW) | redesign |
+| A5 | `cov_qvalue_tgt_fnt_bayes2_ft` (NEW) | redesign + follow-through |
+| A6 | `cov_qvalue_tgt_fnt_bayes_oracle` | myopic ceiling |
 
-A3 vs A1: value of the cleaner posterior alone. A4/A5 vs A3: value of looking
-ahead (Zakb Q1, 1zqK Q1). A6 vs A4: whether collecting the unlocked code
-matters.
+A3 vs A1: the cleaner posterior alone. A4, A5 vs A3: looking ahead.
 
-## Stages (cheapest first; all Gemma, $0)
+## Stages after Stage 0 (all Gemma, $0)
 
-**Stage 1, offline, no runs (2 h).** Re-score the logged candidate pools
-(`*_calib` runs, `scripts/active/eval_scorers_offline.py`) with the new g.
-Report top-1 selection accuracy and regret vs the old scorer (old: 54%
-top-1). Also compute the *decision divergence*: the share of rounds where
-argmax-Q at gamma=0.5 differs from argmax at gamma=0, for old and new
-valuation. If divergence is a few percent, gamma cannot move coverage on this
-benchmark no matter how v is defined; that number is itself an answer to the
-reviewers. Go to stage 2 only if the new g is not worse offline.
-
-**Stage 2, pilot (1.5 h).** A1-A6 on the 27-target stratified pilot set
-(`--per-repo 3`), seed 42. Sanity checks: delta posterior moves, v > 0 in a
-reasonable share of rounds (log it), no parsing regressions.
-
-**Stage 3, hidden-key corridors (2 h).** Depths 4, 6, 8, seeds 42/123/456,
-`--hidden`, with the `_rem` map (needed there, see `run_strategy` comment).
-This is where a depth-d corridor needs d executions in order, so looking
-ahead should matter most. Report stages reached and branches.
-
-```bash
-.venv/bin/python run_synth_corridor.py --hidden --depths 4 6 8 \
-  --seeds 42 123 456 --exec-budget 24 \
-  --strategies cov_qvalue_tgt_rem_fnt_bayes_g0 cov_qvalue_tgt_rem_fnt_bayes \
-     cov_qvalue_tgt_rem_fnt_bayes2_g0 cov_qvalue_tgt_rem_fnt_bayes2 \
-     cov_qvalue_tgt_rem_fnt_bayes2_ft \
-  --output rebuttal_iclr27/E3_corridor_gemma.json
-```
-
-**Stage 4, RepoExploreBench (about 2.5 h per seed for 8 strategies).** All 93
-targets, seeds 42/123/456, A0-A7 in one job so everything is paired.
+1. **Offline (2 h, no runs).** Re-score logged pools
+   (`eval_scorers_offline.py`) with the new g: top-1 accuracy and regret vs
+   the current scorer. Compute decision divergence: share of rounds where the
+   argmax at gamma = 1 differs from gamma = 0, old and new valuation.
+2. **Pilot.** A1-A5, 27 targets, seed 42. Check delta moves, share of rounds
+   with v > 0, no parsing regressions.
+3. **Hidden-key corridors.** Depths 4/6/8, seeds 42/123/456, `--hidden`, with
+   the `_rem` map (required there). Stages reached and branches.
+4. **RepoExploreBench.** 93 targets, seeds 42/123/456, A0-A6 in one job.
 
 ```bash
 .venv/bin/python run_repo_explore_bench.py --seeds 42 123 456 --parallel 48 \
   --strategies cov_qvalue_tgt_rnd cov_qvalue_tgt_fnt_bayes_g0 \
      cov_qvalue_tgt_fnt_bayes cov_qvalue_tgt_fnt_bayes2_g0 \
-     cov_qvalue_tgt_fnt_bayes2 cov_qvalue_tgt_fnt_bayes2_g1 \
-     cov_qvalue_tgt_fnt_bayes2_ft cov_qvalue_tgt_fnt_bayes_oracle \
+     cov_qvalue_tgt_fnt_bayes2 cov_qvalue_tgt_fnt_bayes2_ft \
+     cov_qvalue_tgt_fnt_bayes_oracle \
   --output rebuttal_iclr27/E3_valuation_gemma.json
 ```
 
 ## Extra analyses from the same logs
 
-- Calibration of r_f: predicted vs realised coverage of EXECUTES functions,
-  in bins (reliability plot). Answers "what does the posterior represent".
-- Trajectory of delta over rounds, per repo: where is unlocking real?
-- Selection headroom captured: (ours - A0) / (A7 - A0); paper value is 17%.
-- Per-target split by corridor structure (repos with deep setup chains vs
-  flat modules), since the benefit should concentrate there.
+- Reliability plot for r_f (predicted vs realised), and delta over rounds per
+  repo. Extends Appendix E.
+- Selection headroom captured: (method - A0) / (A6 - A0).
+- Split by repo: where is unlocking real?
 
-## Decision rule (fixed before the run)
+## Decision rule (fixed before the runs)
 
-- **Adopt bayes2 (+ft if A6 >= A4)** as the method if A4 or A6 beats A3 on the
-  corridors (p<0.05) and is not worse than A2 on RepoExploreBench (difference
-  within noise or better). Then rerun the main table with it.
-- **Adopt bayes2 at gamma=0 and reframe** if looking ahead shows no benefit
-  even on corridors: contribution = posterior-targeted planning +
-  function-grounded selection; future value reported as a negative result with
-  the diagnosis above and the decision-divergence number.
-- Either way the paper gets the two-posterior formulation, since it removes
-  the inconsistency the reviewers identified at no cost.
+- Adopt bayes2 (+ft if A5 >= A4) if it beats A3 on the corridors (p<0.05)
+  and is not worse than A2 on RepoExploreBench. Rerun the main table with it.
+- If looking ahead shows nothing even on corridors, or Stage 0 shows no
+  headroom: keep bayes2 at gamma = 0 for its well-defined posterior, and
+  reframe: the planning that matters is multi-step targeted plans chosen from
+  the exploration state; future-value selection is a reported negative result
+  with a measured ceiling. Title/abstract wording adjusted accordingly.
+- Either way the revised paper uses the two-quantity formulation and the
+  learned lift, which remove problems 2-4 at no cost.
+
+Fixed in advance, not tuned on the 93 targets: m = 4, prior strength 10,
+gamma in {0, 1}.
 
 ## Honest prior
 
-Selection captures 17% of oracle headroom and seed noise is about 3 branches,
-so on RepoExploreBench the realistic outcome is "not worse, cleaner". The
-corridors are where a real effect can show. Do not tune m, the prior strength,
-or gamma on the 93 targets; fix them here (m=4, strength 10, gamma in
-{0, 0.5, 1}) and report all.
+A 2.6-point ENABLES lift and seed noise of about 3 branches make a measurable
+win on RepoExploreBench unlikely. The realistic strong outcome is: Stage 0
+quantifies the headroom, the redesign is at least as good with a posterior
+that means something, and the corridors show a real effect of lookahead.
